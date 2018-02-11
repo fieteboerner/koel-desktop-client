@@ -21,7 +21,7 @@ export default new Router({
         {
           path: '/albums',
           name: 'albums',
-          component: require('@/components/views/Artists.vue').default,
+          component: require('@/components/views/Albums.vue').default,
           beforeEnter: ifAuthenticated
         },
         {

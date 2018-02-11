@@ -29,4 +29,5 @@ export default {
 // Import Bulma and Buefy styles
 @import '~bulma';
 @import '~buefy/src/scss/buefy';
+@import '../sass/app';
 </style>
