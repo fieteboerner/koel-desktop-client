@@ -21,25 +21,25 @@ export default new Router({
         {
           path: '/albums',
           name: 'albums',
-          component: require('@/components/Artists.vue').default,
+          component: require('@/components/views/Artists.vue').default,
           beforeEnter: ifAuthenticated
         },
         {
           path: '/artists/:id?',
           name: 'artists',
-          component: require('@/components/Artists.vue').default,
+          component: require('@/components/views/Artists.vue').default,
           beforeEnter: ifAuthenticated
         },
         {
           path: '/playlists',
           name: 'playlists',
-          component: require('@/components/Artists.vue').default,
+          component: require('@/components/views/Artists.vue').default,
           beforeEnter: ifAuthenticated
         },
         {
           path: '/songs',
           name: 'songs',
-          component: require('@/components/Artists.vue').default,
+          component: require('@/components/views/Artists.vue').default,
           beforeEnter: ifAuthenticated
         }
       ]
