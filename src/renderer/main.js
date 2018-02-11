@@ -25,6 +25,19 @@ Vue.use(Buefy)
 Vue.use(InfiniteScroll)
 Vue.component('single-layout', SingleLayout)
 Vue.component('sidebar-layout', SidebarLayout)
+Vue.filter('timecode', code => {
+  let negative = code < 0
+  let secNum = Math.abs(parseInt(code, 10))
+  let hours = Math.floor(secNum / 3600)
+  let minutes = Math.floor((secNum - hours * 3600) / 60)
+  let seconds = secNum - hours * 3600 - minutes * 60
+
+  if (seconds < 10) seconds = '0' + seconds
+  let value = `${minutes}:${seconds}`
+  if (hours > 0) value = `${hours}:${value}`
+  if (negative) value = `- ${value}`
+  return value
+})
 /* eslint-disable no-new */
 new Vue({
   components: { App },
