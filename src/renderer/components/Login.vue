@@ -47,7 +47,7 @@ export default {
         .dispatch('AUTH_REQUEST', { email, password })
         .then(() => {
           this.errors = {}
-          this.$router.push('/')
+          this.$router.push({ name: 'artists' })
         })
         .catch(({ response }) => {
           switch (response.status) {
@@ -55,11 +55,11 @@ export default {
               this.errors = response.data
               break
             case 401:
-              this.errors = {password: 'Invalid credentials'}
+              this.errors = { password: 'Invalid credentials' }
               break
 
             default:
-              this.errors = {email: 'An unknown error occurred'}
+              this.errors = { email: 'An unknown error occurred' }
               break
           }
         })
