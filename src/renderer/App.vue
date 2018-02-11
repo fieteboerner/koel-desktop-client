@@ -9,7 +9,10 @@
     name: 'koel-desktop-client'
   }
 </script>
+<style lang="scss">
+@import '../sass/settings';
 
-<style>
-  /* CSS */
+// Import Bulma and Buefy styles
+@import '~bulma';
+@import '~buefy/src/scss/buefy';
 </style>
