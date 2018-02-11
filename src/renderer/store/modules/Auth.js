@@ -30,13 +30,11 @@ const mutations = {
 const actions = {
   AUTH_REQUEST ({ commit, dispatch, state }, { email, password }) {
     return new Promise((resolve, reject) => {
-      // The Promise used for router redirect in login
-      // commit(AUTH_REQUEST)
       axios
         .post(state.url + '/api/me', { email, password })
         .then(resp => {
           commit('AUTH_SUCCESS', resp.data.token)
-          // dispatch('DATA_REQUEST')
+          dispatch('DATA_REQUEST')
           resolve(resp)
         })
         .catch(err => {
