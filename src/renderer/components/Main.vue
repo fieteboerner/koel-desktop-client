@@ -23,14 +23,17 @@
           <router-view></router-view>
         </div>
       <footer>
-        Footer
+        <site-footer></site-footer>
       </footer>
     </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 
+import SiteFooter from './SiteFooter.vue'
+
 export default {
+  components: { SiteFooter },
   computed: {
     ...mapGetters(['user'])
   },
