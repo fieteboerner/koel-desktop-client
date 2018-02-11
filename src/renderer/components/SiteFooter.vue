@@ -22,6 +22,7 @@
           <b-icon icon="repeat"></b-icon>
         </div>
       </div>
+      <seek-bar></seek-bar>
     </div>
     <div class="media-right special-control">
     </div>
@@ -29,21 +30,31 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
+import SeekBar from './SeekBar.vue'
 export default {
-  data () {
-    return {
-      player: null
+  components: { SeekBar },
+  computed: {
+    ...mapGetters('Player', ['current', 'playing']),
+    currentSong () {
+      return this.current
     }
   },
-  computed: {
-    currentSong () {
-      return null
+  methods: {
+    pause () {
+      this.$store.dispatch('Player/pause')
+    },
+    resume () {
+      this.$store.dispatch('Player/resume')
+    },
+    next () {
+      this.$store.dispatch('Player/next')
     }
   }
 }
 </script>
 <style lang="scss">
-@import "../../sass/settings";
+@import '../../sass/settings';
 
 .footer-root {
   flex: 1;
