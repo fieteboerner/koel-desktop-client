@@ -14,12 +14,12 @@
     <div class="controls-wrapper timeline">
       <div class="controls">
         <div class="buttons level">
-          <b-icon icon="shuffle"></b-icon>
+          <b-icon icon="shuffle" :class="{active: shuffle}" @click.native="toggleShuffle"></b-icon>
           <b-icon icon="skip-previous"></b-icon>
           <b-icon v-if="!playing" icon="play-circle-outline" size="is-large" @click.native="resume"></b-icon>
           <b-icon v-else icon="pause-circle-outline" size="is-large" @click.native="pause"></b-icon>
           <b-icon icon="skip-next" @click.native="next"></b-icon>
-          <b-icon icon="repeat"></b-icon>
+          <b-icon icon="repeat" :class="{active: repeat}" @click.native="toggleRepeat"></b-icon>
         </div>
       </div>
       <seek-bar></seek-bar>
@@ -35,7 +35,7 @@ import SeekBar from './SeekBar.vue'
 export default {
   components: { SeekBar },
   computed: {
-    ...mapGetters('Player', ['current', 'playing']),
+    ...mapGetters('Player', ['current', 'playing', 'repeat', 'shuffle']),
     currentSong () {
       return this.current
     }
@@ -49,6 +49,12 @@ export default {
     },
     next () {
       this.$store.dispatch('Player/next')
+    },
+    toggleRepeat () {
+      this.$store.commit('Player/PLAYER_REPEAT')
+    },
+    toggleShuffle () {
+      this.$store.commit('Player/PLAYER_SHUFFLE')
     }
   }
 }
@@ -79,6 +85,10 @@ export default {
   .buttons {
     margin-bottom: 0;
     width: 250px;
+
+    & .active {
+      color: $primary;
+    }
   }
 
   .buttons {

@@ -47,6 +47,14 @@ const mutations = {
   PLAYER_NEXT (state) {
     state.current = state.queue.shift()
   },
+  PLAYER_REPEAT (state) {
+    state.options.repeat = !state.options.repeat
+    state.options.shuffle = false
+  },
+  PLAYER_SHUFFLE (state) {
+    state.options.shuffle = !state.options.shuffle
+    state.options.repeat = false
+  },
   PLAYER_SET_QUEUE (state, songs) {
     state.queue = songs
   }
@@ -85,6 +93,8 @@ const getters = {
   current: state => state.current,
   currentTime: state => state.currentTime,
   duration: state => (state.current ? state.current.length : 0),
+  repeat: state => state.options.repeat,
+  shuffle: state => state.options.shuffle,
   playing: state => state.playing
 }
 
