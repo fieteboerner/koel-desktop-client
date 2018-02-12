@@ -18,6 +18,7 @@ export default new Router({
       component: require('@/components/Main.vue').default,
       beforeEnter: ifAuthenticated,
       children: [
+        { path: '', redirect: '/artists' },
         {
           path: '/albums',
           name: 'albums',

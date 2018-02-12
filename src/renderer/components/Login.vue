@@ -47,7 +47,7 @@ export default {
         .dispatch('AUTH_REQUEST', { email, password })
         .then(() => {
           this.errors = {}
-          this.$router.push({ name: 'artists' })
+          this.$router.push('/')
         })
         .catch(({ response }) => {
           switch (response.status) {
