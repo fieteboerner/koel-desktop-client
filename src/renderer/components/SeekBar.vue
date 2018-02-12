@@ -61,10 +61,6 @@ export default {
 .plyr__progress {
   display: inline-block;
 }
-.plyr__progress input[type='range'] {
-  /* top: 1.5px; */
-  /* height: 10px; */
-}
 
 .plyr__progress input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
