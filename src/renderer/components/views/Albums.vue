@@ -2,11 +2,17 @@
     <single-layout>
       <div v-infinite-scroll="infiniteHandler" infinite-scroll-disabled="busy" infinite-scroll-distance="100"
            class="cover-container">
-        <div v-for="album in infiniteAlbums" :key="album.id">
+        <template v-for="album in infiniteAlbums">
           <cover-tile :img="album.cover" :title="album.name" :subtitle="album.artist.name"
+            :class="{'is-selected': selected === album}"
             @cover="selected = selected === album ? null : album"
             @subtitle="$router.push({name: 'artists', params: {id: album.artist.id}})"></cover-tile>
-        </div>
+          <transition name="detail-toggle">
+            <div class="details" v-if="selected === album">
+              <album-card :album="album"></album-card>
+            </div>
+          </transition>
+        </template>
       </div>
     </single-layout>
 </template>
@@ -15,9 +21,11 @@ import InfiniteScroll from 'vue-infinite-scroll'
 import { mapGetters } from 'vuex'
 import { sortBy, take } from 'lodash'
 import CoverTile from '@/components/shared/CoverTile.vue'
+import AlbumCard from '@/components/shared/AlbumCard.vue'
 
 export default {
   components: {
+    AlbumCard,
     CoverTile,
     InfiniteScroll
   },
@@ -51,5 +59,41 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-gap: 1em;
+  grid-auto-flow: row dense;
+
+  & .card.is-selected {
+    box-shadow: 0 3px 5px;
+    &::after {
+      content: '';
+      position: absolute;
+      left: 42%;
+      top: calc(100% + 1em);
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 20px solid #f6f6f8;
+    }
+  }
+
+  & .details {
+    background-color: #f6f6f8;
+    grid-column: 1 / -1;
+    margin: 1em -1em 0;
+    padding: 1em;
+    overflow: hidden;
+  }
+}
+
+.detail-toggle-enter-active {
+  transition: height 6.75s;
+}
+.detail-toggle-enter-active {
+  height: auto;
+}
+.detail-toggle-enter,
+.detail-toggle-leave,
+.detail-toggle-leave-active {
+  height: 0;
 }
 </style>

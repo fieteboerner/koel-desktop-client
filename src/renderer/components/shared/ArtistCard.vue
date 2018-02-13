@@ -32,18 +32,7 @@
             </div>
           </div>
           <hr>
-          <div class="song-list">
-            <div v-for="(disc, index) in disksByAlbum(album)">
-              <div class="song-list-item disk-item" v-if="disksByAlbum(album).length > 1"><div class="track-name">DISC {{ disc[0].disc }}</div></div>
-              <div class="song-list-item" v-for="song in sortSongs(disc)" :class="{'is-selected': isSelected(song) }" @click="selectSong($event, song)">
-                <div class="track-number" @click="play(song)"><b-icon icon="play-circle-outline"></b-icon></div>
-                <div class="track-number">{{ song.track }}</div>
-                <div class="track-name">{{ song.title }}</div>
-                <div class="track-favorite"><i class="fa fa-heart-o"></i></div>
-                <div class="track-time">{{ song.length | timecode }}</div>
-              </div>
-            </div>
-          </div>
+          <album-song-list :album="album"></album-song-list>
         </div>
       </div>
     </div>
@@ -51,11 +40,13 @@
 <script>
 import { mapGetters } from 'vuex'
 import { includes, indexOf, last, sortBy } from 'lodash'
+import AlbumSongList from '@/components/shared/AlbumSongList.vue'
 
 export default {
   props: {
     artist: Object
   },
+  components: { AlbumSongList },
   data () {
     return {
       selected: []
@@ -81,18 +72,6 @@ export default {
         count += album.songs.length
       })
       return count
-    },
-    disksByAlbum (album) {
-      let discs = {}
-      album.songs.forEach(song => {
-        if (!discs[song.disc]) discs[song.disc] = []
-        discs[song.disc].push(song)
-      })
-
-      return sortBy(discs, ['song.disc'])
-    },
-    sortSongs (songs) {
-      return sortBy(songs, ['disc', 'track'])
     },
     play (song) {
       let found = false
@@ -153,37 +132,4 @@ export default {
   overflow: hidden;
 }
 
-.song-list {
-  width: 100%;
-}
-
-.song-list-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #cccccc;
-  padding: 7px 0;
-}
-.song-list-item.is-selected {
-  background-color: #2586fa;
-  color: white;
-}
-
-.song-list-item .track-number {
-  width: 2.5rem;
-}
-.song-list-item .track-name {
-  flex: 1;
-  color: #010101;
-  font-weight: 500;
-}
-
-.song-list-item .track-favorite {
-  width: 2rem;
-}
-
-.song-list-item .track-time {
-  text-align: right;
-  width: 3rem;
-}
 </style>
