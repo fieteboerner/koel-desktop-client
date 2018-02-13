@@ -32,36 +32,36 @@
             </div>
           </div>
           <hr>
-          <album-song-list :album="album"></album-song-list>
+          <album-song-list :songs="album.songs" :selected="selected" @select="selectItem" @play="play"></album-song-list>
         </div>
       </div>
     </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { includes, indexOf, last, sortBy } from 'lodash'
+import { sortBy } from 'lodash'
 import AlbumSongList from '@/components/shared/AlbumSongList.vue'
+import listSelectMixin from '@/mixins/ListSelect'
 
 export default {
   props: {
     artist: Object
   },
   components: { AlbumSongList },
-  data () {
-    return {
-      selected: []
-    }
-  },
+  mixins: [ listSelectMixin ],
   computed: {
     ...mapGetters(['albums']),
     sortedAlbums () {
       return sortBy(this.artist.albums, ['year', 'name'])
     },
+    items () {
+      return this.songList
+    },
     songList () {
       let songs = []
-      this.sortedAlbums.forEach(album =>
+      this.sortedAlbums.forEach(album => {
         this.sortSongs(album.songs).forEach(song => songs.push(song))
-      )
+      })
       return songs
     }
   },
@@ -83,25 +83,8 @@ export default {
       })
       this.$store.dispatch('Player/play', songs)
     },
-    selectSong (event, song) {
-      console.log(event)
-      if (event.ctrlKey) {
-        this.selected.push(song)
-      } else if (this.selected.length && event.shiftKey) {
-        let indexes = sortBy([
-          indexOf(this.songList, last(this.selected)),
-          indexOf(this.songList, song)
-        ])
-
-        for (let i = indexes[0]; i <= indexes[1]; i++) {
-          this.selected.push(this.songList[i])
-        }
-      } else {
-        this.selected = [song]
-      }
-    },
-    isSelected (song) {
-      return includes(this.selected, song)
+    sortSongs (songs) {
+      return sortBy(songs, ['disc', 'track'])
     },
     handleEnter () {
       console.log('enter')
@@ -131,5 +114,4 @@ export default {
 .media-content {
   overflow: hidden;
 }
-
 </style>
