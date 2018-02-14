@@ -86,6 +86,9 @@ const actions = {
     const songs = state.queue
     dispatch('play', songs)
     if (!state.playing) dispatch('resume')
+  },
+  toggle ({ dispatch, getters }) {
+    dispatch(getters.playing ? 'pause' : 'resume')
   }
 }
 

@@ -1,5 +1,6 @@
 <template>
-    <div class="main-wrapper">
+    <div class="main-wrapper"
+      @keypress.space.prevent="togglePlayback">
       <nav class="">
         <div class="navbar">
           <div class="navbar-menu">
@@ -29,11 +30,29 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import { ipcRenderer } from 'electron'
 
 import SiteFooter from './SiteFooter.vue'
 
 export default {
   components: { SiteFooter },
+  mounted () {
+    ipcRenderer.on('media-key', (event, key) => {
+      switch (key) {
+        case 'playpause':
+          this.togglePlayback()
+          break
+        case 'next':
+          this.$store.dispatch('Player/next')
+          break
+        case 'previous':
+          break
+      }
+    })
+  },
+  destroyed () {
+    ipcRenderer.removeAllListeners('media-key')
+  },
   computed: {
     ...mapGetters(['user'])
   },
@@ -42,6 +61,9 @@ export default {
       this.$store.dispatch('AUTH_LOGOUT').then(() => {
         this.$router.push('/login')
       })
+    },
+    togglePlayback () {
+      this.$store.dispatch('Player/toggle')
     }
   }
 }
