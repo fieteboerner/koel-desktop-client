@@ -20,7 +20,7 @@ export default new Router({
       children: [
         { path: '', redirect: '/artists' },
         {
-          path: '/albums',
+          path: '/albums/:id?',
           name: 'albums',
           component: require('@/components/views/Albums.vue').default,
           beforeEnter: ifAuthenticated

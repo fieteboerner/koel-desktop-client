@@ -1,11 +1,11 @@
 <template>
     <single-layout>
       <div v-infinite-scroll="infiniteHandler" infinite-scroll-disabled="busy" infinite-scroll-distance="100"
-           class="cover-container" @click.self="selected = null" tabindex="-1" @keyup.esc="selected = null">
+           class="cover-container" @click.self="deselect" tabindex="-1" @keyup.esc="deselect">
         <template v-for="album in infiniteAlbums">
           <cover-tile :img="album.cover" :title="album.name" :subtitle="album.artist.name"
             :class="{'is-selected': selected === album}" class="album-item"
-            @cover="selectAlbum(album)" :id="`album-${album.id}`"
+            @cover="selectAlbum(album)"
             @subtitle="$router.push({name: 'artists', params: {id: album.artist.id}})"></cover-tile>
           <transition name="detail-toggle">
             <div class="details" v-if="selected === album">
@@ -31,18 +31,21 @@ export default {
   },
   data () {
     return {
-      selected: null,
+      selected_item: null,
       busy: false,
       items: 0
     }
   },
   computed: {
-    ...mapGetters(['albums']),
+    ...mapGetters(['albums', 'album']),
     sortedAlbums () {
       return sortBy(this.albums, ['artist.name', 'name'])
     },
     infiniteAlbums () {
       return take(this.sortedAlbums, this.items)
+    },
+    selected () {
+      return this.selected_item || this.album(this.$route.params.id)
     }
   },
   methods: {
@@ -52,10 +55,19 @@ export default {
       this.busy = false
     },
     selectAlbum (album) {
-      this.selected = this.selected === album ? null : album
-      if (this.selected) {
-        this.$scrollTo(`#album-${album.id}`, 500, {container: '.main-content'})
+      if (this.selected !== album) {
+        this.selected_item = album
+        this.$router.push({ name: 'albums', params: { id: album.id } })
+        setTimeout(() => {
+          this.$scrollTo('.details', 500, {container: '.main-content', offset: -150})
+        }, 175)
+      } else {
+        this.deselect()
       }
+    },
+    deselect () {
+      this.selected_item = null
+      this.$router.push({ name: 'albums' })
     }
   }
 }
