@@ -1,5 +1,5 @@
 <template>
-  <div class="columns card-root">
+  <div class="columns card-root" tabindex="-1" @keypress.enter="play(selected[0])">
     <div class="column is-4 cover-column">
       <cover-tile :img="album.cover"></cover-tile>
     </div>

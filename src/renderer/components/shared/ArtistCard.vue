@@ -1,6 +1,6 @@
 <template>
-    <div class="artist-card-root"
-    @keydown.enter.prevent.stop="handleEnter">
+    <div class="artist-card-root" tabindex="-1"
+      @keypress.enter="play(selected[0])">
       <div>
         <p class="title is-3" style="margin-bottom: 2.25rem;">{{ artist.name }}</p>
         <p class="subtitle is-5">
@@ -85,9 +85,6 @@ export default {
     },
     sortSongs (songs) {
       return sortBy(songs, ['disc', 'track'])
-    },
-    handleEnter () {
-      console.log('enter')
     }
   }
 }
