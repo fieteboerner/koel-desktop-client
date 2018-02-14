@@ -5,7 +5,7 @@
         <template v-for="album in infiniteAlbums">
           <cover-tile :img="album.cover" :title="album.name" :subtitle="album.artist.name"
             :class="{'is-selected': selected === album}" class="album-item"
-            @cover="selected = selected === album ? null : album"
+            @cover="selectAlbum(album)" :id="`album-${album.id}`"
             @subtitle="$router.push({name: 'artists', params: {id: album.artist.id}})"></cover-tile>
           <transition name="detail-toggle">
             <div class="details" v-if="selected === album">
@@ -50,6 +50,14 @@ export default {
       this.busy = true
       this.items += 24
       this.busy = false
+    },
+    selectAlbum (album) {
+      this.selected = this.selected === album ? null : album
+      console.log('scrollto')
+
+      if (this.selected) {
+        this.$scrollTo(`#album-${album.id}`, 500, {container: '.main-content'})
+      }
     }
   }
 }

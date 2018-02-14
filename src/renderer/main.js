@@ -2,6 +2,7 @@ import Vue from 'vue'
 import axios from 'axios'
 import Buefy from 'buefy'
 import InfiniteScroll from 'vue-infinite-scroll'
+import VueScrollto from 'vue-scrollto'
 import 'mdi/css/materialdesignicons.css'
 
 import App from './App'
@@ -23,6 +24,7 @@ Vue.config.productionTip = false
 
 Vue.use(Buefy)
 Vue.use(InfiniteScroll)
+Vue.use(VueScrollto)
 Vue.component('single-layout', SingleLayout)
 Vue.component('sidebar-layout', SidebarLayout)
 Vue.filter('timecode', code => {
