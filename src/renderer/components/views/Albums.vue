@@ -7,7 +7,7 @@
             :class="{'is-selected': selected === album}" class="album-item"
             @cover="selectAlbum(album)"
             @subtitle="$router.push({name: 'artists', params: {id: album.artist.id}})"></cover-tile>
-          <transition name="detail-toggle">
+          <transition name="detail-toggle" @after-enter="scrollToSelected">
             <div class="details" v-if="selected === album">
               <album-card :album="album"></album-card>
             </div>
@@ -58,9 +58,6 @@ export default {
       if (this.selected !== album) {
         this.selected_item = album
         this.$router.push({ name: 'albums', params: { id: album.id } })
-        setTimeout(() => {
-          this.$scrollTo('.details', 500, {container: '.main-content', offset: -150})
-        }, 175)
       } else {
         this.deselect()
       }
@@ -68,6 +65,9 @@ export default {
     deselect () {
       this.selected_item = null
       this.$router.push({ name: 'albums' })
+    },
+    scrollToSelected () {
+      this.$scrollTo('.details', 500, {container: '.main-content', offset: -150})
     }
   }
 }
@@ -101,7 +101,7 @@ export default {
 }
 
 .detail-toggle-enter-active {
-  transition: height 6.75s;
+  transition: height 0.3s;
 }
 .detail-toggle-enter-active {
   height: auto;
