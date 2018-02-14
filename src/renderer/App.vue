@@ -30,4 +30,8 @@ export default {
 @import '~bulma';
 @import '~buefy/src/scss/buefy';
 @import '../sass/app';
+
+#app {
+  user-select: none;
+}
 </style>
