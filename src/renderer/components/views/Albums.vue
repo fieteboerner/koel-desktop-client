@@ -53,8 +53,6 @@ export default {
     },
     selectAlbum (album) {
       this.selected = this.selected === album ? null : album
-      console.log('scrollto')
-
       if (this.selected) {
         this.$scrollTo(`#album-${album.id}`, 500, {container: '.main-content'})
       }
