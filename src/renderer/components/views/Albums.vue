@@ -1,10 +1,10 @@
 <template>
     <single-layout>
       <div v-infinite-scroll="infiniteHandler" infinite-scroll-disabled="busy" infinite-scroll-distance="100"
-           class="cover-container">
+           class="cover-container" @click.self="selected = null" tabindex="-1" @keyup.esc="selected = null">
         <template v-for="album in infiniteAlbums">
           <cover-tile :img="album.cover" :title="album.name" :subtitle="album.artist.name"
-            :class="{'is-selected': selected === album}"
+            :class="{'is-selected': selected === album}" class="album-item"
             @cover="selected = selected === album ? null : album"
             @subtitle="$router.push({name: 'artists', params: {id: album.artist.id}})"></cover-tile>
           <transition name="detail-toggle">
@@ -61,19 +61,16 @@ export default {
   grid-gap: 1em;
   grid-auto-flow: row dense;
 
-  & .card.is-selected {
-    box-shadow: 0 3px 5px;
-    &::after {
-      content: '';
-      position: absolute;
-      left: 42%;
-      top: calc(100% + 1em);
-      width: 0;
-      height: 0;
-      border-left: 20px solid transparent;
-      border-right: 20px solid transparent;
-      border-bottom: 20px solid #f6f6f8;
-    }
+  & .album-item.is-selected::after {
+    content: '';
+    position: absolute;
+    left: 42%;
+    top: calc(100% + 1em);
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 20px solid #f6f6f8;
   }
 
   & .details {

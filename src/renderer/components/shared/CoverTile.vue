@@ -21,6 +21,10 @@ export default {
 }
 </script>
 <style scoped>
+.is-selected {
+    box-shadow: 0 3px 5px;
+}
+
 .title:hover, .subtitle:hover {
   cursor: pointer;
   text-decoration: underline;
