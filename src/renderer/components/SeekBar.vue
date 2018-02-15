@@ -14,6 +14,9 @@ export default {
   mounted () {
     this.$store.dispatch('Player/init', this.$refs.audio)
   },
+  destroyed () {
+    this.$store.dispatch('Player/destroy')
+  },
   data () {
     return {
       showTimeLeft: false

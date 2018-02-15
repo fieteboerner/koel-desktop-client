@@ -27,7 +27,14 @@ const mutations = {
 
     state.initialized = true
   },
-  PLAYER_DESTROY (state) {},
+  PLAYER_DESTROY (state) {
+    let audioCopy = state.audioElement.cloneNode(true)
+    state.player.destroy()
+    state.audioElement.parentNode.replaceChild(audioCopy, state.audioElement)
+    state.audioElement = null
+
+    state.initialized = false
+  },
   PLAYER_UPDATE_CURRENT_TIME (state, currentTime) {
     state.currentTime = currentTime
   },
@@ -68,6 +75,11 @@ const actions = {
       commit('PLAYER_UPDATE_CURRENT_TIME', target.currentTime)
     )
     audioElement.addEventListener('ended', ({ target }) => dispatch('next'))
+  },
+  destroy ({ commit, state }) {
+    if (!state.initialized) return
+
+    commit('PLAYER_DESTROY')
   },
   play ({ commit, dispatch, rootGetters }, songs) {
     const song = first(songs)
