@@ -3,11 +3,14 @@
   <div v-for="(disc, index) in discs">
     <div class="song-list-item disk-item" v-if="discs.length > 1"><div class="track-name">DISC {{ disc[0].disc }}</div></div>
     <div class="song-list-item" v-for="song in sortSongs(disc)" :class="{'is-selected': isSelected(song) }"
-      @click="$emit('select', $event, song)" @dblclick="$emit('play', song)">
+      @click.right="$emit('context', $event, song)" @click="$emit('select', $event, song)" @dblclick="$emit('play', song)">
       <div class="track-number" @click="$emit('play', song)"><b-icon icon="play-circle-outline"></b-icon></div>
       <div class="track-number">{{ song.track }}</div>
       <div class="track-name">{{ song.title }}</div>
       <div class="track-favorite"><i class="fa fa-heart-o"></i></div>
+      <div class="track-options">
+        <a @click.stop="$emit('context', $event, song)"><b-icon icon="dots-horizontal"></b-icon></a>
+      </div>
       <div class="track-time">{{ song.length | timecode }}</div>
     </div>
   </div>
@@ -52,7 +55,7 @@ export default {
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #cccccc;
-    padding: 7px 0;
+    padding: 7px;
   }
   & .song-list-item.is-selected {
     background-color: #2586fa;

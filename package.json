@@ -59,6 +59,7 @@
     "mdi": "^2.1.19",
     "plyr": "2",
     "vue": "^2.3.3",
+    "vue-context-menu": "^2.0.6",
     "vue-electron": "^1.0.6",
     "vue-infinite-scroll": "^2.0.2",
     "vue-router": "^2.5.3",
