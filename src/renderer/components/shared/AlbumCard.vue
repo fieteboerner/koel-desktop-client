@@ -16,7 +16,7 @@
   </div>
 </template>
 <script>
-import { includes, sortBy } from 'lodash'
+import { sortBy } from 'lodash'
 import CoverTile from '@/components/shared/CoverTile.vue'
 import ContextMenu from '@/components/shared/ContextMenu.vue'
 import AlbumSongList from '@/components/shared/AlbumSongList.vue'
@@ -45,7 +45,7 @@ export default {
       this.$store.dispatch('Player/play', songs)
     },
     context (event, song) {
-      if (!includes(this.selected, song)) {
+      if (!this.isSelected(song)) {
         this.selected = [song]
       }
       this.$refs.ctx.open(event)
