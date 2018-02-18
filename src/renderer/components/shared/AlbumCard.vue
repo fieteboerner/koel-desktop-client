@@ -27,7 +27,7 @@ export default {
     album: Object
   },
   components: { AlbumSongList, ContextMenu, CoverTile },
-  mixins: [ listSelectMixin ],
+  mixins: [listSelectMixin],
   computed: {
     items () {
       return sortBy(this.album.songs, ['disc', 'track'])
@@ -35,14 +35,8 @@ export default {
   },
   methods: {
     play (song) {
-      let found = false
-      const songs = this.items.filter(s => {
-        if (found) return true
-        if (s !== song) return false
-        found = true
-        return true
-      })
-      this.$store.dispatch('Player/play', songs)
+      this.$store.dispatch('Queue/set', { songlist: this.items, toPlay: song })
+      this.$store.dispatch('Player/play')
     },
     context (event, song) {
       if (!this.isSelected(song)) {

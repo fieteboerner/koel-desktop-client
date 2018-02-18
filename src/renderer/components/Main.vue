@@ -43,9 +43,10 @@ export default {
           this.togglePlayback()
           break
         case 'next':
-          this.$store.dispatch('Player/next')
+          this.$store.dispatch('Player/skip')
           break
         case 'previous':
+          this.$store.dispatch('Player/back')
           break
       }
     })

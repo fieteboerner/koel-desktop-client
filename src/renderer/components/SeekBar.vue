@@ -23,7 +23,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('Player', ['current', 'duration', 'currentTime']),
+    ...mapGetters('Player', ['current', 'currentTime']),
+    duration () {
+      if (!this.current) return 0
+      return this.current.length
+    },
     timeLeft () {
       return -1 * (this.duration - this.currentTime)
     }

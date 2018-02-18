@@ -1,5 +1,5 @@
 <template>
-  <div class="media footer-root">
+  <div class="media footer-root" tabindex="-1">
     <div class="media-left current-song">
       <div v-if="currentSong" class="media">
         <figure class="media-left image is-48x48">
@@ -15,7 +15,7 @@
       <div class="controls">
         <div class="buttons level">
           <b-icon icon="shuffle" :class="{active: shuffle}" @click.native="toggleShuffle"></b-icon>
-          <b-icon icon="skip-previous"></b-icon>
+          <b-icon icon="skip-previous" @click.native="previous"></b-icon>
           <b-icon v-if="!playing" icon="play-circle-outline" size="is-large" @click.native="resume"></b-icon>
           <b-icon v-else icon="pause-circle-outline" size="is-large" @click.native="pause"></b-icon>
           <b-icon icon="skip-next" @click.native="next"></b-icon>
@@ -48,7 +48,10 @@ export default {
       this.$store.dispatch('Player/resume')
     },
     next () {
-      this.$store.dispatch('Player/next')
+      this.$store.dispatch('Player/skip')
+    },
+    previous () {
+      this.$store.dispatch('Player/back')
     },
     toggleRepeat () {
       this.$store.commit('Player/PLAYER_REPEAT')

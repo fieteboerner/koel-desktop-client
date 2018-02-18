@@ -2,7 +2,7 @@
 <div class="album-song-list">
   <div v-for="(disc, index) in discs">
     <div class="song-list-item disk-item" v-if="discs.length > 1"><div class="track-name">DISC {{ disc[0].disc }}</div></div>
-    <div class="song-list-item" v-for="song in sortSongs(disc)" :class="{'is-selected': isSelected(song) }"
+    <div class="song-list-item" v-for="song in sortSongs(disc)" :class="{'is-selected': isSelected(song), 'is-current': current === song}"
       @click.right="$emit('context', $event, song)" @click="$emit('select', $event, song)" @dblclick="$emit('play', song)">
       <div class="track-number" @click="$emit('play', song)"><b-icon icon="play-circle-outline"></b-icon></div>
       <div class="track-number">{{ song.track }}</div>
@@ -18,12 +18,14 @@
 </template>
 <script>
 import { includes, sortBy } from 'lodash'
+import { mapGetters } from 'vuex'
 export default {
   props: {
     songs: Array,
     selected: Array
   },
   computed: {
+    ...mapGetters('Player', ['current']),
     discs () {
       let discs = {}
       this.songs.forEach(song => {
@@ -45,6 +47,7 @@ export default {
 }
 </script>
 <style lang="scss">
+@import "../../../sass/settings";
 .album-song-list {
   width: 100%;
   cursor: default;
@@ -63,6 +66,13 @@ export default {
 
     & .track-name {
       color: white;
+    }
+  }
+
+  & .song-list-item.is-current {
+    color: $primary;
+    & .track-name {
+      color: $primary;
     }
   }
 

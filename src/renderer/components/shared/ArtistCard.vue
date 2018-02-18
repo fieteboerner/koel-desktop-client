@@ -74,14 +74,8 @@ export default {
       return count
     },
     play (song) {
-      let found = false
-      const songs = this.songList.filter(s => {
-        if (found) return true
-        if (s !== song) return false
-        found = true
-        return true
-      })
-      this.$store.dispatch('Player/play', songs)
+      this.$store.dispatch('Queue/set', { songlist: this.items, toPlay: song })
+      this.$store.dispatch('Player/play')
     },
     sortSongs (songs) {
       return sortBy(songs, ['disc', 'track'])
