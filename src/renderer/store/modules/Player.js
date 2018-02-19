@@ -37,6 +37,8 @@ const mutations = {
     state.currentTime = currentTime
   },
   PLAYER_PLAY (state, { song, url }) {
+    console.log(song, url)
+
     state.player.getMedia().src = url
   },
   PLAYER_PAUSE (state) {
@@ -95,7 +97,11 @@ const actions = {
     if (!rootGetters['Queue/currentSong']) return
     commit('PLAYER_RESTART')
   },
-  resume ({ commit }) {
+  resume ({ commit, dispatch, getters }) {
+    if (!getters.current) {
+      dispatch('skip')
+      return
+    }
     commit('PLAYER_RESUME')
   },
   skip ({ dispatch, rootGetters }) {
