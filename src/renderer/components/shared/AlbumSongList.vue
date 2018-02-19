@@ -4,12 +4,21 @@
     <div class="song-list-item disk-item" v-if="discs.length > 1"><div class="track-name">DISC {{ disc[0].disc }}</div></div>
     <div class="song-list-item" v-for="song in sortSongs(disc)" :class="{'is-selected': isSelected(song), 'is-current': current === song}"
       @click.right="$emit('context', $event, song)" @click="$emit('select', $event, song)" @dblclick="$emit('play', song)">
-      <div class="track-number" @click="$emit('play', song)"><b-icon icon="play-circle-outline"></b-icon></div>
-      <div class="track-number">{{ song.track }}</div>
+      <div class="track-number">
+        <div class="show-on-hover">
+          <b-icon v-if="current === song && playing" icon="pause-circle-outline" @click.native="pause"></b-icon>
+          <b-icon v-else-if="current === song && !playing" icon="play-circle-outline" @click.native="resume"></b-icon>
+          <b-icon v-else icon="play-circle-outline" @click.native="$emit('play', song)"></b-icon>
+        </div>
+        <div class="hide-on-hover">
+          <b-icon v-if="current === song && playing" icon="volume-high"></b-icon>
+          <b-icon v-else-if="current === song && !playing" icon="volume-low"></b-icon>
+          <span v-else>{{ song.track }}</span>
+        </div>
+        </div>
       <div class="track-name">{{ song.title }}</div>
-      <div class="track-favorite"><i class="fa fa-heart-o"></i></div>
-      <div class="track-options">
-        <a @click.stop="$emit('context', $event, song)"><b-icon icon="dots-horizontal"></b-icon></a>
+      <div class="track-options show-on-hover">
+        <b-icon icon="dots-horizontal" @click.native="$emit('context', $event, song)" title="more"></b-icon>
       </div>
       <div class="track-time">{{ song.length | timecode }}</div>
     </div>
@@ -18,14 +27,14 @@
 </template>
 <script>
 import { includes, sortBy } from 'lodash'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   props: {
     songs: Array,
     selected: Array
   },
   computed: {
-    ...mapGetters('Player', ['current']),
+    ...mapGetters('Player', ['current', 'playing']),
     discs () {
       let discs = {}
       this.songs.forEach(song => {
@@ -37,6 +46,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('Player', ['resume', 'pause']),
     sortSongs (songs) {
       return sortBy(songs, ['track'])
     },
@@ -47,7 +57,7 @@ export default {
 }
 </script>
 <style lang="scss">
-@import "../../../sass/settings";
+@import '../../../sass/settings';
 .album-song-list {
   width: 100%;
   cursor: default;
@@ -59,13 +69,29 @@ export default {
     justify-content: space-between;
     border-bottom: 1px solid #cccccc;
     padding: 7px;
+    line-height: 1.75em;
+    overflow: hidden;
+
+    .show-on-hover {
+      display: none;
+    }
+
+    &:hover {
+      & .show-on-hover {
+        display: block;
+      }
+      & .hide-on-hover {
+        display: none;
+      }
+    }
   }
+
   & .song-list-item.is-selected {
     background-color: $cyan;
-    color: white;
+    color: $white !important;
 
     & .track-name {
-      color: white;
+      color: $white !important;
     }
   }
 
@@ -78,6 +104,7 @@ export default {
 
   & .song-list-item .track-number {
     width: 2.5rem;
+    text-align: center;
   }
   & .song-list-item .track-name {
     flex: 1;
