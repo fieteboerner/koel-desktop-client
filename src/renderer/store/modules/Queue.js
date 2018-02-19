@@ -79,9 +79,7 @@ const actions = {
   },
   back ({ commit, dispatch, getters }) {
     if (!getters.previous) return
-    let current = getters.currentPlaybackItem
     commit('QUEUE_SET_CURRENT', getters.previous)
-    if (current.prio) commit('QUEUE_REMOVE_FROM_QUEUE', current)
 
     dispatch('start')
   },
