@@ -62,7 +62,7 @@ const actions = {
 const getters = {
   isAuthenticated: state => !!state.token,
   user: state => state.user,
-  url: state => state.url,
+  url: state => state.url.replace(/\/+$/, ''),
   token: state => state.token
 }
 

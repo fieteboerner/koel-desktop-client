@@ -5,7 +5,7 @@
         <a class="dropdown-item" @click="$emit('play')">Play</a>
         <a class="dropdown-item" @click="queue">Add to queue</a>
         <hr class="dropdown-divider">
-        <template v-if="items.length === 1">
+        <template v-if="subCtx === 'song' && items.length === 1">
           <a v-if="mainCtx !== 'artist'" @click="goToArtist" class="dropdown-item">Go to artist</a>
           <a v-if="mainCtx !== 'album'"  @click="goToAlbum" class="dropdown-item">Go to album</a>
           <hr class="dropdown-divider">
@@ -13,13 +13,14 @@
         <a class="dropdown-item">Add to playlist</a>
         <a v-if="mainCtx === 'playlist' && subCtx === 'song'" class="dropdown-item">Remove from this playlist</a>
         <hr class="dropdown-divider">
-        <a class="dropdown-item">Add to queue</a>    <a class="dropdown-item">Save to disk</a>
-        <a class="dropdown-item">Copy share url</a>
+        <a class="dropdown-item">Save to disk</a>
+        <a v-if="subCtx === 'song' && items.length === 1" class="dropdown-item" @click="copyShare">Copy sharable url</a>
       </ul>
 		</div>
 	</div>
 </template>
 <script>
+import { clipboard } from 'electron'
 import ContextMenu from 'vue-context-menu/src/ctx-menu'
 export default {
   extends: ContextMenu,
@@ -49,6 +50,9 @@ export default {
       if (this.subCtx === 'song') {
         this.$store.dispatch('Queue/queue', this.items)
       }
+    },
+    copyShare () {
+      clipboard.writeText(this.$store.getters.sharableUrl(this.items[0]))
     }
   }
 }

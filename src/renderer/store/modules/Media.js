@@ -59,7 +59,8 @@ const getters = {
   artist: state => id => first(state.artists.filter(artist => artist.id === parseInt(id))),
   artists: state => state.artists,
   songs: state => state.songs,
-  songurl: (state, getters, rootState, rootGetters) => song => `${rootGetters.url}/api/${song.id}/play?jwt-token=${rootGetters.token}`
+  songurl: (state, getters, rootState, rootGetters) => song => `${rootGetters.url}/api/${song.id}/play?jwt-token=${rootGetters.token}`,
+  sharableUrl: (state, getters, rootState, rootGetters) => song => `${rootGetters.url}#!/song/${song.id}`
 }
 
 export default {
