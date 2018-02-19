@@ -36,6 +36,7 @@ export default {
         ])
 
         for (let i = indexes[0]; i <= indexes[1]; i++) {
+          if (includes(this.selected, this.items[i])) continue
           this.selected.push(this.items[i])
         }
       // set item if no button is hold
