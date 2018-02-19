@@ -3,7 +3,7 @@
 		<div style="background-color:transparent" class="dropdown-menu">
       <ul class="dropdown-content">
         <a class="dropdown-item" @click="$emit('play')">Play</a>
-        <a class="dropdown-item" @click="$emit('to_queue')">Add to queue</a>
+        <a class="dropdown-item" @click="queue">Add to queue</a>
         <hr class="dropdown-divider">
         <template v-if="items.length === 1">
           <a v-if="mainCtx !== 'artist'" @click="goToArtist" class="dropdown-item">Go to artist</a>
@@ -44,6 +44,11 @@ export default {
     },
     goToAlbum () {
       this.$router.push({name: 'albums', params: {id: this.firstItem.album.id}})
+    },
+    queue () {
+      if (this.subCtx === 'song') {
+        this.$store.dispatch('Queue/queue', this.items)
+      }
     }
   }
 }

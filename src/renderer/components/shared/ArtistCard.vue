@@ -1,7 +1,7 @@
 <template>
     <div class="artist-card-root" tabindex="-1"
       @keypress.enter="play(selected[0])">
-      <context-menu ref="ctx" context="artist:song" @play="play(selected[0])" :items="selected"></context-menu>
+      <context-menu ref="ctx" context="artist:song" @play="play(selected[0])" :items="sortedSelected"></context-menu>
       <div>
         <p class="title is-3" style="margin-bottom: 2.25rem;">{{ artist.name }}</p>
         <p class="subtitle is-5">
