@@ -5,9 +5,11 @@
         <a class="dropdown-item" @click="$emit('play')">Play</a>
         <a class="dropdown-item" @click="$emit('to_queue')">Add to queue</a>
         <hr class="dropdown-divider">
-        <a v-if="mainCtx !== 'artist'" class="dropdown-item">Go to artist</a>
-        <a v-if="mainCtx !== 'album'" class="dropdown-item">Go to album</a>
-        <hr class="dropdown-divider">
+        <template v-if="items.length === 1">
+          <a v-if="mainCtx !== 'artist'" @click="goToArtist" class="dropdown-item">Go to artist</a>
+          <a v-if="mainCtx !== 'album'"  @click="goToAlbum" class="dropdown-item">Go to album</a>
+          <hr class="dropdown-divider">
+        </template>
         <a class="dropdown-item">Add to playlist</a>
         <a v-if="mainCtx === 'playlist' && subCtx === 'song'" class="dropdown-item">Remove from this playlist</a>
         <hr class="dropdown-divider">
@@ -22,7 +24,8 @@ import ContextMenu from 'vue-context-menu/src/ctx-menu'
 export default {
   extends: ContextMenu,
   props: {
-    context: String
+    context: String,
+    items: Array
   },
   computed: {
     mainCtx () {
@@ -30,6 +33,17 @@ export default {
     },
     subCtx () {
       return this.context.split(':')[1]
+    },
+    firstItem () {
+      return this.items[0]
+    }
+  },
+  methods: {
+    goToArtist () {
+      this.$router.push({name: 'artists', params: {id: this.firstItem.artist.id}})
+    },
+    goToAlbum () {
+      this.$router.push({name: 'albums', params: {id: this.firstItem.album.id}})
     }
   }
 }
