@@ -37,8 +37,6 @@ const mutations = {
     state.currentTime = currentTime
   },
   PLAYER_PLAY (state, { song, url }) {
-    console.log(song, url)
-
     state.player.getMedia().src = url
   },
   PLAYER_PAUSE (state) {
@@ -120,7 +118,7 @@ const actions = {
   },
   ended ({ commit, dispatch, state }, song) {
     dispatch('Queue/ended', null, { root: true })
-    state.options.repeat ? dispatch('restart') : dispatch('next')
+    state.options.repeat ? dispatch('restart') : dispatch('skip')
   }
 }
 
