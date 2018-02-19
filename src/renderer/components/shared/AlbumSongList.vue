@@ -61,7 +61,7 @@ export default {
     padding: 7px;
   }
   & .song-list-item.is-selected {
-    background-color: #2586fa;
+    background-color: $cyan;
     color: white;
 
     & .track-name {

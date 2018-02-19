@@ -60,6 +60,8 @@ export default {
 }
 </script>
 <style lang="scss">
+@import "../../../sass/settings";
+
 .sidebar-list-item {
   display: flex;
   align-items: center;
@@ -69,7 +71,7 @@ export default {
 }
 
 .sidebar-list-item.is-selected {
-  background-color: #2586fa;
+  background-color: $cyan;
 }
 
 .sidebar-list-item.is-selected .item-text {
