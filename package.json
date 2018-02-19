@@ -50,7 +50,7 @@
     },
     "linux": {
       "icon": "build/icons",
-      "category": "Music"
+      "category": "Audio"
     }
   },
   "dependencies": {
