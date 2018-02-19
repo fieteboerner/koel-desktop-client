@@ -110,7 +110,7 @@ const actions = {
     dispatch('play')
   },
   back ({ state, dispatch, rootGetters }) {
-    // todo check playback for restart or back
+    if (state.currentTime > 5) return dispatch('restart')
     if (!rootGetters['Queue/previous']) return dispatch('pause')
     dispatch('Queue/back', null, { root: true })
     dispatch('play')
