@@ -1,6 +1,7 @@
 <template>
     <div class="artist-card-root" tabindex="-1"
       @keypress.enter="play(selected[0])">
+      <context-menu ref="ctx" context="artist:song" @play="play(selected[0])" :items="selected"></context-menu>
       <div>
         <p class="title is-3" style="margin-bottom: 2.25rem;">{{ artist.name }}</p>
         <p class="subtitle is-5">
@@ -32,7 +33,8 @@
             </div>
           </div>
           <hr>
-          <album-song-list :songs="album.songs" :selected="selected" @select="selectItem" @play="play"></album-song-list>
+          <album-song-list :songs="album.songs" :selected="selected" @select="selectItem" @play="play"
+            @context="context"></album-song-list>
         </div>
       </div>
     </div>
@@ -41,13 +43,14 @@
 import { mapGetters } from 'vuex'
 import { sortBy } from 'lodash'
 import AlbumSongList from '@/components/shared/AlbumSongList.vue'
+import ContextMenu from '@/components/shared/ContextMenu.vue'
 import listSelectMixin from '@/mixins/ListSelect'
 
 export default {
   props: {
     artist: Object
   },
-  components: { AlbumSongList },
+  components: { AlbumSongList, ContextMenu },
   mixins: [ listSelectMixin ],
   computed: {
     ...mapGetters(['albums']),
@@ -66,6 +69,12 @@ export default {
     }
   },
   methods: {
+    context (event, song) {
+      if (!this.isSelected(song)) {
+        this.selected = [song]
+      }
+      this.$refs.ctx.open(event)
+    },
     songCount (albums) {
       let count = 0
       albums.forEach(album => {

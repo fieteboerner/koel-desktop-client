@@ -1,6 +1,6 @@
 <template>
   <div>
-    <context-menu ref="ctx" context="album:song" @play="play(selected[0])"></context-menu>
+    <context-menu ref="ctx" context="album:song" @play="play(selected[0])" :items="selected"></context-menu>
     <div class="columns card-root" tabindex="-1" @keypress.enter="play(selected[0])">
       <div class="column is-4 cover-column">
         <cover-tile :img="album.cover"></cover-tile>
