@@ -84,6 +84,9 @@ const actions = {
   },
   ended ({ commit }) {
     commit('QUEUE_SONG_END')
+  },
+  remove ({ commit }, item) {
+    commit('QUEUE_REMOVE_FROM_QUEUE', item)
   }
 }
 
@@ -92,8 +95,8 @@ const getters = {
   currentPlaybackItem: state => state.current,
   currentSong: state =>
     (find(state.queue, item => item === state.current) || {}).song,
-  prio: state => state.queue.filter(item => item.prio).map(item => item.song),
-  queue: state => state.queue.filter(item => !item.prio).map(item => item.song),
+  prio: state => state.queue.filter(item => item.prio),
+  queue: state => state.queue.filter(item => !item.prio),
   history: state => state.history,
   next: state => {
     // handle repeat / shuffle
