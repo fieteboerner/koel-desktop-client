@@ -86,6 +86,7 @@ const actions = {
       song: rootGetters['Queue/currentSong'],
       url: rootGetters.songurl(rootGetters['Queue/currentSong'])
     })
+    dispatch('Queue/started', null, { root: true })
     dispatch('resume')
   },
   pause ({ commit }) {

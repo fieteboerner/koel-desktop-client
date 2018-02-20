@@ -48,8 +48,8 @@ const mutations = {
   },
   QUEUE_SONG_END (state) {
     let current = state.current
-    state.history.push({ time: current.play_start, song: current })
-    delete current.play_start
+    current.play_end = new Date()
+    state.history.push(current)
     state.current = current
   },
   QUEUE_SET_CURRENT (state, current) {
@@ -74,16 +74,12 @@ const actions = {
     let current = getters.currentPlaybackItem
     commit('QUEUE_SET_CURRENT', getters.next)
     if (current.prio) commit('QUEUE_REMOVE_FROM_QUEUE', current)
-
-    dispatch('start')
   },
   back ({ commit, dispatch, getters }) {
     if (!getters.previous) return
     commit('QUEUE_SET_CURRENT', getters.previous)
-
-    dispatch('start')
   },
-  start ({ commit }) {
+  started ({ commit }) {
     commit('QUEUE_SONG_START')
   },
   ended ({ commit }) {
@@ -96,6 +92,9 @@ const getters = {
   currentPlaybackItem: state => state.current,
   currentSong: state =>
     (find(state.queue, item => item === state.current) || {}).song,
+  prio: state => state.queue.filter(item => item.prio).map(item => item.song),
+  queue: state => state.queue.filter(item => !item.prio).map(item => item.song),
+  history: state => state.history,
   next: state => {
     // handle repeat / shuffle
     let currentIndex = findIndex(
