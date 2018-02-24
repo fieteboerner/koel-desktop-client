@@ -5,7 +5,7 @@
         <template v-for="album in infiniteAlbums">
           <cover-tile :img="album.cover" :title="album.name" :subtitle="album.artist.name"
             :class="{'is-selected': selected === album}" class="album-item"
-            @cover="selectAlbum(album)"
+            @cover="selectAlbum(album)" @title="selectAlbum(album)"
             @subtitle="$router.push({name: 'artists', params: {id: album.artist.id}})"></cover-tile>
           <transition name="detail-toggle" @after-enter="scrollToSelected">
             <div class="details" v-if="selected === album">
@@ -51,7 +51,7 @@ export default {
   methods: {
     infiniteHandler () {
       this.busy = true
-      this.items += 24
+      this.items += 250
       this.busy = false
     },
     selectAlbum (album) {
