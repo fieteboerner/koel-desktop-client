@@ -1,4 +1,4 @@
-import { each, find, findIndex, findLastIndex } from 'lodash'
+import { each, find, findIndex, findLastIndex, first } from 'lodash'
 
 const state = {
   context: null,
@@ -87,6 +87,10 @@ const actions = {
   },
   remove ({ commit }, item) {
     commit('QUEUE_REMOVE_FROM_QUEUE', item)
+  },
+  restart ({ commit, getters }) {
+    each(getters.prio, item => commit('QUEUE_REMOVE_FROM_QUEUE', item))
+    commit('QUEUE_SET_CURRENT', first(state.queue))
   }
 }
 

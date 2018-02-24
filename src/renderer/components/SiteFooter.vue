@@ -15,11 +15,11 @@
       <div class="controls">
         <div class="buttons level">
           <b-icon icon="shuffle" :class="{active: shuffle}" @click.native="toggleShuffle"></b-icon>
-          <b-icon icon="skip-previous" @click.native="previous"></b-icon>
+          <b-icon icon="skip-previous" @click.native="back"></b-icon>
           <b-icon v-if="!playing" icon="play-circle-outline" size="is-large" @click.native="resume"></b-icon>
           <b-icon v-else icon="pause-circle-outline" size="is-large" @click.native="pause"></b-icon>
-          <b-icon icon="skip-next" @click.native="next"></b-icon>
-          <b-icon icon="repeat" :class="{active: repeat}" @click.native="toggleRepeat"></b-icon>
+          <b-icon icon="skip-next" @click.native="skip"></b-icon>
+          <b-icon :icon="repeatIcon" :class="{active: ['ONE', 'ALL'].indexOf(repeat) > -1}" @click.native="toggleRepeat"></b-icon>
         </div>
       </div>
       <seek-bar></seek-bar>
@@ -30,7 +30,7 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import SeekBar from './SeekBar.vue'
 export default {
   components: { SeekBar },
@@ -38,23 +38,15 @@ export default {
     ...mapGetters('Player', ['current', 'playing', 'repeat', 'shuffle']),
     currentSong () {
       return this.current
+    },
+    repeatIcon () {
+      return this.repeat === 'ONE' ? 'repeat-once' : 'repeat'
     }
   },
   methods: {
-    pause () {
-      this.$store.dispatch('Player/pause')
-    },
-    resume () {
-      this.$store.dispatch('Player/resume')
-    },
-    next () {
-      this.$store.dispatch('Player/skip')
-    },
-    previous () {
-      this.$store.dispatch('Player/back')
-    },
+    ...mapActions('Player', ['back', 'pause', 'resume', 'skip']),
     toggleRepeat () {
-      this.$store.commit('Player/PLAYER_REPEAT')
+      this.$store.commit('Player/PLAYER_TOGGLE_REPEAT')
     },
     toggleShuffle () {
       this.$store.commit('Player/PLAYER_SHUFFLE')

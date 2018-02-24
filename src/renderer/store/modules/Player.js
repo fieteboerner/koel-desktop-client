@@ -6,8 +6,9 @@ const state = {
   player: null,
   current: null,
   currentTime: 0,
+  repeatModes: ['OFF', 'ALL', 'ONE'],
   options: {
-    repeat: false,
+    repeat: 'OFF',
     shuffle: false
   },
   previous: [], // for previous function
@@ -50,13 +51,13 @@ const mutations = {
   PLAYER_RESTART (state) {
     state.player.restart()
   },
-  PLAYER_REPEAT (state) {
-    state.options.repeat = !state.options.repeat
-    state.options.shuffle = false
+  PLAYER_TOGGLE_REPEAT (state) {
+    let current = state.repeatModes.indexOf(state.options.repeat)
+    let nextIndex = state.repeatModes[++current] ? current : 0
+    state.options.repeat = state.repeatModes[nextIndex]
   },
   PLAYER_SHUFFLE (state) {
     state.options.shuffle = !state.options.shuffle
-    state.options.repeat = false
   }
 }
 
@@ -92,9 +93,10 @@ const actions = {
   pause ({ commit }) {
     commit('PLAYER_PAUSE')
   },
-  restart ({ commit, rootGetters }) {
+  restart ({ commit, dispatch, rootGetters }) {
     if (!rootGetters['Queue/currentSong']) return
     commit('PLAYER_RESTART')
+    dispatch('play')
   },
   resume ({ commit, dispatch, getters }) {
     if (!getters.current) {
@@ -104,6 +106,9 @@ const actions = {
     commit('PLAYER_RESUME')
   },
   skip ({ dispatch, rootGetters }) {
+    if (!rootGetters['Queue/next'] && state.options.repeat === 'ALL') {
+      return dispatch('Queue/restart', null, { root: true })
+    }
     if (!rootGetters['Queue/next']) return dispatch('pause')
     dispatch('Queue/skip', null, { root: true })
     dispatch('play')
@@ -119,7 +124,9 @@ const actions = {
   },
   ended ({ commit, dispatch, state }, song) {
     dispatch('Queue/ended', null, { root: true })
-    state.options.repeat ? dispatch('restart') : dispatch('skip')
+    if (state.options.repeat === 'ONE') return dispatch('restart')
+
+    dispatch('skip')
   }
 }
 
