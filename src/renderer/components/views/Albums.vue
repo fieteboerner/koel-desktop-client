@@ -73,9 +73,11 @@ export default {
 }
 </script>
 <style lang="scss">
+@import "../../../sass/settings";
+
 .cover-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(325px, 1fr));
   grid-gap: 1em;
   grid-auto-flow: row dense;
 
@@ -88,11 +90,11 @@ export default {
     height: 0;
     border-left: 20px solid transparent;
     border-right: 20px solid transparent;
-    border-bottom: 20px solid #f6f6f8;
+    border-bottom: 20px solid $light;
   }
 
   & .details {
-    background-color: #f6f6f8;
+    background-color: $light;
     grid-column: 1 / -1;
     margin: 1em -1em 0;
     padding: 1em;
