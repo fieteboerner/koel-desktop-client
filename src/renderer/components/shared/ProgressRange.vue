@@ -23,7 +23,7 @@ export default {
   methods: {
     change (event) {
       this.val = event.target.value
-      this.$emit('input', this.val)
+      this.$emit('input', parseInt(this.val))
     }
   }
 }
