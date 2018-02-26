@@ -82,17 +82,11 @@ const actions = {
   init ({ commit, dispatch, state }, audioElement) {
     if (state.initialized) return
     commit('PLAYER_INIT', audioElement)
-    state.player
-      .getMedia()
-      .addEventListener('timeupdate', ({ target }) =>
-        commit('PLAYER_UPDATE_CURRENT_TIME', target.currentTime)
-      )
-    state.player
-      .getMedia()
-      .addEventListener('ended', ({ target }) => dispatch('ended'))
-    state.player
-      .getMedia()
-      .addEventListener('canplaythough', ({ target }) => dispatch('ended'))
+    state.player.on('timeupdate', ({ detail }) =>
+      commit('PLAYER_UPDATE_CURRENT_TIME', detail.plyr.getCurrentTime())
+    )
+    state.player.on('ended', () => dispatch('ended'))
+    state.player.on('canplaythough', () => dispatch('ended'))
   },
   destroy ({ commit, state }) {
     if (!state.initialized) return
@@ -164,7 +158,7 @@ const getters = {
   playing: state => state.playing,
   repeat: state => state.options.repeat,
   shuffle: state => state.options.shuffle,
-  volume: state => state.options.muted ? 0 : state.options.volume
+  volume: state => (state.options.muted ? 0 : state.options.volume)
 }
 
 export default {
