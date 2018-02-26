@@ -100,7 +100,11 @@ const getters = {
   currentSong: state =>
     (find(state.queue, item => item === state.current) || {}).song,
   prio: state => state.queue.filter(item => item.prio),
-  queue: state => state.queue.filter(item => !item.prio),
+  fullQueue: state => state.queue.filter(item => !item.prio),
+  queue: state => {
+    let start = findIndex(state.queue, item => item.id === state.current.id)
+    return state.queue.filter((item, index) => index > start && !item.prio)
+  },
   history: state => state.history,
   next: state => {
     // handle repeat / shuffle
