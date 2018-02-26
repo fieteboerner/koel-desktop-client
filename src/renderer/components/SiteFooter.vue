@@ -25,6 +25,8 @@
       <seek-bar></seek-bar>
     </div>
     <div class="media-right special-control">
+      <b-icon icon="playlist-play"></b-icon>
+      <volume-control></volume-control>
     </div>
 
   </div>
@@ -32,8 +34,9 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import SeekBar from './SeekBar.vue'
+import VolumeControl from './footer/VolumeControl.vue'
 export default {
-  components: { SeekBar },
+  components: { VolumeControl, SeekBar },
   computed: {
     ...mapGetters('Player', ['current', 'playing', 'repeat', 'shuffle']),
     currentSong () {
@@ -93,6 +96,8 @@ export default {
 
   .special-control {
     width: 250px;
+    display: flex;
+    padding: 1em 0;
   }
 }
 </style>
