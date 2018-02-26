@@ -133,8 +133,9 @@ const actions = {
   toggle ({ dispatch, getters }) {
     dispatch(getters.playing ? 'pause' : 'resume')
   },
-  ended ({ commit, dispatch, state }, song) {
+  ended ({ commit, dispatch, getters, state }) {
     dispatch('Queue/ended', null, { root: true })
+    dispatch('MEDIA_INCREASE_PLAY_COUNT', getters.current, {root: true})
     if (state.options.repeat === 'ONE') return dispatch('restart')
 
     dispatch('skip')

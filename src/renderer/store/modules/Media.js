@@ -50,17 +50,29 @@ const actions = {
         })
         .catch(error => reject(error))
     })
+  },
+  MEDIA_INCREASE_PLAY_COUNT ({ commit, getters }, song) {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`${getters.url}/api/interaction/play`, { song: song.id })
+        .then(response => resolve(response))
+        .catch(error => reject(error))
+    })
   }
 }
 
 const getters = {
-  album: state => id => first(state.albums.filter(album => album.id === parseInt(id))),
+  album: state => id =>
+    first(state.albums.filter(album => album.id === parseInt(id))),
   albums: state => state.albums,
-  artist: state => id => first(state.artists.filter(artist => artist.id === parseInt(id))),
+  artist: state => id =>
+    first(state.artists.filter(artist => artist.id === parseInt(id))),
   artists: state => state.artists,
   songs: state => state.songs,
-  songurl: (state, getters, rootState, rootGetters) => song => `${rootGetters.url}/api/${song.id}/play?jwt-token=${rootGetters.token}`,
-  sharableUrl: (state, getters, rootState, rootGetters) => song => `${rootGetters.url}#!/song/${song.id}`
+  songurl: (state, getters, rootState, rootGetters) => song =>
+    `${rootGetters.url}/api/${song.id}/play?jwt-token=${rootGetters.token}`,
+  sharableUrl: (state, getters, rootState, rootGetters) => song =>
+    `${rootGetters.url}#!/song/${song.id}`
 }
 
 export default {
