@@ -1,8 +1,8 @@
 <template>
 <div class="album-song-list">
   <div v-for="(disc, index) in discs">
-    <div class="song-list-item disk-item" v-if="discs.length > 1"><div class="track-name">DISC {{ disc[0].disc }}</div></div>
-    <div class="song-list-item" v-for="song in sortSongs(disc)" :class="{'is-selected': isSelected(song), 'is-current': current === song}"
+    <div class="song-list-item disk-item" v-if="discs.length > 1"><div class="track-name">DISC {{ disc.number }}</div></div>
+    <div class="song-list-item" v-for="song in sortSongs(disc.songs)" :class="{'is-selected': isSelected(song), 'is-current': current === song}"
       @click.right="$emit('context', $event, song)" @click="$emit('select', $event, song)" @dblclick="$emit('play', song)">
       <div class="track-number">
         <div class="show-on-hover">
@@ -26,7 +26,7 @@
 </div>
 </template>
 <script>
-import { includes, sortBy } from 'lodash'
+import { forOwn, includes, sortBy } from 'lodash'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   props: {
@@ -36,13 +36,19 @@ export default {
   computed: {
     ...mapGetters('Player', ['current', 'playing']),
     discs () {
-      let discs = {}
+      let discs = []
       this.songs.forEach(song => {
         if (!discs[song.disc]) discs[song.disc] = []
         discs[song.disc].push(song)
       })
 
-      return sortBy(discs)
+      let discArray = []
+      forOwn(discs, (songs, disc) => {
+        if (disc === '0') return
+        discArray.push({number: disc, songs})
+      })
+
+      return sortBy(discArray, ['number'])
     }
   },
   methods: {
