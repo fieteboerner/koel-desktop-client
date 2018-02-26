@@ -34,7 +34,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import SeekBar from './SeekBar.vue'
-import VolumeControl from './footer/VolumeControl.vue'
+import VolumeControl from './VolumeControl.vue'
 export default {
   components: { VolumeControl, SeekBar },
   computed: {
@@ -58,7 +58,7 @@ export default {
 }
 </script>
 <style lang="scss">
-@import '../../sass/settings';
+@import '../../../sass/settings';
 
 .footer-root {
   flex: 1;

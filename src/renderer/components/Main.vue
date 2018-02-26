@@ -32,7 +32,7 @@
 import { mapGetters } from 'vuex'
 import { ipcRenderer } from 'electron'
 
-import SiteFooter from './SiteFooter.vue'
+import SiteFooter from './footer/Index.vue'
 
 export default {
   components: { SiteFooter },

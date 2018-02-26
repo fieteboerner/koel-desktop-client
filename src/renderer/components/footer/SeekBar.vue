@@ -35,7 +35,7 @@ export default {
 }
 </script>
 <style lang="scss">
-@import "../../sass/settings";
+@import "../../../sass/settings";
 .full-seek-bar {
   display: flex;
   align-items: center;
