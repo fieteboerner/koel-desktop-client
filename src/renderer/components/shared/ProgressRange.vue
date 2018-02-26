@@ -22,8 +22,13 @@ export default {
   },
   methods: {
     change (event) {
-      this.val = event.target.value
+      this.val = parseInt(event.target.value)
       this.$emit('input', parseInt(this.val))
+    }
+  },
+  watch: {
+    value (value) {
+      if (parseInt(value) !== parseInt(this.val)) this.val = value
     }
   }
 }
@@ -49,6 +54,7 @@ export default {
   input[type='range'] {
     z-index: 1;
     background: none;
+    outline: none;
 
     &::-webkit-slider-thumb {
       -webkit-appearance: none;
