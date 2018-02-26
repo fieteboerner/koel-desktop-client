@@ -9,7 +9,9 @@ const state = {
   repeatModes: ['OFF', 'ALL', 'ONE'],
   options: {
     repeat: 'OFF',
-    shuffle: false
+    shuffle: false,
+    volume: parseInt(window.localStorage.getItem('player-volume')) || 5,
+    muted: false
   },
   previous: [], // for previous function
   playback: [], // normal list of opcoming song if no item in queue is found
@@ -22,6 +24,8 @@ const mutations = {
       controls: ['progress'],
       loadSprite: false
     })[0]
+    state.player.setVolume(state.options.volume)
+    state.options.muted = state.player.isMuted()
 
     state.initialized = true
   },
@@ -38,7 +42,11 @@ const mutations = {
     state.currentTime = currentTime
   },
   PLAYER_PLAY (state, { song, url }) {
-    state.player.getMedia().src = url
+    state.player.source({
+      type: 'audio',
+      title: `${song.title} - ${song.artist.name}`,
+      sources: [{ src: url }]
+    })
   },
   PLAYER_PAUSE (state) {
     state.player.pause()
@@ -58,6 +66,15 @@ const mutations = {
   },
   PLAYER_SHUFFLE (state) {
     state.options.shuffle = !state.options.shuffle
+  },
+  PLAYER_SET_VOLUME (state, volume) {
+    state.options.volume = volume
+    state.player.setVolume(volume)
+    window.localStorage.setItem('player-volume', volume)
+  },
+  PLAYER_TOGGLE_MUTE (state) {
+    state.player.toggleMute()
+    state.options.muted = state.player.isMuted()
   }
 }
 
@@ -127,6 +144,13 @@ const actions = {
     if (state.options.repeat === 'ONE') return dispatch('restart')
 
     dispatch('skip')
+  },
+  setVolume ({ commit }, volume) {
+    commit('PLAYER_SET_VOLUME', volume)
+  },
+  toggleMute ({ commit, getters }) {
+    commit('PLAYER_TOGGLE_MUTE')
+    if (!getters.muted && !getters.volume) commit('PLAYER_SET_VOLUME', 5)
   }
 }
 
@@ -136,9 +160,11 @@ const getters = {
   },
   currentTime: state => state.currentTime,
   duration: state => (state.current ? state.current.length : 0),
+  muted: state => state.options.muted,
+  playing: state => state.playing,
   repeat: state => state.options.repeat,
   shuffle: state => state.options.shuffle,
-  playing: state => state.playing
+  volume: state => state.options.muted ? 0 : state.options.volume
 }
 
 export default {
