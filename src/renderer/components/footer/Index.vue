@@ -25,7 +25,10 @@
       <seek-bar></seek-bar>
     </div>
     <div class="media-right special-control">
-      <b-icon icon="playlist-play"></b-icon>
+      <b-icon icon="playlist-play" @click.native="queueListActive = true"></b-icon>
+      <b-modal :active.sync="queueListActive">
+        <queue-list></queue-list>
+      </b-modal>
       <volume-control></volume-control>
     </div>
 
@@ -33,10 +36,16 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import QueueList from './QueueList.vue'
 import SeekBar from './SeekBar.vue'
 import VolumeControl from './VolumeControl.vue'
 export default {
-  components: { VolumeControl, SeekBar },
+  components: { VolumeControl, QueueList, SeekBar },
+  data () {
+    return {
+      queueListActive: false
+    }
+  },
   computed: {
     ...mapGetters('Player', ['current', 'playing', 'repeat', 'shuffle']),
     currentSong () {
