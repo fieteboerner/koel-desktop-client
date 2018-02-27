@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { first, uniq } from 'lodash'
+import { first, sortBy, uniq } from 'lodash'
 const state = {
   albums: [],
   artists: [],
@@ -72,7 +72,18 @@ const getters = {
   songurl: (state, getters, rootState, rootGetters) => song =>
     `${rootGetters.url}/api/${song.id}/play?jwt-token=${rootGetters.token}`,
   sharableUrl: (state, getters, rootState, rootGetters) => song =>
-    `${rootGetters.url}#!/song/${song.id}`
+    `${rootGetters.url}#!/song/${song.id}`,
+  albumSongs: state => album => {
+    let songs = []
+    sortBy(album.songs, ['disc', 'track']).forEach(song => songs.push(song))
+    return songs
+  },
+  artistSongs: (state, getters) => artist => {
+    let albums = sortBy(artist.albums, ['year', 'name'])
+    let songs = []
+    albums.forEach(album => getters.albumSongs(album).forEach(song => songs.push(song)))
+    return songs
+  }
 }
 
 export default {
