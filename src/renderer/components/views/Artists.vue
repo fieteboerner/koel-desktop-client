@@ -3,26 +3,26 @@
     <div slot="sidebar">
       <div class="sidebar-list">
         <div class="sidebar-list-item" :class="{'is-selected': selected === artist}"
-          v-for="artist in sortedArtists" @click="selectArtist(artist)">
+          v-for="artist in sortedArtists" @click="selectArtist(artist)" @dblclick="play">
           <figure class="sidebar-item-image image is-48x48">
             <img :src="artist.albums[0].cover" alt="artist.name">
           </figure>
-          <div class="sidebar-item-content">
-            <span class="item-text subtitle truncate">{{ artist.name }}</span>
+          <div class="sidebar-item-content is-6 truncate" :title="artist.name">
+            {{ artist.name }}
           </div>
         </div>
       </div>
     </div>
     <div class="artist-albums">
       <artist-card :artist="selected" v-if="selected"></artist-card>
-      <div v-else>
+      <div v-else class="subtitle is-3">
         No Artists
       </div>
     </div>
   </sidebar-layout>
 </template>
 <script>
-import ArtistCard from '../shared/ArtistCard.vue'
+import ArtistCard from '@/components/shared/ArtistCard.vue'
 import { mapGetters } from 'vuex'
 import { first, sortBy } from 'lodash'
 
@@ -34,7 +34,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['artist', 'artists']),
+    ...mapGetters(['artist', 'artists', 'artistSongs']),
     sortedArtists () {
       return sortBy(this.artists, ['name']).filter(
         artist => artist.albums.length > 0
@@ -53,6 +53,11 @@ export default {
       this.selected_item = artist
       this.$router.push({ name: 'artists', params: { id: artist.id } })
     },
+    play () {
+      let songlist = this.artistSongs(this.selected)
+      this.$store.dispatch('Queue/set', { songlist, toPlay: songlist[0] })
+      this.$store.dispatch('Player/play')
+    },
     press (event) {
       console.log(event)
     }
@@ -60,29 +65,26 @@ export default {
 }
 </script>
 <style lang="scss">
-@import "../../../sass/settings";
+@import '../../../sass/settings';
 
 .sidebar-list-item {
   display: flex;
   align-items: center;
   padding: 5px 10px;
   overflow: hidden;
-  cursor: pointer;
-}
+  cursor: default;
 
-.sidebar-list-item.is-selected {
-  background-color: $cyan;
-}
+  &.is-selected {
+    background-color: $cyan;
 
-.sidebar-list-item.is-selected .item-text {
-  color: #fefefe !important;
-}
-
-.sidebar-item-image {
-  width: 48px;
+    & .sidebar-item-content {
+      color: $white !important;
+    }
+  }
 }
 
 .sidebar-item-image img {
+  height: 100%;
   border-radius: 50%;
 }
 

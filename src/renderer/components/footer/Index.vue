@@ -6,8 +6,8 @@
           <img :src="currentSong.album.cover" :alt="currentSong.title">
         </figure>
         <div class="media-content">
-          <p class="title is-5">{{ currentSong.title }}</p>
-          <p class="subtitle is-6">{{ currentSong.artist.name }}</p>
+          <p class="title is-6">{{ currentSong.title }}</p>
+          <p class="subtitle is-7">{{ currentSong.artist.name }}</p>
         </div>
       </div>
     </div>
@@ -76,6 +76,10 @@ export default {
   .current-song {
     padding-left: 0.75rem;
     width: 350px;
+
+    & .media-content {
+      overflow: hidden;
+    }
   }
 
   .controls-wrapper {
