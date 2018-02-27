@@ -10,12 +10,9 @@ const state = {
   options: {
     repeat: 'OFF',
     shuffle: false,
-    volume: parseInt(window.localStorage.getItem('player-volume')) || 5,
+    volume: parseInt(window.localStorage.getItem('player-volume')) || 7,
     muted: false
-  },
-  previous: [], // for previous function
-  playback: [], // normal list of opcoming song if no item in queue is found
-  queue: [] // queue like in spotify
+  }
 }
 
 const mutations = {
