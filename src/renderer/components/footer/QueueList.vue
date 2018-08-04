@@ -11,16 +11,20 @@
 				<div v-if="prio.length">
 					<div class="title is-5">Next in Queue</div>
 					<ul>
-						<li v-for="item in prio">
-							{{ item.song.title }} - {{ item.song.artist.name }}
-						</li>
+						<draggable :value="prio" @input="onPrioSort" :options="{group:'queue'}">
+							<li v-for="item in prio">
+								{{ item.song.title }} - {{ item.song.artist.name }}
+							</li>
+						</draggable>
 					</ul>
 				</div>
 				<div class="title is-5">Next Up</div>
 				<ul v-if="queue.length">
-					<li v-for="item in queue">
-						{{ item.song.title }} - {{ item.song.artist.name }} <a @click="remove(item)">remove</a>
-					</li>
+					<draggable :value="queue" @input="onQueueSort" :options="{group:'queue'}">
+						<li v-for="item in queue">
+							{{ item.song.title }} - {{ item.song.artist.name }} <a @click="remove(item)">remove</a>
+						</li>
+					</draggable>
 				</ul>
 				<div v-else class="has-text-centered subtitle is-5">No items</div>
 
@@ -41,14 +45,28 @@
 </div>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
+import draggable from 'vuedraggable'
 
 export default {
+  components: {
+    draggable
+  },
   computed: {
-    ...mapGetters('Queue', ['history', 'prio', 'queue', 'currentSong'])
+    ...mapGetters('Queue', ['history', 'prio', 'queue', 'currentSong']),
+    queueList () {
+      return this.prio.concat(this.queue)
+    }
   },
   methods: {
-    ...mapActions('Queue', ['remove'])
+    ...mapMutations('Queue', { queueSort: 'QUEUE_SORT' }),
+    ...mapActions('Queue', ['remove']),
+    onPrioSort (queue) {
+      this.queueSort({prio: true, queueItems: queue})
+    },
+    onQueueSort (queue) {
+      this.queueSort({prio: false, queueItems: queue})
+    }
   }
 }
 </script>

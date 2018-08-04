@@ -1,4 +1,4 @@
-import { each, find, findIndex, findLastIndex, first } from 'lodash'
+import { clone, each, find, findIndex, findLastIndex, first } from 'lodash'
 
 const state = {
   context: null,
@@ -25,6 +25,28 @@ const mutations = {
     if (state.current.id === item.id) return
 
     state.queue = state.queue.filter(i => i.id !== item.id)
+  },
+  QUEUE_SORT (state, {prio, queueItems}) {
+    console.log('start', prio)
+
+    let queue = []
+    if (prio) {
+      queue = queueItems.map(queueItem => {
+        queueItem.prio = true
+        return queueItem
+      })
+      state.queue
+        .filter(song => !song.prio && !queueItems.find(queueItem => queueItem.id === song.id))
+        .forEach(song => queue.push(song))
+    } else {
+      queue = state.queue.filter(song => song.prio && !queueItems.find(queueItem => queueItem.id === song.id))
+      queueItems.forEach(queueItem => {
+        queueItem.prio = false
+        queue.push(queueItem)
+      })
+    }
+    state.queue = clone(queue)
+    console.log('end', prio)
   },
   QUEUE_QUEUE_PRIO (state, songs) {
     let lastIndex = findLastIndex(state.queue, ['prio', true])
