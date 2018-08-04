@@ -17,7 +17,6 @@
     </single-layout>
 </template>
 <script>
-import InfiniteScroll from 'vue-infinite-scroll'
 import { mapGetters } from 'vuex'
 import { sortBy, take } from 'lodash'
 import CoverTile from '@/components/shared/CoverTile.vue'
@@ -26,8 +25,7 @@ import AlbumCard from '@/components/shared/AlbumCard.vue'
 export default {
   components: {
     AlbumCard,
-    CoverTile,
-    InfiniteScroll
+    CoverTile
   },
   data () {
     return {
