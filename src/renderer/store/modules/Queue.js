@@ -27,8 +27,6 @@ const mutations = {
     state.queue = state.queue.filter(i => i.id !== item.id)
   },
   QUEUE_SORT (state, {prio, queueItems}) {
-    console.log('start', prio)
-
     let queue = []
     if (prio) {
       queue = queueItems.map(queueItem => {
@@ -46,7 +44,6 @@ const mutations = {
       })
     }
     state.queue = clone(queue)
-    console.log('end', prio)
   },
   QUEUE_QUEUE_PRIO (state, songs) {
     let lastIndex = findLastIndex(state.queue, ['prio', true])
