@@ -5,7 +5,7 @@ import InfiniteScroll from 'vue-infinite-scroll'
 import VueScrollto from 'vue-scrollto'
 import 'mdi/css/materialdesignicons.css'
 
-import App from './App'
+import App from './App.vue'
 import router from './router'
 import store from './store'
 
@@ -19,7 +19,6 @@ if (token) {
 }
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
-Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
 Vue.use(Buefy)
@@ -34,8 +33,8 @@ Vue.filter('timecode', code => {
   let minutes = Math.floor((secNum - hours * 3600) / 60)
   let seconds = secNum - hours * 3600 - minutes * 60
 
-  if (seconds < 10) seconds = '0' + seconds
-  let value = `${minutes}:${seconds}`
+  const secondsString = (seconds < 10) ? `0${seconds}` : seconds
+  let value = `${minutes}:${secondsString}`
   if (hours > 0) value = `${hours}:${value}`
   if (negative) value = `- ${value}`
   return value
