@@ -7,30 +7,40 @@
     <div class="full-time" @click="showTimeLeft = !showTimeLeft">{{ showTimeLeft ? timeLeft : currentTime | timecode }}</div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import 'plyr/dist/plyr.css'
-import { mapGetters } from 'vuex'
-export default {
-  mounted () {
-    this.$store.dispatch('Player/init', this.$refs.audio)
-  },
-  destroyed () {
-    this.$store.dispatch('Player/destroy')
-  },
-  data () {
-    return {
-      showTimeLeft: false
-    }
-  },
-  computed: {
-    ...mapGetters('Player', ['current', 'currentTime']),
-    duration () {
+
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
+import { namespace, Getter, Mutation, Action } from 'vuex-class';
+
+const playerModule = namespace('Player')
+
+@Component
+export default class SeekBar extends Vue {
+  @playerModule.Action init
+  @playerModule.Action destroy
+
+  @playerModule.Getter current
+  @playerModule.Getter currentTime
+
+  showTimeLeft = false
+
+  mounted() {
+    this.init()
+  }
+
+  destroyed() {
+    this.destroy()
+  }
+
+  get duration() {
       if (!this.current) return 0
       return this.current.length
-    },
-    timeLeft () {
+  }
+
+  get timeLeft() {
       return -1 * (this.duration - this.currentTime)
-    }
   }
 }
 </script>

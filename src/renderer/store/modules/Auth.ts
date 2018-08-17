@@ -21,7 +21,7 @@ const mutations = {
   AUTH_USER (state, { currentUser }) {
     state.user = currentUser
   },
-  AUTH_URL (state, url) {
+  AUTH_SET_URL (state, url) {
     state.url = url
     localStorage.setItem('url', url)
   }
@@ -54,8 +54,8 @@ const actions = {
         .catch(error => reject(error))
     })
   },
-  AUTH_URL ({ commit }, url) {
-    commit('AUTH_URL', url)
+  AUTH_SET_URL ({ commit }, url) {
+    commit('AUTH_SET_URL', url)
   }
 }
 

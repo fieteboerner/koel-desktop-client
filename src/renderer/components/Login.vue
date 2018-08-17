@@ -29,42 +29,49 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-  data () {
-    return {
-      url: this.$store.getters.url,
-      email: '',
-      password: '',
-      errors: {}
-    }
-  },
-  methods: {
-    login () {
-      const { email, password, url } = this
-      this.$store.dispatch('AUTH_URL', url)
-      this.$store
-        .dispatch('AUTH_REQUEST', { email, password })
-        .then(() => {
-          this.errors = {}
-          this.$router.push('/')
-        })
-        .catch(({ response }) => {
-          switch (response.status) {
-            case 422:
-              this.errors = response.data
-              break
-            case 401:
-              this.errors = { password: 'Invalid credentials' }
-              break
+<script lang="ts">
+import Vue from 'vue'
+import { mapActions } from 'vuex'
+import { Action, Getter } from 'vuex-class'
+import { Component } from 'vue-property-decorator'
 
-            default:
-              this.errors = { email: 'An unknown error occurred' }
-              break
-          }
-        })
-    }
-  }
+@Component
+export default class Login extends Vue {
+      @Action('AUTH_SET_URL') setUrl
+      @Action('AUTH_REQUEST') authRequest
+      @Getter('url') storeUrl
+
+      url = ''
+      email = ''
+      password = ''
+      errors = {}
+
+      mounted() {
+        this.url = this.storeUrl
+      }
+
+      login () {
+        const { email, password, url } = this
+        this.setUrl(url)
+        this.authRequest({ email, password })
+          .then(() => {
+            this.errors = {}
+            this.$router.push('/')
+          })
+          .catch(({ response }) => {
+            switch (response.status) {
+                case 422:
+                this.errors = response.data
+                break
+              case 401:
+                this.errors = { password: 'Invalid credentials' }
+                break
+              default:
+                this.errors = { email: 'An unknown error occurred' }
+                break
+            }
+          })
+      }
 }
 </script>
 <style scoped>

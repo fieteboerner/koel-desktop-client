@@ -44,35 +44,46 @@
 	</footer>
 </div>
 </template>
-<script>
-import { mapGetters, mapActions, mapMutations } from 'vuex'
+<script lang="ts">
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
+import { namespace } from 'vuex-class';
+
 import draggable from 'vuedraggable'
 
-export default {
+const queueModule = namespace('Queue')
+
+@Component({
   components: {
     draggable
   },
-  computed: {
-    ...mapGetters('Queue', ['history', 'prio', 'queue', 'currentSong']),
-    queueList () {
-      return this.prio.concat(this.queue)
-    }
-  },
-  methods: {
-    ...mapMutations('Queue', { queueSort: 'QUEUE_SORT' }),
-    ...mapActions('Queue', ['remove']),
-    onPrioSort (queue) {
-      this.queueSort({prio: true, queueItems: queue})
-    },
-    onQueueSort (queue) {
-      this.queueSort({prio: false, queueItems: queue})
-    }
+})
+export default class QueueList extends Vue {
+  @queueModule.Action remove
+
+  @queueModule.Getter history
+  @queueModule.Getter prio
+  @queueModule.Getter queue
+  @queueModule.Getter currentSong
+
+  @queueModule.Mutation('QUEUE_SORT') queueSort
+
+  get queueList() {
+    return this.prio.concat(this.queue)
+  }
+
+  onPrioSort (queue) {
+    this.queueSort({prio: true, queueItems: queue})
+  }
+
+  onQueueSort (queue) {
+    this.queueSort({prio: false, queueItems: queue})
   }
 }
 </script>
 <style lang="scss" scoped>
 // pull footer button right
 .modal-card-foot {
-	justify-content: flex-end;
+  justify-content: flex-end;
 }
 </style>

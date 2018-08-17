@@ -28,15 +28,22 @@
       </footer>
     </div>
 </template>
-<script>
-import { mapGetters } from 'vuex'
+<script lang="ts">
+import Vue from 'vue'
 import { ipcRenderer } from 'electron'
+import { Component } from 'vue-property-decorator'
+import { Getter } from 'vuex-class';
 
 import SiteFooter from './footer/Index.vue'
 
-export default {
-  components: { SiteFooter },
-  mounted () {
+@Component({
+  components: {
+    SiteFooter
+  }
+})
+export default class Main extends Vue {
+  @Getter user
+  mounted() {
     ipcRenderer.on('media-key', (event, key) => {
       switch (key) {
         case 'playpause':
@@ -50,27 +57,26 @@ export default {
           break
       }
     })
-  },
-  destroyed () {
+  }
+
+  destroyed() {
     ipcRenderer.removeAllListeners('media-key')
-  },
-  computed: {
-    ...mapGetters(['user'])
-  },
-  methods: {
-    logout () {
-      this.$store.dispatch('AUTH_LOGOUT').then(() => {
-        this.$router.push('/login')
-      })
-    },
-    togglePlayback () {
-      this.$store.dispatch('Player/toggle')
-    }
+  }
+
+  logout() {
+    this.$store.dispatch('AUTH_LOGOUT').then(() => {
+      this.$router.push('/login')
+    })
+  }
+  togglePlayback() {
+    this.$store.dispatch('Player/toggle')
   }
 }
 </script>
 <style>
-html, body, #app {
+html,
+body,
+#app {
   height: 100%;
   overflow: hidden;
 }

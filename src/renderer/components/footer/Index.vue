@@ -34,35 +34,41 @@
 
   </div>
 </template>
-<script>
-import { mapGetters, mapActions } from 'vuex'
+<script lang="ts">
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
+
 import QueueList from './QueueList.vue'
 import SeekBar from './SeekBar.vue'
 import VolumeControl from './VolumeControl.vue'
-export default {
-  components: { VolumeControl, QueueList, SeekBar },
-  data () {
-    return {
-      queueListActive: false
-    }
-  },
-  computed: {
-    ...mapGetters('Player', ['current', 'playing', 'repeat', 'shuffle']),
-    currentSong () {
-      return this.current
-    },
-    repeatIcon () {
-      return this.repeat === 'ONE' ? 'repeat-once' : 'repeat'
-    }
-  },
-  methods: {
-    ...mapActions('Player', ['back', 'pause', 'resume', 'skip']),
-    toggleRepeat () {
-      this.$store.commit('Player/PLAYER_TOGGLE_REPEAT')
-    },
-    toggleShuffle () {
-      this.$store.commit('Player/PLAYER_SHUFFLE')
-    }
+import { namespace, Getter } from 'vuex-class';
+
+const playerModule = namespace('Player')
+
+@Component({
+  components: {
+    QueueList,
+    SeekBar,
+    VolumeControl,
+  }
+})
+export default class Index extends Vue {
+  queueListActive = false
+  @playerModule.Action back
+  @playerModule.Action pause
+  @playerModule.Action resume
+  @playerModule.Action skip
+
+  @playerModule.Getter('currentSong') current
+  @playerModule.Getter playing
+  @playerModule.Getter repeat
+  @playerModule.Getter shuffle
+
+  @playerModule.Mutation('PLAYER_TOGGLE_REPEAT') toggleRepeat
+  @playerModule.Mutation('PLAYER_SHUFFLE') toggleShuffle
+
+  get repeatIcon() {
+    return this.repeat === 'ONE' ? 'repeat-once' : 'repeat'
   }
 }
 </script>

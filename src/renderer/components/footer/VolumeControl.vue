@@ -4,19 +4,35 @@
 		<progress-range :value="volume" @input="setVolume" id="slider"></progress-range>
 	</div>
 </template>
-<script>
-import {mapActions, mapGetters} from 'vuex'
+<script lang="ts">
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
+import { namespace } from 'vuex-class';
 import ProgressRange from '@/components/shared/ProgressRange.vue'
-export default {
-  components: { ProgressRange },
-  computed: {
-    ...mapGetters('Player', ['muted', 'volume']),
-    volumeIcon () {
-      return this.volume === 0 ? 'volume-low' : this.volume <= 6 ? 'volume-medium' : 'volume-high'
-    }
+
+const playerModule = namespace('Player')
+
+@Component({
+  components: {
+    ProgressRange,
   },
-  methods: {
-    ...mapActions('Player', ['setVolume', 'toggleMute'])
+})
+export default class VolumeControl extends Vue {
+  @playerModule.Action setVolume
+  @playerModule.Action toggleMute
+
+  @playerModule.Getter muted
+  @playerModule.Getter volume
+
+  get volumeIcon() {
+    if(this.volume === 0) {
+      return 'volume-low'
+    }
+    if(this.volume <= 6) {
+      return 'volume-medium'
+    }
+
+    return 'volume-high'
   }
 }
 </script>
