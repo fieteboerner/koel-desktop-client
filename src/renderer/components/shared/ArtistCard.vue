@@ -1,7 +1,7 @@
 <template>
     <div class="artist-card-root" tabindex="-1"
       @keypress.enter="play(selected[0])">
-      <context-menu ref="ctx" context="artist:song" @play="play(selected[0])" :items="sortedSelected"></context-menu>
+      <context-menu ref="ctx" context="artist:song" @play="play(selected[0])" :items="sortedSelected"/>
       <div>
         <p class="title is-3" style="margin-bottom: 2.25rem;">{{ artist.name }}</p>
         <p class="subtitle is-5">
@@ -33,62 +33,76 @@
             </div>
           </div>
           <hr>
-          <album-song-list :songs="album.songs" :selected="selected" @select="selectItem" @play="play"
+          <album-song-list :songs="album.songs" :selected="selected" @select="selectItem" @play="onPlay"
             @context="context"></album-song-list>
         </div>
       </div>
     </div>
 </template>
-<script>
-import { mapGetters } from 'vuex'
+<script lang="ts">
+import Vue from 'vue'
 import { sortBy } from 'lodash'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
+import { playerModule, queueModule } from '@/store/namespaces'
+
 import AlbumSongList from '@/components/shared/AlbumSongList.vue'
 import ContextMenu from '@/components/shared/ContextMenu.vue'
-import listSelectMixin from '@/mixins/ListSelect'
+import ListSelectMixin from '@/mixins/ListSelect'
 
-export default {
-  props: {
-    artist: Object
-  },
-  components: { AlbumSongList, ContextMenu },
-  mixins: [ listSelectMixin ],
-  computed: {
-    ...mapGetters(['albums']),
-    sortedAlbums () {
-      return sortBy(this.artist.albums, ['year', 'name'])
-    },
-    items () {
-      return this.songList
-    },
-    songList () {
-      let songs = []
-      this.sortedAlbums.forEach(album => {
-        this.sortSongs(album.songs).forEach(song => songs.push(song))
-      })
-      return songs
+@Component({
+  components: {
+    AlbumSongList,
+    ContextMenu,
+  }
+})
+export default class ArtistCard extends Mixins(ListSelectMixin) {
+  $refs: {
+    ctx: ContextMenu,
+  }
+  @Prop(Object) artist
+  @Getter albums
+  @playerModule.Action play
+  @queueModule.Action('set') setQueue
+
+  get sortedAlbums () {
+    return sortBy(this.artist.albums, ['year', 'name'])
+  }
+
+  get items () {
+    return this.songList
+  }
+
+  get songList () {
+    let songs = []
+    this.sortedAlbums.forEach(album => {
+      this.sortSongs(album.songs).forEach(song => songs.push(song))
+    })
+    return songs
+  }
+
+  context (event, song) {
+    if (!this.isSelected(song)) {
+      this.selected = [song]
     }
-  },
-  methods: {
-    context (event, song) {
-      if (!this.isSelected(song)) {
-        this.selected = [song]
-      }
-      this.$refs.ctx.open(event)
-    },
-    songCount (albums) {
-      let count = 0
-      albums.forEach(album => {
-        count += album.songs.length
-      })
-      return count
-    },
-    play (song) {
-      this.$store.dispatch('Queue/set', { songlist: this.items, toPlay: song })
-      this.$store.dispatch('Player/play')
-    },
-    sortSongs (songs) {
-      return sortBy(songs, ['disc', 'track'])
-    }
+    this.$refs.ctx.open(event)
+  }
+
+  songCount (albums) {
+    let count = 0
+    albums.forEach(album => {
+      count += album.songs.length
+    })
+    return count
+  }
+
+  onPlay (song) {
+    this.setQueue({ songlist: this.items, toPlay: song })
+    this.play()
+  }
+
+  sortSongs (songs) {
+    return sortBy(songs, ['disc', 'track'])
   }
 }
 </script>

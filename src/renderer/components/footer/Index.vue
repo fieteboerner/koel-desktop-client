@@ -59,7 +59,7 @@ export default class Index extends Vue {
   @playerModule.Action resume
   @playerModule.Action skip
 
-  @playerModule.Getter('currentSong') current
+  @playerModule.Getter('current') currentSong
   @playerModule.Getter playing
   @playerModule.Getter repeat
   @playerModule.Getter shuffle

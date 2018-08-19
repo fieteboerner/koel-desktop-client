@@ -1,5 +1,6 @@
-import axios from '../../api/axios'
 import { first, sortBy, uniq } from 'lodash'
+import axios from '@/api/axios'
+
 const state = {
   albums: [],
   artists: [],

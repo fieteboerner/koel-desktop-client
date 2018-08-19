@@ -3,7 +3,7 @@
     <div slot="sidebar">
       <div class="sidebar-list">
         <div class="sidebar-list-item" :class="{'is-selected': selected === artist}"
-          v-for="artist in sortedArtists" @click="selectArtist(artist)" @dblclick="play">
+          v-for="artist in sortedArtists" @click="selectArtist(artist)" @dblclick="onPlay">
           <figure class="sidebar-item-image image is-48x48">
             <img :src="artist.albums[0].cover" alt="artist.name">
           </figure>
@@ -21,46 +21,54 @@
     </div>
   </sidebar-layout>
 </template>
-<script>
-import ArtistCard from '@/components/shared/ArtistCard.vue'
-import { mapGetters } from 'vuex'
+<script lang="ts">
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 import { first, sortBy } from 'lodash'
+import { Getter } from 'vuex-class'
+import { playerModule, queueModule } from '@/store/namespaces'
 
-export default {
-  components: { ArtistCard },
-  data () {
-    return {
-      selected_item: null
-    }
+import ArtistCard from '@/components/shared/ArtistCard.vue'
+
+@Component({
+  components: {
+    ArtistCard,
   },
-  computed: {
-    ...mapGetters(['artist', 'artists', 'artistSongs']),
-    sortedArtists () {
-      return sortBy(this.artists, ['name']).filter(
-        artist => artist.albums.length > 0
-      )
-    },
-    selected () {
-      return (
-        this.selected_item ||
-        this.artist(this.$route.params.id) ||
-        first(this.sortedArtists)
-      )
-    }
-  },
-  methods: {
-    selectArtist (artist) {
-      this.selected_item = artist
-      this.$router.push({ name: 'artists', params: { id: artist.id } })
-    },
-    play () {
-      let songlist = this.artistSongs(this.selected)
-      this.$store.dispatch('Queue/set', { songlist, toPlay: songlist[0] })
-      this.$store.dispatch('Player/play')
-    },
-    press (event) {
-      console.log(event)
-    }
+})
+export default class Artists extends Vue {
+  @Getter artist
+  @Getter artists
+  @Getter artistSongs
+  @playerModule.Action play
+  @queueModule.Action('set') setQueue
+
+  selectedItem = null
+  get sortedArtists () {
+    return sortBy(this.artists, ['name']).filter(
+      artist => artist.albums.length > 0
+    )
+  }
+
+  get selected () {
+    return (
+      this.selectedItem ||
+      this.artist(this.$route.params.id) ||
+      first(this.sortedArtists)
+    )
+  }
+  selectArtist (artist) {
+    this.selectedItem = artist
+    this.$router.push({ name: 'artists', params: { id: artist.id } })
+  }
+
+  onPlay () {
+    let songlist = this.artistSongs(this.selected)
+    this.setQueue({ songlist, toPlay: songlist[0] })
+    this.play()
+  }
+
+  press (event) {
+    console.log(event)
   }
 }
 </script>

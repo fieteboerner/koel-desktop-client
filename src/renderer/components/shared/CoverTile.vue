@@ -11,13 +11,15 @@
       </div>
     </div>
 </template>
-<script>
-export default {
-  props: {
-    img: String,
-    title: String,
-    subtitle: String
-  }
+<script lang="ts">
+import Vue from 'vue'
+import { Component, Prop } from 'vue-property-decorator'
+
+@Component
+export default class CoverTile extends Vue {
+  @Prop(String) img
+  @Prop(String) title
+  @Prop(String) subtitle
 }
 </script>
 <style scoped>

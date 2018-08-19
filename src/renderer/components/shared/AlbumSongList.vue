@@ -25,17 +25,25 @@
   </div>
 </div>
 </template>
-<script>
+<script lang="ts">
+import Vue from 'vue'
+import { Component, Prop } from 'vue-property-decorator'
 import { forOwn, includes, sortBy } from 'lodash'
-import { mapGetters, mapActions } from 'vuex'
-export default {
-  props: {
-    songs: Array,
-    selected: Array
-  },
-  computed: {
-    ...mapGetters('Player', ['current', 'playing']),
-    discs () {
+
+import { playerModule } from '@/store/namespaces'
+
+@Component
+export default class AlbumSongList extends Vue {
+   @Prop(Array) songs
+   @Prop(Array) selected
+
+   @playerModule.Getter current
+   @playerModule.Getter playing
+
+   @playerModule.Action resume
+   @playerModule.Action pause
+
+   get discs() {
       let discs = []
       this.songs.forEach(song => {
         if (!discs[song.disc]) discs[song.disc] = []
@@ -49,16 +57,14 @@ export default {
       })
 
       return sortBy(discArray, ['number'])
-    }
-  },
-  methods: {
-    ...mapActions('Player', ['resume', 'pause']),
-    sortSongs (songs) {
-      return sortBy(songs, ['track'])
-    },
-    isSelected (song) {
-      return includes(this.selected, song)
-    }
+   }
+
+  sortSongs (songs) {
+    return sortBy(songs, ['track'])
+  }
+
+  isSelected (song) {
+    return includes(this.selected, song)
   }
 }
 </script>

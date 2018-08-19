@@ -16,57 +16,65 @@
       </div>
     </single-layout>
 </template>
-<script>
-import { mapGetters } from 'vuex'
+<script lang="ts">
+import Vue from 'vue'
+import { Getter } from 'vuex-class'
 import { sortBy, take } from 'lodash'
+import { Component } from 'vue-property-decorator'
+import scrollTo from 'vue-scrollto'
+
 import CoverTile from '@/components/shared/CoverTile.vue'
 import AlbumCard from '@/components/shared/AlbumCard.vue'
 
-export default {
+@Component({
   components: {
     AlbumCard,
-    CoverTile
+    CoverTile,
   },
-  data () {
-    return {
-      selected_item: null,
-      busy: false,
-      items: 0
+})
+export default class Albums extends Vue {
+
+  @Getter album
+  @Getter albums
+
+  selectedItem = null
+  busy = false
+  items = 0
+
+  get sortedAlbums () {
+    return sortBy(this.albums, ['artist.name', 'name'])
+  }
+
+  get infiniteAlbums () {
+    return take(this.sortedAlbums, this.items)
+  }
+
+  get selected () {
+    return this.selectedItem || this.album(this.$route.params.id)
+  }
+
+  infiniteHandler () {
+    this.busy = true
+    this.items += 250
+    this.busy = false
+  }
+
+  selectAlbum (album) {
+    if (this.selected !== album) {
+      this.selectedItem = album
+      this.$router.push({ name: 'albums', params: { id: album.id } })
+    } else {
+      this.deselect()
     }
-  },
-  computed: {
-    ...mapGetters(['albums', 'album']),
-    sortedAlbums () {
-      return sortBy(this.albums, ['artist.name', 'name'])
-    },
-    infiniteAlbums () {
-      return take(this.sortedAlbums, this.items)
-    },
-    selected () {
-      return this.selected_item || this.album(this.$route.params.id)
-    }
-  },
-  methods: {
-    infiniteHandler () {
-      this.busy = true
-      this.items += 250
-      this.busy = false
-    },
-    selectAlbum (album) {
-      if (this.selected !== album) {
-        this.selected_item = album
-        this.$router.push({ name: 'albums', params: { id: album.id } })
-      } else {
-        this.deselect()
-      }
-    },
-    deselect () {
-      this.selected_item = null
-      this.$router.push({ name: 'albums' })
-    },
-    scrollToSelected () {
-      this.$scrollTo('.details', 500, {container: '.main-content', offset: -150})
-    }
+  }
+
+  deselect () {
+    this.selectedItem = null
+    this.$router.push({ name: 'albums' })
+  }
+
+  scrollToSelected () {
+    scrollTo('.details', 500, {container: '.main-content', offset: -150})
   }
 }
 </script>

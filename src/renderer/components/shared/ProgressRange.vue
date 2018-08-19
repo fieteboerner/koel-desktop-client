@@ -4,32 +4,25 @@
     <progress :value="val" :max="max"></progress>
   </div>
 </template>
-<script>
-export default {
-  props: {
-    value: Number,
-    max: {
-      type: Number,
-      default () {
-        return 100
-      }
-    }
-  },
-  data () {
-    return {
-      val: this.value
-    }
-  },
-  methods: {
-    change (event) {
-      this.val = parseInt(event.target.value)
-      this.$emit('input', parseInt(this.val))
-    }
-  },
-  watch: {
-    value (value) {
-      if (parseInt(value) !== parseInt(this.val)) this.val = value
-    }
+<script lang="ts">
+import Vue from 'vue'
+import { Component, Prop, Watch } from 'vue-property-decorator'
+
+@Component
+export default class ProgessRange extends Vue {
+  @Prop(Number) value
+  @Prop({ type: Number, default: 100 }) max
+
+  val = this.value
+
+  change (event) {
+    this.val = parseInt(event.target.value)
+    this.$emit('input', parseInt(this.val))
+  }
+
+  @Watch('value')
+  onValueChanged (newValue) {
+    if (parseInt(newValue) !== parseInt(this.val)) this.val = newValue
   }
 }
 </script>

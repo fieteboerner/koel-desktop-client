@@ -8,16 +8,13 @@
       </div>
   </div>
 </template>
-<script>
-export default {
-  props: {
-    width: {
-      type: String,
-      default () {
-        return '350px'
-      }
-    }
-  }
+<script lang="ts">
+import Vue from 'vue'
+import { Component, Prop } from 'vue-property-decorator'
+
+@Component
+export default class Sidebar extends Vue {
+  @Prop({ type: String, default: '350px' }) width
 }
 </script>
 <style lang="scss">
