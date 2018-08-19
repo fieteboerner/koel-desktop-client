@@ -21,7 +21,7 @@ import Vue from 'vue'
 import { Getter } from 'vuex-class'
 import { sortBy, take } from 'lodash'
 import { Component } from 'vue-property-decorator'
-import scrollTo from 'vue-scrollto'
+import VueScrollto from 'vue-scrollto'
 
 import CoverTile from '@/components/shared/CoverTile.vue'
 import AlbumCard from '@/components/shared/AlbumCard.vue'
@@ -74,7 +74,7 @@ export default class Albums extends Vue {
   }
 
   scrollToSelected () {
-    scrollTo('.details', 500, {container: '.main-content', offset: -150})
+    VueScrollto.scrollTo('.details', 500, {container: '.main-content', offset: -150})
   }
 }
 </script>
