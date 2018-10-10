@@ -48,7 +48,7 @@ import ListSelectMixin from '@/mixins/ListSelect'
 })
 export default class AlbumCard extends mixins(ListSelectMixin) {
   $refs: {
-    ctx: ContextMenu,
+    ctx: any,
   }
   @Prop(Object) album
 
