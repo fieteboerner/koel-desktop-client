@@ -38,17 +38,6 @@ let rendererConfig = {
           appendTsSuffixTo: [/\.vue$/]
         }
       },
-      // {
-      //   test: /\.(js|vue)$/,
-      //   enforce: 'pre',
-      //   exclude: /node_modules/,
-      //   use: {
-      //     loader: 'eslint-loader',
-      //     options: {
-      //       formatter: require('eslint-friendly-formatter')
-      //     }
-      //   }
-      // },
       {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
