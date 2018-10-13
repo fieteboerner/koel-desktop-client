@@ -4,9 +4,9 @@
       ref="ctx"
       :items="sortedSelected"
       context="album:song"
-      @play="onPlay(selected[0])"
+      @play="onPlay"
     />
-    <div class="columns card-root" tabindex="-1" @keypress.enter="onPlay(selected[0])">
+    <div class="columns card-root" tabindex="-1" @keypress.enter="onPlay">
       <div class="column is-4 cover-column">
         <cover-tile :img="album.cover"></cover-tile>
       </div>
@@ -18,7 +18,7 @@
           :selected="selected"
           :songs="album.songs"
           @context="onContext"
-          @play="play"
+          @play="onPlay"
           @select="selectItem"
         />
       </div>
@@ -60,7 +60,8 @@ export default class AlbumCard extends mixins(ListSelectMixin) {
   }
 
   onPlay(song) {
-    this.setQueue()
+    console.log(song)
+    this.setQueue({ songlist: this.items, toPlay: song })
     this.play()
   }
 
