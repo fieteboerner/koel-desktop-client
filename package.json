@@ -4,7 +4,7 @@
   "author": "Fiete Börner <fieteboerner@googlemail.com>",
   "description": "A light themed music desktop client using the API of koel.",
   "license": "MIT",
-  "main": "./dist/electron/main.ts",
+  "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
