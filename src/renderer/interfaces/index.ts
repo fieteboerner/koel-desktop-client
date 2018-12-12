@@ -8,8 +8,8 @@ export interface Album {
 }
 
 export interface Artist {
-  id: 0,
-  name: '',
+  id: number,
+  name: string,
   albums: Album[],
 }
 

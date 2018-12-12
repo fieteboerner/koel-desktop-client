@@ -1,11 +1,12 @@
 import { first, sortBy, uniq } from 'lodash'
 import axios from '@/services/axios'
+import { Album, Artist, Song } from '@/interfaces'
 
 const state = {
-  loading: false,
-  albums: [],
-  artists: [],
-  songs: []
+  loading: <boolean> false,
+  albums: <Album[]> [],
+  artists: <Artist[]> [],
+  songs: <Song[]> []
 }
 
 const mutations = {
@@ -16,18 +17,18 @@ const mutations = {
       album.songs = data.songs.filter(
         song => parseInt(song.album_id) === album.id
       )
-      album.artist = data.artists.filter(
+      album.artist = data.artists.find(
         artist => artist.id === album.artist_id
-      )[0]
+      )
       return album
     })
     state.songs = data.songs.map(song => {
-      song.album = state.albums.filter(
+      song.album = state.albums.find(
         album => album.id === parseInt(song.album_id)
-      )[0]
-      song.artist = data.artists.filter(
+      )
+      song.artist = data.artists.find(
         artist => artist.id === parseInt(song.artist_id)
-      )[0]
+      )
       const artistId = parseInt(song.artist_id)
       if (!artistAlbumCache[artistId]) artistAlbumCache[artistId] = []
       artistAlbumCache[artistId].push(song.album)
