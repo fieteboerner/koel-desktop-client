@@ -2,6 +2,7 @@ import { first, sortBy, uniq } from 'lodash'
 import axios from '@/services/axios'
 
 const state = {
+  loading: false,
   albums: [],
   artists: [],
   songs: []
@@ -36,20 +37,33 @@ const mutations = {
       artist.albums = uniq(artistAlbumCache[artist.id])
       return artist
     })
+  },
+
+  MEDIA_SET_LOADING (state) {
+    state.loading = true
+  },
+
+  MEDIA_SET_NOT_LOADING (state) {
+    state.loading = false
   }
 }
 
 const actions = {
   DATA_REQUEST ({ commit, state, getters }) {
+    commit('MEDIA_SET_LOADING')
     return new Promise((resolve, reject) => {
       axios
         .get(getters.url + '/api/data')
         .then(resp => {
           commit('AUTH_USER', resp.data)
           commit('MEDIA_SUCCESS', resp.data)
+          commit('MEDIA_SET_NOT_LOADING')
           resolve()
         })
-        .catch(error => reject(error))
+        .catch(error => {
+          commit('MEDIA_SET_NOT_LOADING')
+          reject(error)
+        })
     })
   },
   MEDIA_INCREASE_PLAY_COUNT ({ commit, getters }, song) {
@@ -84,7 +98,8 @@ const getters = {
     let songs = []
     albums.forEach(album => getters.albumSongs(album).forEach(song => songs.push(song)))
     return songs
-  }
+  },
+  loading: state => state.loading
 }
 
 export default {

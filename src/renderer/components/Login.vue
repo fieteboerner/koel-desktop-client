@@ -38,7 +38,8 @@ import { Component } from 'vue-property-decorator'
 @Component
 export default class Login extends Vue {
       @Action('AUTH_SET_URL') setUrl
-      @Action('AUTH_REQUEST') authRequest
+      @Action('AUTH_LOGIN') authRequest
+      @Getter('email') storeEmail
       @Getter('url') storeUrl
 
       url = ''
@@ -48,6 +49,7 @@ export default class Login extends Vue {
 
       mounted() {
         this.url = this.storeUrl
+        this.email  = this.storeEmail
       }
 
       login () {

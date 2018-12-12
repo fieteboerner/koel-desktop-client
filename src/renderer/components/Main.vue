@@ -1,6 +1,7 @@
 <template>
     <div class="main-wrapper"
       @keypress.space.prevent="togglePlayback">
+      <b-loading :active="isLoading"/>
       <nav class="">
         <div class="navbar">
           <div class="navbar-menu">
@@ -32,7 +33,7 @@
 import Vue from 'vue'
 import { ipcRenderer } from 'electron'
 import { Component } from 'vue-property-decorator'
-import { Getter } from 'vuex-class';
+import { Getter, Action } from 'vuex-class';
 
 import SiteFooter from './footer/Index.vue'
 
@@ -42,7 +43,9 @@ import SiteFooter from './footer/Index.vue'
   }
 })
 export default class Main extends Vue {
+  @Action('DATA_REQUEST') loadData
   @Getter user
+  @Getter('loading') isLoading
   mounted() {
     ipcRenderer.on('media-key', (event, key) => {
       switch (key) {
@@ -57,6 +60,10 @@ export default class Main extends Vue {
           break
       }
     })
+  }
+
+  created() {
+    this.loadData()
   }
 
   destroyed() {

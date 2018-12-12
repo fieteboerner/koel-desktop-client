@@ -15,7 +15,6 @@ import SidebarLayout from './components/layout/Sidebar.vue'
 const token = store.getters.token
 if (token) {
   store.commit('AUTH_SUCCESS', token)
-  store.dispatch('DATA_REQUEST')
 }
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
