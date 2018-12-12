@@ -1,4 +1,4 @@
-import axios from '../../api/axios'
+import axios from '@/services/axios'
 const state = {
   auth_error: {},
   token: window.localStorage.getItem('auth-token') || '',
