@@ -9,38 +9,38 @@ export default new Router({
     {
       path: '/login',
       name: 'Login',
-      component: require('@/components/Login.vue').default,
+      component: require('@/views/Login.vue').default,
       beforeEnter: ifNotAuthenticated
     },
     {
       path: '/',
       name: 'koel',
-      component: require('@/components/Main.vue').default,
+      component: require('@/views/Main.vue').default,
       beforeEnter: ifAuthenticated,
       children: [
         { path: '', redirect: '/artists' },
         {
           path: '/albums/:id?',
           name: 'albums',
-          component: require('@/components/views/Albums.vue').default,
+          component: require('@/views/main/Albums.vue').default,
           beforeEnter: ifAuthenticated
         },
         {
           path: '/artists/:id?',
           name: 'artists',
-          component: require('@/components/views/Artists.vue').default,
+          component: require('@/views/main/Artists.vue').default,
           beforeEnter: ifAuthenticated
         },
         {
           path: '/playlists',
           name: 'playlists',
-          component: require('@/components/views/Artists.vue').default,
+          component: require('@/views/main/Artists.vue').default,
           beforeEnter: ifAuthenticated
         },
         {
           path: '/songs',
           name: 'songs',
-          component: require('@/components/views/Artists.vue').default,
+          component: require('@/views/main/Artists.vue').default,
           beforeEnter: ifAuthenticated
         }
       ]

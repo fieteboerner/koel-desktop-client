@@ -35,7 +35,7 @@ import { ipcRenderer } from 'electron'
 import { Component } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class';
 
-import SiteFooter from './footer/Index.vue'
+import SiteFooter from '@/components/footer/Index.vue'
 
 @Component({
   components: {
