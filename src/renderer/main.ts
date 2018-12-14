@@ -12,9 +12,9 @@ import store from './store'
 import SingleLayout from './components/layout/Single.vue'
 import SidebarLayout from './components/layout/Sidebar.vue'
 
-const token = store.getters.token
+const token = store.getters['auth/token']
 if (token) {
-  store.commit('AUTH_SUCCESS', token)
+  store.commit('auth/loginSuccess', token)
 }
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))

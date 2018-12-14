@@ -12,7 +12,6 @@ const state = {
 const mutations = {
   MEDIA_SUCCESS (state, data) {
     let artistAlbumCache = {}
-    state.user = data.currentUser
     state.albums = data.albums.map(album => {
       album.songs = data.songs.filter(
         song => parseInt(song.album_id) === album.id
@@ -50,13 +49,13 @@ const mutations = {
 }
 
 const actions = {
-  DATA_REQUEST ({ commit, state, getters }) {
+  DATA_REQUEST ({ commit, state, rootGetters }) {
     commit('MEDIA_SET_LOADING')
     return new Promise((resolve, reject) => {
       axios
-        .get(getters.url + '/api/data')
+        .get(rootGetters['auth/url'] + '/api/data')
         .then(resp => {
-          commit('AUTH_USER', resp.data)
+          commit('auth/setUser', resp.data)
           commit('MEDIA_SUCCESS', resp.data)
           commit('MEDIA_SET_NOT_LOADING')
           resolve()
@@ -86,9 +85,9 @@ const getters = {
   artists: state => state.artists,
   songs: state => state.songs,
   songurl: (state, getters, rootState, rootGetters) => song =>
-    `${rootGetters.url}/api/${song.id}/play?jwt-token=${rootGetters.token}`,
+    `${rootGetters['auth/url']}/api/${song.id}/play?jwt-token=${rootGetters['auth/token']}`,
   sharableUrl: (state, getters, rootState, rootGetters) => song =>
-    `${rootGetters.url}#!/song/${song.id}`,
+    `${rootGetters['auth/url']}#!/song/${song.id}`,
   albumSongs: state => album => {
     let songs = []
     sortBy(album.songs, ['disc', 'track']).forEach(song => songs.push(song))

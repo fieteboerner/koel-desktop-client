@@ -31,16 +31,16 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
-import { mapActions } from 'vuex'
-import { Action, Getter } from 'vuex-class'
 import { Component } from 'vue-property-decorator'
+
+import { authModule } from '@/store/namespaces'
 
 @Component
 export default class Login extends Vue {
-      @Action('AUTH_SET_URL') setUrl
-      @Action('AUTH_LOGIN') authRequest
-      @Getter('email') storeEmail
-      @Getter('url') storeUrl
+      @authModule.Action setUrl
+      @authModule.Action('login') authRequest
+      @authModule.Getter('url') storeUrl
+      @authModule.Getter('email') storeEmail
 
       url = ''
       email = ''

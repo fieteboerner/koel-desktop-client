@@ -35,6 +35,7 @@ import { ipcRenderer } from 'electron'
 import { Component } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class';
 
+import { authModule } from '@/store/namespaces'
 import SiteFooter from '@/components/footer/Index.vue'
 
 @Component({
@@ -44,7 +45,7 @@ import SiteFooter from '@/components/footer/Index.vue'
 })
 export default class Main extends Vue {
   @Action('DATA_REQUEST') loadData
-  @Getter user
+  @authModule.Getter user
   @Getter('loading') isLoading
   mounted() {
     ipcRenderer.on('media-key', (event, key) => {
@@ -71,7 +72,7 @@ export default class Main extends Vue {
   }
 
   logout() {
-    this.$store.dispatch('AUTH_LOGOUT').then(() => {
+    this.$store.dispatch('auth/logout').then(() => {
       this.$router.push('/login')
     })
   }

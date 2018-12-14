@@ -1,7 +1,7 @@
 import store from '@/store'
 
 const ifAuthenticated = (from, to, next) => {
-  if (store.getters.url && store.getters.isAuthenticated) {
+  if (store.getters['auth/url'] && store.getters['auth/isAuthenticated']) {
     next()
     return
   }
@@ -10,7 +10,7 @@ const ifAuthenticated = (from, to, next) => {
 }
 
 const ifNotAuthenticated = (from, to, next) => {
-  if (!store.getters.url || !store.getters.isAuthenticated) {
+  if (!store.getters['auth/url'] || !store.getters['auth/isAuthenticated']) {
     next()
     return
   }
