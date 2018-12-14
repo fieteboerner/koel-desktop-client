@@ -60,7 +60,6 @@ export default class AlbumCard extends mixins(ListSelectMixin) {
   }
 
   onPlay(song) {
-    console.log(song)
     this.setQueue({ songlist: this.items, toPlay: song })
     this.play()
   }

@@ -66,10 +66,6 @@ export default class Artists extends Vue {
     this.setQueue({ songlist, toPlay: songlist[0] })
     this.play()
   }
-
-  press (event) {
-    console.log(event)
-  }
 }
 </script>
 <style lang="scss">
