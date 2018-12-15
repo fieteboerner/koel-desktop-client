@@ -37,7 +37,7 @@ const mutations = {
 }
 
 const actions = {
-  login ({ commit, dispatch, state }, { email, password }) {
+  login ({ commit, state }, { email, password }) {
 
     return new Promise((resolve, reject) => {
       axios
