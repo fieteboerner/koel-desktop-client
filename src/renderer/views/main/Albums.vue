@@ -7,7 +7,7 @@
             :class="{'is-selected': selected === album}" class="album-item"
             @cover="selectAlbum(album)" @title="selectAlbum(album)"
             @subtitle="$router.push({name: 'artists', params: {id: album.artist.id}})"></cover-tile>
-          <transition name="detail-toggle" @after-enter="scrollToSelected">
+          <transition name="detail-toggle" @after-enter="scrollToSelected" @appear="scrollToSelected">
             <div class="details" v-if="selected === album">
               <album-card :album="album"></album-card>
             </div>
@@ -38,7 +38,6 @@ export default class Albums extends Vue {
   @mediaModule.Getter album
   @mediaModule.Getter albums
 
-  selectedItem = null
   busy = false
   items = 0
 
@@ -51,7 +50,7 @@ export default class Albums extends Vue {
   }
 
   get selected () {
-    return this.selectedItem || this.album(this.$route.params.id)
+    return this.album(this.$route.params.id)
   }
 
   infiniteHandler () {
@@ -62,7 +61,6 @@ export default class Albums extends Vue {
 
   selectAlbum (album) {
     if (this.selected !== album) {
-      this.selectedItem = album
       this.$router.push({ name: 'albums', params: { id: album.id } })
     } else {
       this.deselect()
@@ -70,7 +68,6 @@ export default class Albums extends Vue {
   }
 
   deselect () {
-    this.selectedItem = null
     this.$router.push({ name: 'albums' })
   }
 
