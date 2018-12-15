@@ -8,9 +8,8 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class';
+import { playerModule } from '@/store/namespaces'
 import ProgressRange from '@/components/shared/ProgressRange.vue'
-
-const playerModule = namespace('Player')
 
 @Component({
   components: {

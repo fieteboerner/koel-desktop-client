@@ -12,9 +12,7 @@ import 'plyr/dist/plyr.css'
 
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { namespace, Getter, Mutation, Action } from 'vuex-class';
-
-const playerModule = namespace('Player')
+import { playerModule } from '@/store/namespaces'
 
 @Component
 export default class SeekBar extends Vue {

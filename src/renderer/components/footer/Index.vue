@@ -41,9 +41,7 @@ import { Component } from 'vue-property-decorator'
 import QueueList from './QueueList.vue'
 import SeekBar from './SeekBar.vue'
 import VolumeControl from './VolumeControl.vue'
-import { namespace, Getter } from 'vuex-class';
-
-const playerModule = namespace('Player')
+import { playerModule } from '@/store/namespaces'
 
 @Component({
   components: {
@@ -64,8 +62,8 @@ export default class Index extends Vue {
   @playerModule.Getter repeat
   @playerModule.Getter shuffle
 
-  @playerModule.Mutation('PLAYER_TOGGLE_REPEAT') toggleRepeat
-  @playerModule.Mutation('PLAYER_SHUFFLE') toggleShuffle
+  @playerModule.Mutation toggleRepeat
+  @playerModule.Mutation toggleShuffle
 
   get repeatIcon() {
     return this.repeat === 'ONE' ? 'repeat-once' : 'repeat'

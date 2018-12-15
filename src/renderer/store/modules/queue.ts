@@ -86,7 +86,7 @@ const actions = {
 
     if (!state.current.id) {
       dispatch('skip')
-      dispatch('Player/play', null, { root: true })
+      dispatch('player/play', null, { root: true })
     }
   },
   skip ({ commit, getters }) {

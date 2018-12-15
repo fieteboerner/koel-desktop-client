@@ -4,14 +4,14 @@
  */
 import auth from './auth'
 import media from './media'
-import Player from './Player'
+import player from './player'
 import queue from './queue'
 
 const modules = {
   auth,
-  queue,
   media,
-  Player: Player,
+  player,
+  queue,
 }
 
 export default modules

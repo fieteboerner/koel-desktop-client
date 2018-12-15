@@ -16,7 +16,7 @@ const state = {
 }
 
 const mutations = {
-  PLAYER_INIT (state, element) {
+  init (state, element) {
     state.player = plyr.setup(element, {
       controls: ['progress'],
       loadSprite: false
@@ -26,7 +26,7 @@ const mutations = {
 
     state.initialized = true
   },
-  PLAYER_DESTROY (state) {
+  destroy (state) {
     let audioCopy = state.player.getMedia().cloneNode(true)
     state.player
       .getMedia()
@@ -35,41 +35,41 @@ const mutations = {
 
     state.initialized = false
   },
-  PLAYER_UPDATE_CURRENT_TIME (state, currentTime) {
+  updateCurrentTime (state, currentTime) {
     state.currentTime = currentTime
   },
-  PLAYER_PLAY (state, { song, url }) {
+  play (state, { song, url }) {
     state.player.source({
       type: 'audio',
       title: `${song.title} - ${song.artist.name}`,
       sources: [{ src: url }]
     })
   },
-  PLAYER_PAUSE (state) {
+  pause (state) {
     state.player.pause()
     state.playing = false
   },
-  PLAYER_RESUME (state) {
+  resume (state) {
     state.player.play()
     state.playing = true
   },
-  PLAYER_RESTART (state) {
+  restart (state) {
     state.player.restart()
   },
-  PLAYER_TOGGLE_REPEAT (state) {
+  toggleRepeat (state) {
     let current = state.repeatModes.indexOf(state.options.repeat)
     let nextIndex = state.repeatModes[++current] ? current : 0
     state.options.repeat = state.repeatModes[nextIndex]
   },
-  PLAYER_SHUFFLE (state) {
+  toggleShuffle (state) {
     state.options.shuffle = !state.options.shuffle
   },
-  PLAYER_SET_VOLUME (state, volume) {
+  setVolume (state, volume) {
     state.options.volume = volume
     state.player.setVolume(volume)
     window.localStorage.setItem('player-volume', volume)
   },
-  PLAYER_TOGGLE_MUTE (state) {
+  toggleMute (state) {
     state.player.toggleMute()
     state.options.muted = state.player.isMuted()
   }
@@ -78,9 +78,9 @@ const mutations = {
 const actions = {
   init ({ commit, dispatch, state }, audioElement) {
     if (state.initialized) return
-    commit('PLAYER_INIT', audioElement)
+    commit('init', audioElement)
     state.player.on('timeupdate', ({ detail }) =>
-      commit('PLAYER_UPDATE_CURRENT_TIME', detail.plyr.getCurrentTime())
+      commit('updateCurrentTime', detail.plyr.getCurrentTime())
     )
     state.player.on('ended', () => dispatch('ended'))
     state.player.on('canplaythough', () => dispatch('ended'))
@@ -88,10 +88,10 @@ const actions = {
   destroy ({ commit, state }) {
     if (!state.initialized) return
 
-    commit('PLAYER_DESTROY')
+    commit('destroy')
   },
   play ({ commit, dispatch, rootGetters }) {
-    commit('PLAYER_PLAY', {
+    commit('play', {
       song: rootGetters['queue/currentSong'],
       url: rootGetters['media/songurl'](rootGetters['queue/currentSong'])
     })
@@ -99,11 +99,11 @@ const actions = {
     dispatch('resume')
   },
   pause ({ commit }) {
-    commit('PLAYER_PAUSE')
+    commit('pause')
   },
   restart ({ commit, dispatch, rootGetters }) {
     if (!rootGetters['queue/currentSong']) return
-    commit('PLAYER_RESTART')
+    commit('restart')
     dispatch('play')
   },
   resume ({ commit, dispatch, getters }) {
@@ -111,7 +111,7 @@ const actions = {
       dispatch('skip')
       return
     }
-    commit('PLAYER_RESUME')
+    commit('resume')
   },
   skip ({ dispatch, rootGetters }) {
     if (!rootGetters['queue/next'] && state.options.repeat === 'ALL') {
@@ -127,7 +127,7 @@ const actions = {
     dispatch('queue/back', null, { root: true })
     dispatch('play')
   },
-  toggle ({ dispatch, getters }) {
+  togglePlayback ({ dispatch, getters }) {
     dispatch(getters.playing ? 'pause' : 'resume')
   },
   ended ({ commit, dispatch, getters, state }) {
@@ -138,11 +138,11 @@ const actions = {
     dispatch('skip')
   },
   setVolume ({ commit }, volume) {
-    commit('PLAYER_SET_VOLUME', volume)
+    commit('setVolume', volume)
   },
   toggleMute ({ commit, getters }) {
-    commit('PLAYER_TOGGLE_MUTE')
-    if (!getters.muted && !getters.volume) commit('PLAYER_SET_VOLUME', 5)
+    commit('toggleMute')
+    if (!getters.muted && !getters.volume) commit('setVolume', 5)
   }
 }
 

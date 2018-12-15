@@ -35,7 +35,7 @@ import { ipcRenderer } from 'electron'
 import { Component } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class';
 
-import { authModule, mediaModule } from '@/store/namespaces'
+import { authModule, mediaModule, playerModule } from '@/store/namespaces'
 import SiteFooter from '@/components/footer/Index.vue'
 
 @Component({
@@ -45,8 +45,12 @@ import SiteFooter from '@/components/footer/Index.vue'
 })
 export default class Main extends Vue {
   @mediaModule.Action loadData
+  @playerModule.Action skip
+  @playerModule.Action back
+  @playerModule.Action togglePlayback
   @authModule.Getter user
   @mediaModule.Getter('loading') isLoading
+
   mounted() {
     ipcRenderer.on('media-key', (event, key) => {
       switch (key) {
@@ -54,10 +58,10 @@ export default class Main extends Vue {
           this.togglePlayback()
           break
         case 'next':
-          this.$store.dispatch('Player/skip')
+          this.skip()
           break
         case 'previous':
-          this.$store.dispatch('Player/back')
+          this.back()
           break
       }
     })
@@ -75,9 +79,6 @@ export default class Main extends Vue {
     this.$store.dispatch('auth/logout').then(() => {
       this.$router.push('/login')
     })
-  }
-  togglePlayback() {
-    this.$store.dispatch('Player/toggle')
   }
 }
 </script>
