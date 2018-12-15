@@ -23,3 +23,11 @@ export interface Song {
   artist_id: number,
   artist: Artist,
 }
+
+export interface QueueItem {
+  id: string,
+  playStart?: Date,
+  playEnd?: Date,
+  prio: boolean,
+  song: Song,
+}

@@ -5,13 +5,13 @@
 import auth from './auth'
 import Media from './Media'
 import Player from './Player'
-import Queue from './Queue'
+import queue from './queue'
 
 const modules = {
   auth,
+  queue,
   Media: Media,
   Player: Player,
-  Queue: Queue,
 }
 
 export default modules

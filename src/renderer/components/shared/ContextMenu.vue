@@ -21,6 +21,7 @@
 </template>
 <script>
 import { clipboard } from 'electron'
+import { mapActions } from 'vuex'
 import ContextMenu from 'vue-context-menu/src/ctx-menu'
 export default {
   extends: ContextMenu,
@@ -40,6 +41,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('queue', {queueSongs: 'queue'}),
     goToArtist () {
       this.$router.push({name: 'artists', params: {id: this.firstItem.artist.id}})
     },
@@ -48,7 +50,7 @@ export default {
     },
     queue () {
       if (this.subCtx === 'song') {
-        this.$store.dispatch('Queue/queue', this.items)
+        this.queueSongs(this.items)
       }
     },
     copyShare () {

@@ -92,17 +92,17 @@ const actions = {
   },
   play ({ commit, dispatch, rootGetters }) {
     commit('PLAYER_PLAY', {
-      song: rootGetters['Queue/currentSong'],
-      url: rootGetters.songurl(rootGetters['Queue/currentSong'])
+      song: rootGetters['queue/currentSong'],
+      url: rootGetters.songurl(rootGetters['queue/currentSong'])
     })
-    dispatch('Queue/started', null, { root: true })
+    dispatch('queue/started', null, { root: true })
     dispatch('resume')
   },
   pause ({ commit }) {
     commit('PLAYER_PAUSE')
   },
   restart ({ commit, dispatch, rootGetters }) {
-    if (!rootGetters['Queue/currentSong']) return
+    if (!rootGetters['queue/currentSong']) return
     commit('PLAYER_RESTART')
     dispatch('play')
   },
@@ -114,24 +114,24 @@ const actions = {
     commit('PLAYER_RESUME')
   },
   skip ({ dispatch, rootGetters }) {
-    if (!rootGetters['Queue/next'] && state.options.repeat === 'ALL') {
-      return dispatch('Queue/restart', null, { root: true })
+    if (!rootGetters['queue/next'] && state.options.repeat === 'ALL') {
+      return dispatch('queue/restart', null, { root: true })
     }
-    if (!rootGetters['Queue/next']) return dispatch('pause')
-    dispatch('Queue/skip', null, { root: true })
+    if (!rootGetters['queue/next']) return dispatch('pause')
+    dispatch('queue/skip', null, { root: true })
     dispatch('play')
   },
   back ({ state, dispatch, rootGetters }) {
     if (state.currentTime > 5) return dispatch('restart')
-    if (!rootGetters['Queue/previous']) return dispatch('pause')
-    dispatch('Queue/back', null, { root: true })
+    if (!rootGetters['queue/previous']) return dispatch('pause')
+    dispatch('queue/back', null, { root: true })
     dispatch('play')
   },
   toggle ({ dispatch, getters }) {
     dispatch(getters.playing ? 'pause' : 'resume')
   },
   ended ({ commit, dispatch, getters, state }) {
-    dispatch('Queue/ended', null, { root: true })
+    dispatch('queue/ended', null, { root: true })
     dispatch('MEDIA_INCREASE_PLAY_COUNT', getters.current, {root: true})
     if (state.options.repeat === 'ONE') return dispatch('restart')
 
@@ -148,7 +148,7 @@ const actions = {
 
 const getters = {
   current: (state, getters, test, rootGetters) => {
-    return rootGetters['Queue/currentSong']
+    return rootGetters['queue/currentSong']
   },
   currentTime: state => state.currentTime,
   duration: state => (state.current ? state.current.length : 0),

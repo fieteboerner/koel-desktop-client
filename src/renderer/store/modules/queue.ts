@@ -1,115 +1,116 @@
 import { clone, each, find, findIndex, findLastIndex, first } from 'lodash'
+import { QueueItem, Song } from '@/interfaces';
 
 const state = {
   context: null,
   contextActive: false,
-  queue: [],
-  history: [],
-  current: {}
+  queue: <QueueItem[]> [],
+  history: <QueueItem[]> [],
+  current: <QueueItem> {}
 }
 
 const mutations = {
-  QUEUE_SET (state, { songlist, toPlay }) {
+  set (state, { songlist, toPlay }) {
     state.queue = songlist.map(song => {
       return { id: generateId(), song, prio: false }
     })
 
-    each(state.queue, item => {
+    each(state.queue, (item: QueueItem) => {
       if (item.song === toPlay) {
         state.current = item
         return false
       }
     })
   },
-  QUEUE_REMOVE_FROM_QUEUE (state, item) {
+  removeFromQueue (state, item: QueueItem) {
     if (state.current.id === item.id) return
 
-    state.queue = state.queue.filter(i => i.id !== item.id)
+    state.queue = state.queue.filter((queueItem: QueueItem) => queueItem.id !== item.id)
   },
-  QUEUE_SORT (state, {prio, queueItems}) {
+  sort (state, {prio, queueItems}) {
     let queue = []
     if (prio) {
-      queue = queueItems.map(queueItem => {
-        queueItem.prio = true
-        return queueItem
+      queue = queueItems.map((item: QueueItem) => {
+        item.prio = true
+        return item
       })
       state.queue
-        .filter(song => !song.prio && !queueItems.find(queueItem => queueItem.id === song.id))
-        .forEach(song => queue.push(song))
+        .filter((item: QueueItem) => !item.prio && !queueItems.find((queueItem: QueueItem) => queueItem.id === item.id))
+        .forEach((item: QueueItem) => queue.push(item))
     } else {
-      queue = state.queue.filter(song => song.prio && !queueItems.find(queueItem => queueItem.id === song.id))
-      queueItems.forEach(queueItem => {
+      queue = state.queue.filter((item: QueueItem) => item.prio && !queueItems.find((queueItem: QueueItem) => queueItem.id === item.id))
+      queueItems.forEach((queueItem: QueueItem) => {
         queueItem.prio = false
         queue.push(queueItem)
       })
     }
     state.queue = clone(queue)
   },
-  QUEUE_QUEUE_PRIO (state, songs) {
+  queuePrio (state, songs: Song[]) {
     let lastIndex = findLastIndex(state.queue, ['prio', true])
     if (lastIndex < 0) {
       let currentIndex = findIndex(state.queue, state.current)
       lastIndex = currentIndex >= 0 ? currentIndex : -1
     }
-    songs = songs.map(song => {
+    const queue = songs.map((song: Song) => {
       return { id: generateId(), song, prio: true }
     })
     if (lastIndex === -1) {
-      state.queue = songs
+      state.queue = queue
       return
     }
-    state.queue.splice(lastIndex + 1, 0, ...songs)
+    state.queue.splice(lastIndex + 1, 0, ...queue)
   },
-  QUEUE_SONG_START (state) {
+  songStart (state) {
     let current = state.current
-    current.play_start = new Date()
+    current.playStart = new Date()
     state.current = current
   },
-  QUEUE_SONG_END (state) {
+  songEnd (state) {
     let current = state.current
-    current.play_end = new Date()
+    current.playEnd = new Date()
     state.history.push(current)
     state.current = current
   },
-  QUEUE_SET_CURRENT (state, current) {
+  setCurrent (state, current) {
     state.current = current
   }
 }
 
 const actions = {
-  set ({ commit }, { songlist, toPlay, context }) {
-    commit('QUEUE_SET', { songlist, toPlay })
+  set ({ commit }, { songlist, toPlay }) {
+    commit('set', { songlist, toPlay })
   },
-  queue ({ commit, dispatch, state }, songs) {
-    commit('QUEUE_QUEUE_PRIO', songs)
+  queue ({ commit, dispatch, state }, songs: Song[]) {
+    commit('queuePrio', songs)
 
     if (!state.current.id) {
       dispatch('skip')
       dispatch('Player/play', null, { root: true })
     }
   },
-  skip ({ commit, dispatch, getters }) {
+  skip ({ commit, getters }) {
     if (!getters.next) return
     let current = getters.currentPlaybackItem
-    commit('QUEUE_SET_CURRENT', getters.next)
-    if (current.prio) commit('QUEUE_REMOVE_FROM_QUEUE', current)
+    commit('setCurrent', getters.next)
+    if (current.prio) commit('removeFromQueue', current)
   },
-  back ({ commit, dispatch, getters }) {
+  back ({ commit, getters }) {
     if (!getters.previous) return
-    commit('QUEUE_SET_CURRENT', getters.previous)
+    commit('setCurrent', getters.previous)
   },
   started ({ commit }) {
-    commit('QUEUE_SONG_START')
+    commit('songStart')
   },
   ended ({ commit }) {
-    commit('QUEUE_SONG_END')
+    commit('songEnd')
   },
-  remove ({ commit }, item) {
-    commit('QUEUE_REMOVE_FROM_QUEUE', item)
+  remove ({ commit }, item: QueueItem) {
+    commit('removeFromQueue', item)
   },
   restart ({ commit, getters }) {
-    each(getters.prio, item => commit('QUEUE_REMOVE_FROM_QUEUE', item))
-    commit('QUEUE_SET_CURRENT', first(state.queue))
+    each(getters.prio, item => commit('removeFromQueue', item))
+    commit('setCurrent', first(state.queue))
   }
 }
 
@@ -117,19 +118,19 @@ const getters = {
   context: state => (state.contextActive ? state.context : null),
   currentPlaybackItem: state => state.current,
   currentSong: state =>
-    (find(state.queue, item => item === state.current) || {}).song,
-  prio: state => state.queue.filter(item => item.prio),
-  fullQueue: state => state.queue.filter(item => !item.prio),
+    (find(state.queue, (item: QueueItem) => item === state.current) || {}).song,
+  prio: state => state.queue.filter((item: QueueItem) => item.prio),
+  fullQueue: state => state.queue.filter((item: QueueItem) => !item.prio),
   queue: state => {
-    let start = findIndex(state.queue, item => item.id === state.current.id)
-    return state.queue.filter((item, index) => index > start && !item.prio)
+    let start = findIndex(state.queue, (item: QueueItem) => item.id === state.current.id)
+    return state.queue.filter((item: QueueItem, index: number) => index > start && !item.prio)
   },
   history: state => state.history,
   next: state => {
     // handle repeat / shuffle
     let currentIndex = findIndex(
       state.queue,
-      item => item.id === state.current.id
+      (item: QueueItem) => item.id === state.current.id
     )
     if (!state.queue[++currentIndex]) return false
     return state.queue[currentIndex]
@@ -138,7 +139,7 @@ const getters = {
     // handle repeat / shuffle
     let currentIndex = findIndex(
       state.queue,
-      item => item.id === state.current.id
+      (item: QueueItem) => item.id === state.current.id
     )
     if (!state.queue[--currentIndex]) return false
     return state.queue[currentIndex]

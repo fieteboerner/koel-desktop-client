@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import axios from 'axios'
 import Buefy from 'buefy'
 import InfiniteScroll from 'vue-infinite-scroll'
 import VueScrollto from 'vue-scrollto'

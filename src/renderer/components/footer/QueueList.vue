@@ -32,7 +32,7 @@
 			<b-tab-item label="History">
 				<ul v-if="history.length">
 					<li v-for="historyItem in history">
-						{{ historyItem.play_start }} - {{ historyItem.song.title }}
+						{{ historyItem.playStart }} - {{ historyItem.song.title }}
 					</li>
 				</ul>
 				<div v-else class="has-text-centered subtitle is-5">No items</div>
@@ -47,11 +47,10 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { namespace } from 'vuex-class';
+import { queueModule } from '@/store/namespaces'
 
 import draggable from 'vuedraggable'
 
-const queueModule = namespace('Queue')
 
 @Component({
   components: {
@@ -66,7 +65,7 @@ export default class QueueList extends Vue {
   @queueModule.Getter queue
   @queueModule.Getter currentSong
 
-  @queueModule.Mutation('QUEUE_SORT') queueSort
+  @queueModule.Mutation('sort') queueSort
 
   get queueList() {
     return this.prio.concat(this.queue)
