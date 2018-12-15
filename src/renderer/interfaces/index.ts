@@ -14,7 +14,7 @@ export interface Artist {
 }
 
 export interface Song {
-  id: number,
+  id: string,
   title: string,
   length: number,
   disc: number,

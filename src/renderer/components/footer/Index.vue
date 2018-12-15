@@ -6,7 +6,9 @@
           <img :src="currentSong.album.cover" :alt="currentSong.title">
         </figure>
         <div class="current-song-content">
-          <p class="title is-6">{{ currentSong.title }}</p>
+          <p class="title is-6" @click="goToAlbum">
+            {{ currentSong.title }}
+          </p>
           <p class="subtitle is-7" @click="goToArtist">
             {{ currentSong.artist.name }}
           </p>
@@ -71,10 +73,18 @@ export default class Index extends Vue {
     return this.repeat === 'ONE' ? 'repeat-once' : 'repeat'
   }
 
-  goToArtist(){
+  goToArtist() {
     this.$router.push({
       name: 'artists',
       params: { id: this.currentSong.artist.id }
+    })
+  }
+
+  goToAlbum() {
+    this.$router.push({
+      name: 'albums',
+      params: { id: this.currentSong.album.id },
+      query: { highlightedSongId: this.currentSong.id }
     })
   }
 }
@@ -103,8 +113,9 @@ export default class Index extends Vue {
     .current-song-content {
       overflow: hidden;
 
-      .subtitle:hover {
+      .title:hover, .subtitle:hover {
         text-decoration: underline;
+        cursor: pointer;
       }
     }
   }

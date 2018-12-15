@@ -2,8 +2,14 @@
 <div class="album-song-list">
   <div v-for="(disc, index) in discs">
     <div class="song-list-item disk-item" v-if="discs.length > 1"><div class="track-name">DISC {{ disc.number }}</div></div>
-    <div class="song-list-item" v-for="song in sortSongs(disc.songs)" :class="{'is-selected': isSelected(song), 'is-current': current === song}"
-      @click.right="$emit('context', $event, song)" @click="$emit('select', $event, song)" @dblclick="$emit('play', song)">
+    <div
+      v-for="song in sortSongs(disc.songs)"
+      :class="{'is-selected': isSelected(song), 'is-current': current === song, 'is-highlighted': isHighlighted(song)}"
+      class="song-list-item"
+      @click.right="$emit('context', $event, song)"
+      @click="$emit('select', $event, song)"
+      @dblclick="$emit('play', song)"
+    >
       <div class="track-number">
         <div class="show-on-hover">
           <b-icon v-if="current === song && playing" icon="pause-circle-outline" @click.native="pause"></b-icon>
@@ -63,6 +69,10 @@ export default class AlbumSongList extends Vue {
     return sortBy(songs, ['track'])
   }
 
+  isHighlighted(song) {
+    return this.$route.query.highlightedSongId === song.id
+  }
+
   isSelected (song) {
     return includes(this.selected, song)
   }
@@ -112,6 +122,10 @@ export default class AlbumSongList extends Vue {
     & .track-name {
       color: $primary;
     }
+  }
+
+  & .song-list-item.is-highlighted {
+    box-shadow: 0 0 0 3px $primary;
   }
 
   & .song-list-item .track-number {
