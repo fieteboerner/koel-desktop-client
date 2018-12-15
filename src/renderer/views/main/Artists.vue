@@ -26,7 +26,7 @@ import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import { first, sortBy } from 'lodash'
 import { Getter } from 'vuex-class'
-import { playerModule, queueModule } from '@/store/namespaces'
+import { playerModule, queueModule, mediaModule } from '@/store/namespaces'
 
 import ArtistCard from '@/components/shared/ArtistCard.vue'
 
@@ -36,9 +36,9 @@ import ArtistCard from '@/components/shared/ArtistCard.vue'
   },
 })
 export default class Artists extends Vue {
-  @Getter artist
-  @Getter artists
-  @Getter artistSongs
+  @mediaModule.Getter artist
+  @mediaModule.Getter artists
+  @mediaModule.Getter artistSongs
   @playerModule.Action play
   @queueModule.Action('set') setQueue
 

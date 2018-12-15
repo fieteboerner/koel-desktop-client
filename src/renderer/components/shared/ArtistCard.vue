@@ -44,7 +44,7 @@ import Vue from 'vue'
 import { sortBy } from 'lodash'
 import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
-import { playerModule, queueModule } from '@/store/namespaces'
+import { playerModule, queueModule, mediaModule } from '@/store/namespaces'
 
 import AlbumSongList from '@/components/shared/AlbumSongList.vue'
 import ContextMenu from '@/components/shared/ContextMenu.vue'
@@ -61,7 +61,7 @@ export default class ArtistCard extends Mixins(ListSelectMixin) {
     ctx: any,
   }
   @Prop(Object) artist
-  @Getter albums
+  @mediaModule.Getter albums
   @playerModule.Action play
   @queueModule.Action('set') setQueue
 

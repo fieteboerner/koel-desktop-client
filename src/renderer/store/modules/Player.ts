@@ -93,7 +93,7 @@ const actions = {
   play ({ commit, dispatch, rootGetters }) {
     commit('PLAYER_PLAY', {
       song: rootGetters['queue/currentSong'],
-      url: rootGetters.songurl(rootGetters['queue/currentSong'])
+      url: rootGetters['media/songurl'](rootGetters['queue/currentSong'])
     })
     dispatch('queue/started', null, { root: true })
     dispatch('resume')
@@ -132,7 +132,7 @@ const actions = {
   },
   ended ({ commit, dispatch, getters, state }) {
     dispatch('queue/ended', null, { root: true })
-    dispatch('MEDIA_INCREASE_PLAY_COUNT', getters.current, {root: true})
+    dispatch('media/increasePlayCount', getters.current, { root: true })
     if (state.options.repeat === 'ONE') return dispatch('restart')
 
     dispatch('skip')

@@ -35,7 +35,7 @@ import { ipcRenderer } from 'electron'
 import { Component } from 'vue-property-decorator'
 import { Getter, Action } from 'vuex-class';
 
-import { authModule } from '@/store/namespaces'
+import { authModule, mediaModule } from '@/store/namespaces'
 import SiteFooter from '@/components/footer/Index.vue'
 
 @Component({
@@ -44,9 +44,9 @@ import SiteFooter from '@/components/footer/Index.vue'
   }
 })
 export default class Main extends Vue {
-  @Action('DATA_REQUEST') loadData
+  @mediaModule.Action loadData
   @authModule.Getter user
-  @Getter('loading') isLoading
+  @mediaModule.Getter('loading') isLoading
   mounted() {
     ipcRenderer.on('media-key', (event, key) => {
       switch (key) {

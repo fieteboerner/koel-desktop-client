@@ -10,7 +10,7 @@ const state = {
 }
 
 const mutations = {
-  MEDIA_SUCCESS (state, data) {
+  initializeData (state, data) {
     let artistAlbumCache = {}
     state.albums = data.albums.map(album => {
       album.songs = data.songs.filter(
@@ -39,37 +39,37 @@ const mutations = {
     })
   },
 
-  MEDIA_SET_LOADING (state) {
+  setLoading (state) {
     state.loading = true
   },
 
-  MEDIA_SET_NOT_LOADING (state) {
+  setNotLoading (state) {
     state.loading = false
   }
 }
 
 const actions = {
-  DATA_REQUEST ({ commit, state, rootGetters }) {
-    commit('MEDIA_SET_LOADING')
+  loadData ({ commit, rootGetters }) {
+    commit('setLoading')
     return new Promise((resolve, reject) => {
       axios
         .get(rootGetters['auth/url'] + '/api/data')
         .then(resp => {
-          commit('auth/setUser', resp.data)
-          commit('MEDIA_SUCCESS', resp.data)
-          commit('MEDIA_SET_NOT_LOADING')
+          commit('auth/setUser', resp.data, { root: true })
+          commit('initializeData', resp.data)
+          commit('setNotLoading')
           resolve()
         })
         .catch(error => {
-          commit('MEDIA_SET_NOT_LOADING')
+          commit('setNotLoading')
           reject(error)
         })
     })
   },
-  MEDIA_INCREASE_PLAY_COUNT ({ commit, getters }, song) {
+  increasePlayCount ({ rootGetters }, song) {
     return new Promise((resolve, reject) => {
       axios
-        .post(`${getters.url}/api/interaction/play`, { song: song.id })
+        .post(`${rootGetters['auth/url']}/api/interaction/play`, { song: song.id })
         .then(response => resolve(response))
         .catch(error => reject(error))
     })
@@ -103,6 +103,7 @@ const getters = {
 }
 
 export default {
+  namespaced: true,
   state,
   mutations,
   actions,

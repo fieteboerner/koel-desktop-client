@@ -23,6 +23,7 @@ import { sortBy, take } from 'lodash'
 import { Component } from 'vue-property-decorator'
 import VueScrollto from 'vue-scrollto'
 
+import { mediaModule } from '@/store/namespaces'
 import CoverTile from '@/components/shared/CoverTile.vue'
 import AlbumCard from '@/components/shared/AlbumCard.vue'
 
@@ -34,8 +35,8 @@ import AlbumCard from '@/components/shared/AlbumCard.vue'
 })
 export default class Albums extends Vue {
 
-  @Getter album
-  @Getter albums
+  @mediaModule.Getter album
+  @mediaModule.Getter albums
 
   selectedItem = null
   busy = false

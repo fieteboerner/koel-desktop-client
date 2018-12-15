@@ -21,7 +21,7 @@
 </template>
 <script>
 import { clipboard } from 'electron'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import ContextMenu from 'vue-context-menu/src/ctx-menu'
 export default {
   extends: ContextMenu,
@@ -30,6 +30,7 @@ export default {
     items: Array
   },
   computed: {
+    ...mapGetters('media', ['sharableUrl']),
     mainCtx () {
       return this.context.split(':')[0]
     },
@@ -54,7 +55,7 @@ export default {
       }
     },
     copyShare () {
-      clipboard.writeText(this.$store.getters.sharableUrl(this.items[0]))
+      clipboard.writeText(this.sharableUrl(this.items[0]))
     }
   }
 }
