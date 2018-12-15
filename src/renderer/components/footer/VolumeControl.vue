@@ -1,7 +1,7 @@
 <template>
-	<div id="root">
-		<b-icon size="is-small" :max="10" :icon="volumeIcon" @click.native="toggleMute"></b-icon>
-		<progress-range :value="volume" @input="setVolume" id="slider"></progress-range>
+	<div class="volume-control">
+		<b-icon size="is-small" :max="10" :icon="volumeIcon" @click.native="toggleMute" />
+		<progress-range :value="volume" @input="setVolume" class="volume-control-slider" />
 	</div>
 </template>
 <script lang="ts">
@@ -36,13 +36,14 @@ export default class VolumeControl extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-#root {
+.volume-control {
 	width: 125px;
 	display: flex;
-	align-items: center
+	align-items: center;
 
-}
-#slider {
-	flex: 1;
+  .volume-control-slider {
+    flex: 1;
+    margin-left: 0.25rem;
+  }
 }
 </style>

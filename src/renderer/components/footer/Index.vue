@@ -1,15 +1,17 @@
 <template>
-  <div class="media footer-root" tabindex="-1">
-    <div class="media-left current-song">
-      <div v-if="currentSong" class="media">
-        <figure class="media-left image is-48x48">
+  <div class="footer-root" tabindex="-1">
+    <div class="current-song">
+      <template v-if="currentSong">
+        <figure class="current-song-cover image is-48x48">
           <img :src="currentSong.album.cover" :alt="currentSong.title">
         </figure>
-        <div class="media-content">
+        <div class="current-song-content">
           <p class="title is-6">{{ currentSong.title }}</p>
-          <p class="subtitle is-7">{{ currentSong.artist.name }}</p>
+          <p class="subtitle is-7" @click="goToArtist">
+            {{ currentSong.artist.name }}
+          </p>
         </div>
-      </div>
+      </template>
     </div>
     <div class="controls-wrapper timeline">
       <div class="controls">
@@ -24,7 +26,7 @@
       </div>
       <seek-bar></seek-bar>
     </div>
-    <div class="media-right special-control">
+    <div class="special-control">
       <b-icon icon="playlist-play" @click.native="queueListActive = true"></b-icon>
       <b-modal :active.sync="queueListActive">
         <queue-list></queue-list>
@@ -68,6 +70,13 @@ export default class Index extends Vue {
   get repeatIcon() {
     return this.repeat === 'ONE' ? 'repeat-once' : 'repeat'
   }
+
+  goToArtist(){
+    this.$router.push({
+      name: 'artists',
+      params: { id: this.currentSong.artist.id }
+    })
+  }
 }
 </script>
 <style lang="scss">
@@ -75,14 +84,28 @@ export default class Index extends Vue {
 
 .footer-root {
   flex: 1;
-  height: 70px;
+  display: flex;
+  height: 75px;
+  align-items: center;
+  user-select: none;
+  cursor: default;
 
   .current-song {
-    padding-left: 0.75rem;
+    display: flex;
     width: 350px;
+    margin: 0 1rem;
+    align-items: center;
 
-    & .media-content {
+    .current-song-cover {
+      margin-right: 1rem;
+    }
+
+    .current-song-content {
       overflow: hidden;
+
+      .subtitle:hover {
+        text-decoration: underline;
+      }
     }
   }
 
@@ -112,9 +135,14 @@ export default class Index extends Vue {
   }
 
   .special-control {
-    width: 250px;
+    width: 350px;
     display: flex;
-    padding: 1em 0;
+    margin: 0 1.5rem 0 1rem;
+    justify-content: flex-end;
+
+    >.icon {
+      margin-right: 0.75rem;
+    }
   }
 }
 </style>
