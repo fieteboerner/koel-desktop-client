@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { ifAuthenticated, ifNotAuthenticated } from './guards'
+import StorageService from '@/services/storage';
 
 Vue.use(Router)
 
-export default new Router({
+const router =  new Router({
   routes: [
     {
       path: '/login',
@@ -51,3 +52,9 @@ export default new Router({
     }
   ]
 })
+
+router.afterEach(to => {
+  StorageService.setLastUrl(to.fullPath)
+})
+
+export default router

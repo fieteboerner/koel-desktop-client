@@ -10,10 +10,12 @@ import store from './store'
 
 import SingleLayout from './components/layout/Single.vue'
 import SidebarLayout from './components/layout/Sidebar.vue'
+import StorageService from './services/storage';
 
 const token = store.getters['auth/token']
 if (token) {
   store.commit('auth/loginSuccess', token)
+  router.replace(StorageService.getLastUrl())
 }
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
