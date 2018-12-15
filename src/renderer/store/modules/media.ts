@@ -1,15 +1,17 @@
 import { first, sortBy, uniq } from 'lodash'
 import axios from '@/services/axios'
 import { Album, Artist, Song } from '@/interfaces'
+import { MediaState, RootState } from '../types';
+import { MutationTree, ActionTree, GetterTree, Module } from 'vuex';
 
-const state = {
-  loading: <boolean> false,
-  albums: <Album[]> [],
-  artists: <Artist[]> [],
-  songs: <Song[]> []
+const state: MediaState = {
+  loading: false,
+  albums: [],
+  artists: [],
+  songs: []
 }
 
-const mutations = {
+const mutations: MutationTree<MediaState> = {
   initializeData (state, data) {
     let artistAlbumCache = {}
     state.albums = data.albums.map(album => {
@@ -48,7 +50,7 @@ const mutations = {
   }
 }
 
-const actions = {
+const actions: ActionTree<MediaState, RootState> = {
   loadData ({ commit, rootGetters }) {
     commit('setLoading')
     return new Promise((resolve, reject) => {
@@ -76,7 +78,7 @@ const actions = {
   }
 }
 
-const getters = {
+const getters: GetterTree<MediaState, RootState> = {
   album: state => id =>
     first(state.albums.filter(album => album.id === parseInt(id))),
   albums: state => state.albums,
@@ -102,10 +104,12 @@ const getters = {
   loading: state => state.loading
 }
 
-export default {
+const MediaModule: Module<MediaState, RootState> = {
   namespaced: true,
   state,
   mutations,
   actions,
   getters
 }
+
+export default MediaModule

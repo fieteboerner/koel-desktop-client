@@ -1,21 +1,23 @@
 import plyr from 'plyr'
+import { PlayerState, RootState } from '../types';
+import { RepeatTypes } from '@/interfaces';
+import { MutationTree, ActionTree, GetterTree, Module } from 'vuex';
 
-const state = {
+const state: PlayerState = {
   initialized: false,
   playing: false,
   player: null,
-  current: null,
   currentTime: 0,
-  repeatModes: ['OFF', 'ALL', 'ONE'],
+  repeatModes: [RepeatTypes.Off, RepeatTypes.All, RepeatTypes.One],
   options: {
-    repeat: 'OFF',
+    repeat: RepeatTypes.Off,
     shuffle: false,
     volume: parseInt(window.localStorage.getItem('player-volume')) || 7,
     muted: false
   }
 }
 
-const mutations = {
+const mutations: MutationTree<PlayerState> = {
   init (state, element) {
     state.player = plyr.setup(element, {
       controls: ['progress'],
@@ -75,7 +77,7 @@ const mutations = {
   }
 }
 
-const actions = {
+const actions: ActionTree<PlayerState, RootState> = {
   init ({ commit, dispatch, state }, audioElement) {
     if (state.initialized) return
     commit('init', audioElement)
@@ -146,12 +148,11 @@ const actions = {
   }
 }
 
-const getters = {
+const getters: GetterTree<PlayerState, RootState> = {
   current: (state, getters, test, rootGetters) => {
     return rootGetters['queue/currentSong']
   },
   currentTime: state => state.currentTime,
-  duration: state => (state.current ? state.current.length : 0),
   muted: state => state.options.muted,
   playing: state => state.playing,
   repeat: state => state.options.repeat,
@@ -159,10 +160,12 @@ const getters = {
   volume: state => (state.options.muted ? 0 : state.options.volume)
 }
 
-export default {
+const PlayerModule: Module<PlayerState, RootState> = {
   namespaced: true,
   state,
   mutations,
   actions,
   getters
 }
+
+export default PlayerModule

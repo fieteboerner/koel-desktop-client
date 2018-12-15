@@ -1,15 +1,17 @@
 import { clone, each, find, findIndex, findLastIndex, first } from 'lodash'
 import { QueueItem, Song } from '@/interfaces';
+import { QueueState, RootState } from '../types';
+import { MutationTree, ActionTree, GetterTree, Module } from 'vuex';
 
-const state = {
+const state: QueueState = {
   context: null,
   contextActive: false,
-  queue: <QueueItem[]> [],
-  history: <QueueItem[]> [],
-  current: <QueueItem> {}
+  queue: [],
+  history: [],
+  current: {}
 }
 
-const mutations = {
+const mutations: MutationTree<QueueState> = {
   set (state, { songlist, toPlay }) {
     state.queue = songlist.map(song => {
       return { id: generateId(), song, prio: false }
@@ -77,7 +79,7 @@ const mutations = {
   }
 }
 
-const actions = {
+const actions: ActionTree<QueueState, RootState> = {
   set ({ commit }, { songlist, toPlay }) {
     commit('set', { songlist, toPlay })
   },
@@ -114,7 +116,7 @@ const actions = {
   }
 }
 
-const getters = {
+const getters: GetterTree<QueueState, RootState> = {
   context: state => (state.contextActive ? state.context : null),
   currentPlaybackItem: state => state.current,
   currentSong: state =>
@@ -152,10 +154,12 @@ function generateId () {
     .substr(2, 16)
 }
 
-export default {
+const QueueModule: Module<QueueState, RootState> = {
   namespaced: true,
   state,
   mutations,
   actions,
   getters
 }
+
+export default QueueModule

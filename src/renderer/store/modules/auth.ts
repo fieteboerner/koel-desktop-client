@@ -1,15 +1,16 @@
 import axios from '@/services/axios'
-const state = {
-  auth_error: {},
-  token: <string> window.localStorage.getItem('auth-token') || '',
-  url: <string> window.localStorage.getItem('url') || '',
-  email: <string> window.localStorage.getItem('email') || '',
+import { AuthState, RootState } from '../types';
+import { GetterTree, MutationTree, ActionTree, Module } from 'vuex';
+
+const state: AuthState = {
+  token: window.localStorage.getItem('auth-token') || '',
+  url: window.localStorage.getItem('url') || '',
+  email: window.localStorage.getItem('email') || '',
   user: {}
 }
 
-const mutations = {
+const mutations: MutationTree<AuthState> = {
   loginSuccess (state, token: string) {
-    state.auth_error = {}
     state.token = token
     localStorage.setItem('auth-token', token)
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
@@ -36,7 +37,7 @@ const mutations = {
   }
 }
 
-const actions = {
+const actions: ActionTree<AuthState, RootState> = {
   login ({ commit, state }, { email, password }) {
 
     return new Promise((resolve, reject) => {
@@ -75,7 +76,7 @@ const actions = {
   }
 }
 
-const getters = {
+const getters: GetterTree<AuthState, RootState> = {
   isAuthenticated: state => !!state.token,
   user: state => state.user,
   url: state => state.url.replace(/\/+$/, ''),
@@ -83,10 +84,12 @@ const getters = {
   token: state => state.token
 }
 
-export default {
+const AuthModule: Module<AuthState, RootState> = {
   namespaced: true,
   state,
   mutations,
   actions,
   getters
 }
+
+export default AuthModule

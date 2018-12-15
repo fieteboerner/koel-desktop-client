@@ -31,3 +31,9 @@ export interface QueueItem {
   prio: boolean,
   song: Song,
 }
+
+export enum RepeatTypes {
+  Off = 'OFF',
+  All = 'ALL',
+  One = 'ONE'
+}
