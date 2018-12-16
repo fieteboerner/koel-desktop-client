@@ -1,4 +1,5 @@
 import axios from '@/services/axios'
+import StorageService from '@/services/storage'
 import { AuthState, RootState } from '../types';
 import { GetterTree, MutationTree, ActionTree, Module } from 'vuex';
 
@@ -19,11 +20,13 @@ const mutations: MutationTree<AuthState> = {
   logout (state) {
     state.token = null
     localStorage.removeItem('auth-token')
+    StorageService.setUserPrefix('')
     delete axios.defaults.headers.common['Authorization']
   },
 
   setUser (state, { currentUser }) {
     state.user = currentUser
+    StorageService.setUserPrefix(currentUser.id.toString())
   },
 
   setUrl (state, url: string) {
