@@ -4,22 +4,22 @@ import { AuthState, RootState } from '../types';
 import { GetterTree, MutationTree, ActionTree, Module } from 'vuex';
 
 const state: AuthState = {
-  token: window.localStorage.getItem('auth-token') || '',
-  url: window.localStorage.getItem('url') || '',
-  email: window.localStorage.getItem('email') || '',
+  token: StorageService.get('auth-token', ''),
+  url: StorageService.get('url', ''),
+  email: StorageService.get('email', ''),
   user: {}
 }
 
 const mutations: MutationTree<AuthState> = {
   loginSuccess (state, token: string) {
     state.token = token
-    localStorage.setItem('auth-token', token)
+    StorageService.set('auth-token', token)
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
   },
 
   logout (state) {
     state.token = null
-    localStorage.removeItem('auth-token')
+    StorageService.remove('auth-token')
     StorageService.setUserPrefix('')
     delete axios.defaults.headers.common['Authorization']
   },
@@ -31,12 +31,12 @@ const mutations: MutationTree<AuthState> = {
 
   setUrl (state, url: string) {
     state.url = url
-    localStorage.setItem('url', url)
+    StorageService.set('url', url)
   },
 
   setMail (state, email: string) {
     state.email = email
-    localStorage.setItem('email', email)
+    StorageService.set('email', email)
   }
 }
 

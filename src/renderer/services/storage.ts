@@ -15,6 +15,10 @@ class StorageService {
         return this.storage.getItem(this._prefixKey(prefix, key)) || defaultValue
     }
 
+    remove(key: string, prefix: string = '') {
+        this.storage.removeItem(this._prefixKey(prefix, key))
+    }
+
     setUserValue(key: string, value: string) {
         if(!this.userPrefix) {
             return
@@ -29,6 +33,10 @@ class StorageService {
         }
 
         return this.get(key, defaultValue, this.userPrefix)
+    }
+
+    removeUserValue(key: string) {
+        this.remove(key, this.userPrefix)
     }
 
     setUserPrefix(prefix: string) {
