@@ -32,6 +32,7 @@ export interface PlayerState {
     shuffle: boolean
     volume: number
     muted: boolean
+    showRemainingTime: boolean
   }
 }
 

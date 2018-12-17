@@ -1,3 +1,4 @@
+import { sha256 } from 'js-sha256'
 class StorageService {
     storage?: Storage = null
     userPrefix: string = ''
@@ -39,9 +40,17 @@ class StorageService {
         this.remove(key, this.userPrefix)
     }
 
-    setUserPrefix(prefix: string) {
-        this.userPrefix = prefix
-        this.set('userPrefix', prefix)
+    setUserPrefix(email: string, id: string = '') {
+        const userMap = JSON.parse(this.get('userMap', '{}'))
+        const emailHash = sha256(email)
+        if (id) {
+            userMap[emailHash] = id
+            this.set('userMap', JSON.stringify(userMap))
+        } else {
+            id = userMap[emailHash] || ''
+        }
+        this.userPrefix = id
+        this.set('userPrefix', id)
     }
 
     setToken(token: string) {

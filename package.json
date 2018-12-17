@@ -53,6 +53,7 @@
   "dependencies": {
     "axios": "0.18.0",
     "buefy": "0.7.1",
+    "js-sha256": "^0.9.0",
     "lodash": "^4.17.5",
     "mdi": "^2.1.19",
     "plyr": "2",

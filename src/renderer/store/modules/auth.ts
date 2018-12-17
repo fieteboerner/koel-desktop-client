@@ -4,7 +4,7 @@ import { AuthState, RootState } from '../types';
 import { GetterTree, MutationTree, ActionTree, Module } from 'vuex';
 
 const state: AuthState = {
-  token: StorageService.get('auth-token', ''),
+  token: StorageService.get('authToken', ''),
   url: StorageService.get('url', ''),
   email: StorageService.get('email', ''),
   user: {}
@@ -13,20 +13,20 @@ const state: AuthState = {
 const mutations: MutationTree<AuthState> = {
   loginSuccess (state, token: string) {
     state.token = token
-    StorageService.set('auth-token', token)
+    StorageService.set('authToken', token)
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
   },
 
   logout (state) {
     state.token = null
-    StorageService.remove('auth-token')
+    StorageService.remove('authToken')
     StorageService.setUserPrefix('')
     delete axios.defaults.headers.common['Authorization']
   },
 
   setUser (state, { currentUser }) {
     state.user = currentUser
-    StorageService.setUserPrefix(currentUser.id.toString())
+    StorageService.setUserPrefix(currentUser.email, currentUser.id.toString())
   },
 
   setUrl (state, url: string) {
@@ -49,6 +49,7 @@ const actions: ActionTree<AuthState, RootState> = {
         .then(resp => {
           commit('setMail', email)
           commit('loginSuccess', resp.data.token)
+          StorageService.setUserPrefix(email)
           resolve(resp)
         })
         .catch(err => {

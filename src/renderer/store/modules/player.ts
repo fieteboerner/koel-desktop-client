@@ -4,6 +4,10 @@ import { PlayerState, RootState } from '../types';
 import { RepeatTypes } from '@/interfaces';
 import StorageService from '@/services/storage'
 
+function updatePersistentOptions(options){
+  StorageService.setUserValue('playerOptions', JSON.stringify(options))
+}
+
 const state: PlayerState = {
   initialized: false,
   playing: false,
@@ -13,8 +17,9 @@ const state: PlayerState = {
   options: {
     repeat: RepeatTypes.Off,
     shuffle: false,
-    volume: parseInt(StorageService.getUserValue('player-volume', '7'), 10),
-    muted: false
+    volume: 7,
+    muted: false,
+    showRemainingTime: false
   }
 }
 
@@ -24,8 +29,16 @@ const mutations: MutationTree<PlayerState> = {
       controls: ['progress'],
       loadSprite: false
     })[0]
+
+    state.options = Object.assign(
+      state.options,
+      JSON.parse(StorageService.getUserValue('playerOptions', '{}'))
+    )
+
     state.player.setVolume(state.options.volume)
-    state.options.muted = state.player.isMuted()
+    if(state.options.muted !== state.player.isMuted()){
+      state.player.toggleMute()
+    }
 
     state.initialized = true
   },
@@ -63,18 +76,25 @@ const mutations: MutationTree<PlayerState> = {
     let current = state.repeatModes.indexOf(state.options.repeat)
     let nextIndex = state.repeatModes[++current] ? current : 0
     state.options.repeat = state.repeatModes[nextIndex]
+    updatePersistentOptions(state.options)
   },
   toggleShuffle (state) {
     state.options.shuffle = !state.options.shuffle
+    updatePersistentOptions(state.options)
   },
   setVolume (state, volume: number) {
     state.options.volume = volume
     state.player.setVolume(volume)
-    StorageService.setUserValue('player-volume', volume.toString())
+    updatePersistentOptions(state.options)
   },
   toggleMute (state) {
     state.player.toggleMute()
     state.options.muted = state.player.isMuted()
+    updatePersistentOptions(state.options)
+  },
+  toggleShowRemainingTime(state) {
+    state.options.showRemainingTime = !state.options.showRemainingTime
+    updatePersistentOptions(state.options)
   }
 }
 
@@ -143,9 +163,11 @@ const actions: ActionTree<PlayerState, RootState> = {
   setVolume ({ commit }, volume) {
     commit('setVolume', volume)
   },
-  toggleMute ({ commit, getters }) {
+  toggleMute ({ commit }) {
     commit('toggleMute')
-    if (!getters.muted && !getters.volume) commit('setVolume', 5)
+  },
+  toggleShowRemainingTime({ commit }) {
+    commit('toggleShowRemainingTime')
   }
 }
 
@@ -158,7 +180,8 @@ const getters: GetterTree<PlayerState, RootState> = {
   playing: state => state.playing,
   repeat: state => state.options.repeat,
   shuffle: state => state.options.shuffle,
-  volume: state => (state.options.muted ? 0 : state.options.volume)
+  volume: state => (state.options.muted ? 0 : state.options.volume),
+  showRemainingTime: state => state.options.showRemainingTime
 }
 
 const PlayerModule: Module<PlayerState, RootState> = {

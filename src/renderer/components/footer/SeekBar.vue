@@ -4,7 +4,7 @@
     <div ref="plyr" class="plyr" id="plyr-player">
       <audio ref="audio" controls></audio>
     </div>
-    <div class="full-time" @click="showTimeLeft = !showTimeLeft">{{ showTimeLeft ? timeLeft : currentTime | timecode }}</div>
+    <div class="full-time" @click="toggleShowRemainingTime">{{ showRemainingTime ? timeLeft : currentTime | timecode }}</div>
   </div>
 </template>
 <script lang="ts">
@@ -18,9 +18,11 @@ import { playerModule } from '@/store/namespaces'
 export default class SeekBar extends Vue {
   @playerModule.Action init
   @playerModule.Action destroy
+  @playerModule.Action toggleShowRemainingTime
 
   @playerModule.Getter current
   @playerModule.Getter currentTime
+  @playerModule.Getter showRemainingTime
 
   showTimeLeft = false
 
