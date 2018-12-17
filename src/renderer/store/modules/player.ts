@@ -1,7 +1,8 @@
 import plyr from 'plyr'
+import { MutationTree, ActionTree, GetterTree, Module } from 'vuex';
 import { PlayerState, RootState } from '../types';
 import { RepeatTypes } from '@/interfaces';
-import { MutationTree, ActionTree, GetterTree, Module } from 'vuex';
+import StorageService from '@/services/storage'
 
 const state: PlayerState = {
   initialized: false,
@@ -12,7 +13,7 @@ const state: PlayerState = {
   options: {
     repeat: RepeatTypes.Off,
     shuffle: false,
-    volume: parseInt(window.localStorage.getItem('player-volume')) || 7,
+    volume: parseInt(StorageService.getUserValue('player-volume', '7'), 10),
     muted: false
   }
 }
@@ -66,10 +67,10 @@ const mutations: MutationTree<PlayerState> = {
   toggleShuffle (state) {
     state.options.shuffle = !state.options.shuffle
   },
-  setVolume (state, volume) {
+  setVolume (state, volume: number) {
     state.options.volume = volume
     state.player.setVolume(volume)
-    window.localStorage.setItem('player-volume', volume)
+    StorageService.setUserValue('player-volume', volume.toString())
   },
   toggleMute (state) {
     state.player.toggleMute()

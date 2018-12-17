@@ -1,7 +1,7 @@
 <template>
 	<div class="volume-control">
-		<b-icon size="is-small" :max="10" :icon="volumeIcon" @click.native="toggleMute" />
-		<progress-range :value="volume" @input="setVolume" class="volume-control-slider" />
+		<b-icon size="is-small" :icon="volumeIcon" @click.native="toggleMute" />
+		<progress-range :value="volume" :max="10" :step=".1" @input="onUpdateVolume" class="volume-control-slider" />
 	</div>
 </template>
 <script lang="ts">
@@ -32,6 +32,10 @@ export default class VolumeControl extends Vue {
     }
 
     return 'volume-high'
+  }
+
+  onUpdateVolume(value) {
+    this.setVolume(Math.round(value))
   }
 }
 </script>
