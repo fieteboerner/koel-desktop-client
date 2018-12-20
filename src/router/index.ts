@@ -15,11 +15,10 @@ const router =  new Router({
     },
     {
       path: '/',
-      name: 'koel',
       component: require('@/views/Main.vue').default,
       beforeEnter: ifAuthenticated,
       children: [
-        { path: '', redirect: '/artists' },
+        { path: '', name: 'koel', redirect: '/artists' },
         {
           path: '/albums/:id?',
           name: 'albums',
