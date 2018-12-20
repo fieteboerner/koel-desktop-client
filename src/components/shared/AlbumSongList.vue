@@ -1,10 +1,11 @@
 <template>
 <div class="album-song-list">
-  <div v-for="(disc, index) in discs">
+  <div v-for="(disc, index) in discs" :key="index">
     <div class="song-list-item disk-item" v-if="discs.length > 1"><div class="track-name">DISC {{ disc.number }}</div></div>
     <div
       v-for="song in sortSongs(disc.songs)"
       :class="{'is-selected': isSelected(song), 'is-current': current === song, 'is-highlighted': isHighlighted(song)}"
+      :key="song.id"
       class="song-list-item"
       @click.right="$emit('context', $event, song)"
       @click="$emit('select', $event, song)"

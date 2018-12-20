@@ -9,7 +9,7 @@
         </p>
         <hr>
       </div>
-      <div class="artist-card-columns" v-for="album in sortedAlbums">
+      <div class="artist-card-columns" v-for="album in sortedAlbums" :key="album.id">
         <div class="column is-one-quarter is-hidden-touch">
           <figure class="image cover is-square">
             <img :src="album.cover" :alt="album.name">

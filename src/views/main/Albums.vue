@@ -5,9 +5,11 @@
         <template v-for="album in infiniteAlbums">
           <cover-tile :img="album.cover" :title="album.name" :subtitle="album.artist.name"
             :class="{'is-selected': selected === album}" class="album-item"
+            :key="album.id"
             @cover="selectAlbum(album)" @title="selectAlbum(album)"
             @subtitle="$router.push({name: 'artists', params: {id: album.artist.id}})"></cover-tile>
-          <transition name="detail-toggle" @after-enter="scrollToSelected" @appear="scrollToSelected">
+          <transition name="detail-toggle" @after-enter="scrollToSelected" @appear="scrollToSelected"
+            :key="album.id" >
             <div class="details" v-if="selected === album">
               <album-card :album="album"></album-card>
             </div>

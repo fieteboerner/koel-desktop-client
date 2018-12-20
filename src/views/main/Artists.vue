@@ -3,7 +3,8 @@
     <div slot="sidebar">
       <div class="sidebar-list">
         <div class="sidebar-list-item" :class="{'is-selected': selected === artist}"
-          v-for="artist in sortedArtists" @click="selectArtist(artist)" @dblclick="onPlay">
+          v-for="artist in sortedArtists" @click="selectArtist(artist)" @dblclick="onPlay"
+          :key="artist.id">
           <figure class="sidebar-item-image image is-48x48">
             <img :src="artist.albums[0].cover" alt="artist.name">
           </figure>

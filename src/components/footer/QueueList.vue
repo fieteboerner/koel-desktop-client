@@ -12,7 +12,7 @@
 					<div class="title is-5">Next in Queue</div>
 					<ul>
 						<draggable :value="prio" @input="onPrioSort" :options="{group:'queue'}">
-							<li v-for="item in prio">
+							<li v-for="item in prio" :key="item.id">
 								{{ item.song.title }} - {{ item.song.artist.name }}
 							</li>
 						</draggable>
@@ -21,7 +21,7 @@
 				<div class="title is-5">Next Up</div>
 				<ul v-if="queue.length">
 					<draggable :value="queue" @input="onQueueSort" :options="{group:'queue'}">
-						<li v-for="item in queue">
+						<li v-for="item in queue" :key="item.id">
 							{{ item.song.title }} - {{ item.song.artist.name }} <a @click="remove(item)">remove</a>
 						</li>
 					</draggable>
@@ -31,7 +31,7 @@
 			</b-tab-item>
 			<b-tab-item label="History">
 				<ul v-if="history.length">
-					<li v-for="historyItem in history">
+					<li v-for="historyItem in history" :key="historyItem.id">
 						{{ historyItem.playStart }} - {{ historyItem.song.title }}
 					</li>
 				</ul>
