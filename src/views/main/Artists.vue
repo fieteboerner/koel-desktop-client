@@ -63,7 +63,7 @@ export default class Artists extends Vue {
   }
 
   onPlay () {
-    let songlist = this.artistSongs(this.selected)
+    const songlist = this.artistSongs(this.selected)
     this.setQueue({ songlist, toPlay: songlist[0] })
     this.play()
   }

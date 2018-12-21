@@ -1,7 +1,6 @@
 <template>
-    <div class="artist-card-root" tabindex="-1"
-      @keypress.enter="play(selected[0])">
-      <context-menu ref="ctx" context="artist:song" @play="play(selected[0])" :items="sortedSelected"/>
+    <div class="artist-card-root" tabindex="-1" @keypress.enter="onPlay">
+      <context-menu ref="ctx" context="artist:song" @play="onPlay" :items="sortedSelected"/>
       <div>
         <p class="title is-3" style="margin-bottom: 2.25rem;">{{ artist.name }}</p>
         <p class="subtitle is-5">
@@ -33,8 +32,12 @@
             </div>
           </div>
           <hr>
-          <album-song-list :songs="album.songs" :selected="selected" @select="selectItem" @play="onPlay"
-            @context="context"></album-song-list>
+          <album-song-list
+            :songs="album.songs"
+            :selected="selected"
+            @select="selectItem"
+            @play="onPlay"
+            @context="context" />
         </div>
       </div>
     </div>
@@ -98,7 +101,10 @@ export default class ArtistCard extends Mixins(ListSelectMixin) {
 
   onPlay (song) {
     song = song || this.sortedSelected[0] || this.items[0]
-    this.setQueue({ songlist: this.items, toPlay: song })
+    const startIndex = this.items.indexOf(song)
+    const songlist = this.items.filter((song, index) => index >= startIndex)
+
+    this.setQueue({ songlist, toPlay: song })
     this.play()
   }
 

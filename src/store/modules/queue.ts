@@ -46,7 +46,10 @@ const mutations: MutationTree<QueueState> = {
         queue.push(queueItem)
       })
     }
-    state.queue = clone(queue)
+    if(!queue.find((item: QueueItem) => item.id === state.current.id)){
+      queue.unshift(state.current);
+    }
+    state.queue = queue
   },
   queuePrio (state, songs: Song[]) {
     let lastIndex = findLastIndex(state.queue, ['prio', true])
@@ -120,13 +123,10 @@ const getters: GetterTree<QueueState, RootState> = {
   context: state => (state.contextActive ? state.context : null),
   currentPlaybackItem: state => state.current,
   currentSong: state =>
-    (find(state.queue, (item: QueueItem) => item === state.current) || {}).song,
-  prio: state => state.queue.filter((item: QueueItem) => item.prio),
+    (find(state.queue, (item: QueueItem) => item.id === state.current.id) || {}).song,
+  prio: state => state.queue.filter((item: QueueItem) => item.prio && item.id !== state.current.id),
   fullQueue: state => state.queue.filter((item: QueueItem) => !item.prio),
-  queue: state => {
-    let start = findIndex(state.queue, (item: QueueItem) => item.id === state.current.id)
-    return state.queue.filter((item: QueueItem, index: number) => index > start && !item.prio)
-  },
+  queue: state => state.queue.filter((item: QueueItem) => !item.prio && item.id !== state.current.id),
   history: state => state.history,
   next: state => {
     // handle repeat / shuffle

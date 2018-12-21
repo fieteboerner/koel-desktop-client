@@ -61,7 +61,10 @@ export default class AlbumCard extends mixins(ListSelectMixin) {
 
   onPlay(song) {
     song = song || this.sortedSelected[0] || this.items[0]
-    this.setQueue({ songlist: this.items, toPlay: song })
+    const startIndex = this.items.indexOf(song)
+    const songlist = this.items.filter((song, index) => index >= startIndex)
+
+    this.setQueue({ songlist, toPlay: song })
     this.play()
   }
 
