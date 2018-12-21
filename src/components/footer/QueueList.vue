@@ -1,7 +1,8 @@
 <template>
 <div class="modal-card" style="width: auto;">
 	<header class="modal-card-head">
-		<div class="modal-card-title">Play Queue</div></header>
+		<div class="modal-card-title">Play Queue</div>
+  </header>
 	<section class="modal-card-body">
 		<b-tabs position="is-centered">
 			<b-tab-item label="Queue">

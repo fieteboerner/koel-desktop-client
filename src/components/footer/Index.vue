@@ -26,14 +26,14 @@
           <b-icon :icon="repeatIcon" :class="{active: ['ONE', 'ALL'].indexOf(repeat) > -1}" @click.native="toggleRepeat"></b-icon>
         </div>
       </div>
-      <seek-bar></seek-bar>
+      <seek-bar/>
     </div>
     <div class="special-control">
       <b-icon icon="playlist-play" @click.native="queueListActive = true"></b-icon>
-      <b-modal :active.sync="queueListActive">
-        <queue-list></queue-list>
+      <b-modal :active.sync="queueListActive" :can-cancel="['escape', 'outside']">
+        <queue-list/>
       </b-modal>
-      <volume-control></volume-control>
+      <volume-control/>
     </div>
 
   </div>
