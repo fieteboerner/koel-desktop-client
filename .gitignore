@@ -1,8 +1,5 @@
 .DS_Store
-dist/electron/*
-dist/web/*
-build/*
-!build/icons
+dist_electron/
 node_modules/
 npm-debug.log
 npm-debug.log.*
