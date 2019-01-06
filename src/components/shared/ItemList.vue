@@ -5,8 +5,18 @@
     </div>
     <table v-else class="item-list">
       <tbody>
-        <tr v-for="item in items" :key="item.id">
-          <ItemListCell v-for="column in columns" :column="column" :item="item" :key="column.id" />
+        <tr
+          class="item-list-row"
+          :class="{ 'is-selected': selectedItem === item }"
+          v-for="item in items"
+          :key="item.id"
+          @click="onSelect(item)"
+          >
+          <ItemListCell
+            v-for="column in columns"
+            :column="column"
+            :item="item"
+            :key="column.id" />
         </tr>
       </tbody>
     </table>
@@ -29,24 +39,51 @@ import ItemListCell from "@/components/shared/ItemListCell.ts";
   }
 })
 export default class ItemList extends Vue {
-  @Prop(Array) items;
+  @Prop(Array) items
+  @Prop(Boolean) selectable
 
-  columns: ItemListColumn[] = [];
+  columns: ItemListColumn[] = []
+  selectedItem: any = null
 
   mounted() {
     this.columns = this.$slots.default
       .filter((column: VNode) => column.componentInstance)
-      .map(column => <ItemListColumn>column.componentInstance);
+      .map(column => <ItemListColumn>column.componentInstance)
   }
 
-  getCellValue(column: ItemListColumn, item: any) {
-    return item[column.show];
+  onSelect(item: any): void {
+    if(!this.selectable) return
+    this.selectedItem = item
   }
 }
 </script>
 
 <style lang="scss">
+@import '../../styles/settings';
+
 .item-list {
-  width: 100%
+  width: 100%;
+  cursor: default;
+  user-select: none;
+
+  .item-list-row {
+    border-bottom: 1px solid #cccccc;
+    padding: 7px;
+    line-height: 1.75em;
+    overflow: hidden;
+
+    td {
+      padding: 7px;
+      color: #010101;
+      font-weight: 500;
+    }
+
+    &.is-selected {
+      td {
+        background-color: $cyan;
+        color: $white;
+      }
+    }
+  }
 }
 </style>
