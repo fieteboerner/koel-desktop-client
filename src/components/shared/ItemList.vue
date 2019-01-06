@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import Vue, { CreateElement, VNode } from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import ItemListColumn from "@/components/shared/ItemListColumn.vue";
 import ItemListCell from "@/components/shared/ItemListCell.ts";
 
@@ -41,6 +41,7 @@ import ItemListCell from "@/components/shared/ItemListCell.ts";
 export default class ItemList extends Vue {
   @Prop(Array) items
   @Prop(Boolean) selectable
+  @Prop(Object) selected
 
   columns: ItemListColumn[] = []
   selectedItem: any = null
@@ -49,11 +50,20 @@ export default class ItemList extends Vue {
     this.columns = this.$slots.default
       .filter((column: VNode) => column.componentInstance)
       .map(column => <ItemListColumn>column.componentInstance)
+
   }
 
   onSelect(item: any): void {
     if(!this.selectable) return
+    if(this.selectedItem === item) return
+
     this.selectedItem = item
+    this.$emit('selection-change', item)
+  }
+
+  @Watch('selected', {immediate: true})
+  onSelectedChange(selected){
+    this.selectedItem = selected
   }
 }
 </script>
