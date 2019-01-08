@@ -1,27 +1,33 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { includes, indexOf, last, sortBy, without } from 'lodash'
+import { indexOf, last, sortBy, without } from 'lodash'
 
 @Component
-export default class ListSelect extends Vue {
-  selected = []
+export default class ListSelect<T> extends Vue {
+  selected: Array<T> = []
 
-  get items () {
+  get multiselect() {
+    return true
+  }
+  get items (): Array<T> {
+    console.warn('implement a computed property "items" for ...')
     return []
   }
 
-  get sortedSelected() {
-    const selected = []
-    this.items.forEach(item => {
-      if (this.isSelected(item)) selected.push(item)
-    })
+  get sortedSelected(): Array<T> {
+    return this.items.filter(item => this.isSelected(item))
+  }
 
-    return selected
+  isSelected(item: T): Boolean {
+    return this.selected.includes(item)
   }
-  isSelected(item) {
-    return includes(this.selected, item)
-  }
-  selectItem(event, item) {
+
+  selectItem(event: MouseEvent, item: T): void {
+    if(!this.multiselect) {
+      this.selected = [item]
+      return
+    }
+
     // toggle single item with ctrl or cmd
     if (event.ctrlKey || event.metaKey) {
       if (this.isSelected(item)) {
@@ -37,7 +43,7 @@ export default class ListSelect extends Vue {
       ])
 
       for (let i = indexes[0]; i <= indexes[1]; i++) {
-        if (includes(this.selected, this.items[i])) continue
+        if (this.selected.includes(this.items[i])) continue
         this.selected.push(this.items[i])
       }
       // set item if no button is hold
@@ -46,3 +52,4 @@ export default class ListSelect extends Vue {
     }
   }
 }
+
