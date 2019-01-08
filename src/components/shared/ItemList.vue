@@ -10,7 +10,7 @@
           :class="{ 'is-selected': isSelected(item) }"
           v-for="item in items"
           :key="item.id"
-          @click="onSelect($event, item)"
+          @click="$emit('select', $event, item)"
         >
           <ItemListCell v-for="column in columns" :column="column" :item="item" :key="column.id"/>
         </tr>
@@ -36,13 +36,10 @@ import ItemListCell from "@/components/shared/ItemListCell.ts";
   }
 })
 export default class ItemList extends Vue {
-  @Prop(Array) items;
-  @Prop(Boolean) selectable;
-  @Prop(Boolean) multiselectable;
-  @Prop([Object, Array]) selected;
+  @Prop(Array) items: Array<any>;
+  @Prop(Array) selected: Array<any>;
 
   columns: ItemListColumn[] = [];
-  selectedItems: Array<any> = [];
 
   mounted() {
     this.columns = this.$slots.default
@@ -50,54 +47,8 @@ export default class ItemList extends Vue {
       .map(column => <ItemListColumn>column.componentInstance);
   }
 
-  get sortedSelected() {
-    return this.items.filter(item => this.isSelected(item));
-  }
-
-  isSelected(item) {
-    return this.selectedItems.includes(item);
-  }
-
-  onSelect(event: MouseEvent, item: any): void {
-    if (!this.selectable && !this.multiselectable) return;
-
-    // single select
-    if (!this.multiselectable) {
-      if (this.isSelected(item)) return;
-      this.selectedItems = [item];
-      this.$emit("selection-change", item);
-    }
-
-    // multi select
-    // toggle single item with ctrl or cmd
-    if (event.ctrlKey || event.metaKey) {
-      if (this.isSelected(item)) {
-        this.selectedItems = without(this.selectedItems, item);
-      } else {
-        this.selectedItems.push(item);
-      }
-      // select from to with shift
-    } else if (this.selectedItems.length && event.shiftKey) {
-      let indexes = sortBy([
-        indexOf(this.items, last(this.selectedItems)),
-        indexOf(this.items, item)
-      ]);
-
-      for (let i = indexes[0]; i <= indexes[1]; i++) {
-        if (this.isSelected(this.items[i])) continue;
-        this.selectedItems.push(this.items[i]);
-      }
-      // set item if no button is hold
-    } else {
-      this.selectedItems = [item];
-    }
-
-    this.$emit("selection-change", item, this.sortedSelected);
-  }
-
-  @Watch("selected", { immediate: true })
-  onSelectedChange(selected) {
-    this.selectedItems = Array.isArray(selected) ? selected : [selected];
+  isSelected(item: any): Boolean {
+    return this.selected.includes(item);
   }
 }
 </script>
