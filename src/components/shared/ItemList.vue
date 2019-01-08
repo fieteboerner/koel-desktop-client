@@ -3,19 +3,18 @@
     <div v-if="!items.length">
       <slot name="empty">There are no items to show</slot>
     </div>
-    <table v-else class="item-list">
-      <tbody>
-        <tr
-          class="item-list-row"
-          :class="{ 'is-selected': isSelected(item) }"
-          v-for="item in items"
-          :key="item.id"
-          @click="$emit('select', $event, item)"
-        >
-          <ItemListCell v-for="column in columns" :column="column" :item="item" :key="column.id"/>
-        </tr>
-      </tbody>
-    </table>
+    <div v-else class="item-list">
+      <div
+        class="item-list-item"
+        :class="{ 'is-selected': isSelected(item), [itemClass]: true }"
+        v-for="item in items"
+        :key="item.id"
+        @click="$emit('select', $event, item)"
+        @dblclick="$emit('open', $event, item)"
+      >
+        <ItemListCell v-for="column in columns" :column="column" :item="item" :key="column.id"/>
+      </div>
+    </div>
     <!-- mount helper components to get the component instances -->
     <div style="display: none;">
       <slot></slot>
@@ -38,6 +37,7 @@ import ItemListCell from "@/components/shared/ItemListCell.ts";
 export default class ItemList extends Vue {
   @Prop(Array) items: Array<any>;
   @Prop(Array) selected: Array<any>;
+  @Prop(String) itemClass: String;
 
   columns: ItemListColumn[] = [];
 
@@ -61,21 +61,20 @@ export default class ItemList extends Vue {
   cursor: default;
   user-select: none;
 
-  .item-list-row {
-    border-bottom: 1px solid #cccccc;
-    padding: 7px;
-    line-height: 1.75em;
+  .item-list-item {
+    display: flex;
+    align-items: center;
     overflow: hidden;
+    line-height: 1.75em;
+    cursor: default;
 
-    td {
-      padding: 7px;
+    .item-list-cell {
       color: #010101;
-      font-weight: 500;
     }
 
     &.is-selected {
-      td {
-        background-color: $cyan;
+      background-color: $cyan;
+      .item-list-cell {
         color: $white;
       }
     }

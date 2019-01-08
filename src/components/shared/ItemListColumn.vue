@@ -13,6 +13,7 @@ let globalId = 1
 @Component
 export default class ItemListColumn extends Vue {
   @Prop(String) show;
+  @Prop() cellClass;
 
   id = globalId++
 }

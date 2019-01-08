@@ -1,4 +1,4 @@
-import Vue, { CreateElement, VNode, RenderContext } from 'vue'
+import Vue, { CreateElement, VNode, RenderContext, ComponentOptions, VNodeData } from 'vue'
 import ItemListColumn from '@/components/shared/ItemListColumn.vue'
 
 function getCellValue(column: ItemListColumn, item: Object) {
@@ -15,14 +15,19 @@ export default Vue.extend({
     functional: true,
 
     render(h: CreateElement, { props }: RenderContext): VNode {
-        const options = {}
+      const options: VNodeData = {
+        staticClass: 'item-list-cell'
+      }
 
-        const { column, item } = props
+      const { column, item } = props
+      if(column.cellClass) {
+        options.class = column.cellClass
+      }
 
-        if (column.$scopedSlots.default) {
-            return h('td', options, column.$scopedSlots.default({ column, item, value: getCellValue(column, item) }))
-        }
+      if (column.$scopedSlots.default) {
+          return h('div', options, column.$scopedSlots.default({ column, item, value: getCellValue(column, item) }))
+      }
 
-        return h('td', options, getCellValue(column, item))
+      return h('div', options, getCellValue(column, item))
     }
 })
