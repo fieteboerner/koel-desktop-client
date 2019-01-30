@@ -6,7 +6,7 @@
     <div v-else class="item-list">
       <div
         class="item-list-item"
-        :class="{ 'is-selected': isSelected(item), [itemClass]: true }"
+        :class="itemClasses(item)"
         v-for="item in items"
         :key="item.id"
         @click="$emit('select', $event, item)"
@@ -37,7 +37,7 @@ import ItemListCell from "@/components/shared/ItemListCell.ts";
 export default class ItemList extends Vue {
   @Prop(Array) items: Array<any>;
   @Prop(Array) selected: Array<any>;
-  @Prop(String) itemClass: String;
+  @Prop(String) itemClass: string;
 
   columns: ItemListColumn[] = [];
 
@@ -45,6 +45,18 @@ export default class ItemList extends Vue {
     this.columns = this.$slots.default
       .filter((column: VNode) => column.componentInstance)
       .map(column => <ItemListColumn>column.componentInstance);
+  }
+
+  itemClasses(item: any) {
+    const classes: Object = {
+      'is-selected': this.isSelected(item),
+    }
+
+    if(this.itemClass) {
+      classes[this.itemClass] = true
+    }
+
+    return classes
   }
 
   isSelected(item: any): Boolean {
