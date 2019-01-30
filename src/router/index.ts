@@ -40,7 +40,7 @@ const router =  new Router({
         {
           path: '/songs',
           name: 'songs',
-          component: require('@/views/main/Artists.vue').default,
+          component: require('@/views/main/Songs.vue').default,
           beforeEnter: ifAuthenticated
         }
       ]
