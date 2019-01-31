@@ -6,14 +6,14 @@
     @open="onPlay"
     @select="onSelect"
   >
-    <ItemListColumn show="image" cell-class="sidebar-item-image">
-      <template slot-scope="{item}">
+    <template slot-scope="item">
+      <div class="sidebar-item-image">
         <figure class="image is-48x48">
           <img :src="item.albums[0].cover" alt="item.name">
         </figure>
-      </template>
-    </ItemListColumn>
-    <ItemListColumn cell-class="sidebar-item-content is-6 truncate" show="name"/>
+      </div>
+      <div class="sidebar-item-content subtitle is-6 truncate">{{ item.name }}</div>
+    </template>
   </ItemList>
 </template>
 
@@ -24,13 +24,11 @@ import { mixins } from "vue-class-component";
 import ListSelectMixin from "@/mixins/ListSelect";
 
 import ItemList from "@/components/shared/ItemList.vue";
-import ItemListColumn from "@/components/shared/ItemListColumn.vue";
 import { Artist } from "@/interfaces";
 
 @Component({
   components: {
     ItemList,
-    ItemListColumn
   }
 })
 export default class ArtistList extends Mixins(ListSelectMixin) {
@@ -52,7 +50,7 @@ export default class ArtistList extends Mixins(ListSelectMixin) {
   }
 
   onPlay(event: MouseEvent, artist: Artist) {
-    this.$emit('play', artist)
+    this.$emit("play", artist);
   }
 
   @Watch("value", { immediate: true })

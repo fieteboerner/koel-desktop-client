@@ -7,41 +7,27 @@
     :selected="selected"
     @select="selectItem"
   >
-    <ItemListColumn show="track" cell-class="track-number">
-      <template slot-scope="{ value, item }">
-        <div class="show-on-hover">
-          <b-icon v-if="current === item && playing" icon="pause-circle-outline" @click.native="pause" />
-          <b-icon v-else-if="current === item && !playing" icon="play-circle-outline" @click.native="resume" />
-          <b-icon v-else icon="play-circle-outline" @click.native="$emit('play', item)" />
-        </div>
-        <div class="hide-on-hover">
-          <b-icon v-if="current === item && playing" icon="volume-high" />
-          <b-icon v-else-if="current === item && !playing" icon="volume-low" />
-          <span v-else>{{ value }}</span>
-        </div>
-      </template>
-    </ItemListColumn>
-    <ItemListColumn show="title" cell-class="track-name"></ItemListColumn>
-    <ItemListColumn v-if="artist" show="artist" cell-class="track-name">
-      <template slot-scope="{ value }">
-        {{ value.name }}
-      </template>
-    </ItemListColumn>
-    <ItemListColumn v-if="album" show="album" cell-class="track-name">
-      <template slot-scope="{ value }">
-        {{ value.name }}
-      </template>
-    </ItemListColumn>
-    <ItemListColumn show="options" cell-class="track-options visible-on-hover">
-      <template slot-scope="{ item }">
+    <template slot-scope="item">
+      <div class="track-number">
+          <div class="show-on-hover">
+            <b-icon v-if="current === item && playing" icon="pause-circle-outline" @click.native="pause" />
+            <b-icon v-else-if="current === item && !playing" icon="play-circle-outline" @click.native="resume" />
+            <b-icon v-else icon="play-circle-outline" @click.native="$emit('play', item)" />
+          </div>
+          <div class="hide-on-hover">
+            <b-icon v-if="current === item && playing" icon="volume-high" />
+            <b-icon v-else-if="current === item && !playing" icon="volume-low" />
+            <span v-else>{{ item.track }}</span>
+          </div>
+      </div>
+      <div class="track-name">{{ item.title }}</div>
+      <div v-if="artist" class="track-name">{{ item.artist.name }}</div>
+      <div v-if="album" class="track-name">{{ item.album.name }}</div>
+      <div class="track-options visible-on-hover">
         <b-icon icon="dots-horizontal" @click.native="$emit('context', $event, item)" title="more" />
-      </template>
-    </ItemListColumn>
-    <ItemListColumn show="length" cell-class="track-time">
-      <template slot-scope="{ value }">
-        {{ value | timecode }}
-      </template>
-    </ItemListColumn>
+      </div>
+      <div class="track-time">{{ item | timecode }}</div>
+    </template>
   </ItemList>
 </div>
 </template>
@@ -54,12 +40,10 @@ import { playerModule } from '@/store/namespaces'
 import ListSelectMixin from '@/mixins/ListSelect'
 
 import ItemList from '@/components/shared/ItemList.vue'
-import ItemListColumn from '@/components/shared/ItemListColumn.vue'
 
 @Component({
   components: {
     ItemList,
-    ItemListColumn,
   }
 })
 export default class SongList extends Mixins(ListSelectMixin) {
