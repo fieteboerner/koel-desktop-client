@@ -26,7 +26,7 @@
       <div class="track-options visible-on-hover">
         <b-icon icon="dots-horizontal" @click.native="$emit('context', $event, item)" title="more" />
       </div>
-      <div class="track-time">{{ item | timecode }}</div>
+      <div class="track-time">{{ item.length | timecode }}</div>
     </template>
   </ItemList>
 </div>
