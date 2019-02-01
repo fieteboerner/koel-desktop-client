@@ -114,6 +114,11 @@ export default class SongList extends Mixins(ListSelectMixin) {
     flex: 1;
     color: #010101;
     font-weight: 500;
+    padding-right: 0.2rem;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   & .song-list-item .track-time {

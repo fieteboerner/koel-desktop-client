@@ -66,7 +66,7 @@ export default class ItemList extends Vue {
     &.is-selected {
       background-color: $cyan;
       > * {
-        color: $white;
+        color: $white !important;
       }
     }
   }
