@@ -27,6 +27,7 @@
     "vue-property-decorator": "^7.2.0",
     "vue-router": "3.0.2",
     "vue-scrollto": "^2.8.0",
+    "vue-virtual-scroller": "^1.0.0-beta.4",
     "vuedraggable": "^2.16.0",
     "vuex": "^3.0.1",
     "vuex-class": "^0.3.1"

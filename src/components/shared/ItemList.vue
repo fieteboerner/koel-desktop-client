@@ -1,20 +1,39 @@
 <template>
-  <div>
+  <div style="height: 100%">
     <div v-if="!items.length">
       <slot name="empty">There are no items to show</slot>
     </div>
-    <div v-else class="item-list">
-      <div
-        class="item-list-item"
-        :class="itemClasses(item)"
-        v-for="item in items"
-        :key="itemKey(item)"
-        @click="$emit('select', $event, item)"
-        @dblclick="$emit('open', $event, item)"
+    <template v-else>
+      <RecycleScroller
+        v-if="virtualScroll"
+        class="scroller item-list"
+        :items="items"
+        :item-height="itemHeight"
+        :key-field="keyField"
       >
-        <slot v-bind="item" />
+        <div
+          slot-scope="{ item }"
+          :class="itemClasses(item)"
+          class="item-list-item"
+          @click="$emit('select', $event, item)"
+          @dblclick="$emit('open', $event, item)"
+        >
+          <slot v-bind="item"></slot>
+        </div>
+      </RecycleScroller>
+      <div v-else class="item-list">
+        <div
+          class="item-list-item"
+          :class="itemClasses(item)"
+          v-for="item in items"
+          :key="item[keyField]"
+          @click="$emit('select', $event, item)"
+          @dblclick="$emit('open', $event, item)"
+        >
+          <slot v-bind="item"/>
+        </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -22,24 +41,30 @@
 import { indexOf, last, sortBy, without } from "lodash";
 import Vue, { CreateElement, VNode } from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
+import { RecycleScroller } from "vue-virtual-scroller";
+import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 
-@Component
+@Component({
+  components: { RecycleScroller }
+})
 export default class ItemList extends Vue {
   @Prop(Array) items: Array<any>;
   @Prop(Array) selected: Array<any>;
   @Prop(String) itemClass: string;
-  @Prop({ type: Function, default: item => item.id }) itemKey: Function;
+  @Prop(Boolean) virtualScroll: Boolean;
+  @Prop({ type: String, default: "id" }) keyField: string;
+  @Prop(Number) itemHeight: Number;
 
   itemClasses(item: any) {
     const classes: Object = {
-      'is-selected': this.isSelected(item),
+      "is-selected": this.isSelected(item)
+    };
+
+    if (this.itemClass) {
+      classes[this.itemClass] = true;
     }
 
-    if(this.itemClass) {
-      classes[this.itemClass] = true
-    }
-
-    return classes
+    return classes;
   }
 
   isSelected(item: any): Boolean {
@@ -50,6 +75,10 @@ export default class ItemList extends Vue {
 
 <style lang="scss">
 @import "../../styles/settings";
+
+.scroller {
+  height: 100%;
+}
 
 .item-list {
   width: 100%;

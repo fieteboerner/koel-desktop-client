@@ -42,7 +42,7 @@ const router =  new Router({
           name: 'songs',
           component: require('@/views/main/Songs.vue').default,
           beforeEnter: ifAuthenticated
-        }
+        },
       ]
     },
     {

@@ -3,6 +3,8 @@
     :items="artists"
     :selected="selected"
     item-class="sidebar-list-item"
+    :item-height="62"
+    virtual-scroll
     @open="onPlay"
     @select="onSelect"
   >

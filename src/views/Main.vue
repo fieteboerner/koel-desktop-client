@@ -101,7 +101,7 @@ header {
 }
 
 .main-content {
-  flex: 1 1 auto;
+  flex: 1;
   position: relative;
   overflow-y: auto;
   display: flex;

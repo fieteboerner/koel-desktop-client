@@ -5,6 +5,8 @@
     item-class="song-list-item"
     :items="songs"
     :selected="selected"
+    :itemHeight="42"
+    virtualScroll
     @select="selectItem"
   >
     <template slot-scope="item">
@@ -67,6 +69,7 @@ export default class SongList extends Mixins(ListSelectMixin) {
 <style lang="scss">
 @import '../../styles/settings';
 .song-list {
+  height: 100%;
   & .song-list-item {
     border-bottom: 1px solid #cccccc;
     padding: 7px;
