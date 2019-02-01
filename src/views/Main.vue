@@ -1,6 +1,10 @@
 <template>
     <div class="main-wrapper"
-      @keypress.space.prevent="togglePlayback">
+      tabindex="-1"
+      @keypress.space.prevent="togglePlayback"
+      @keyup.ctrl.left="back"
+      @keyup.ctrl.right="skip"
+    >
       <b-loading :active="isLoading"/>
       <nav class="">
         <div class="navbar">

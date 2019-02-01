@@ -1,10 +1,11 @@
 <template>
   <SongList
-    :songs="songs"
+    :songs="sortedSongs"
     :value="[]"
     artist
     album
-    @play=""
+    virtual-scroll
+    @play="onPlay"
     @context=""
     >
 
@@ -27,5 +28,21 @@ import { Artist, Song } from '@/interfaces';
 })
 export default class Songs extends Vue {
   @mediaModule.Getter songs: Array<Song>
+
+  @playerModule.Action play
+  @queueModule.Action('set') setQueue
+
+  get sortedSongs() {
+    return sortBy(this.songs, ['artist.name', 'album.year', 'album.name', 'disc', 'track'])
+  }
+
+  onPlay(event: KeyboardEvent|MouseEvent, song: Song = null) {
+    song = song || this.sortedSongs[0]
+    const startIndex = this.sortedSongs.indexOf(song)
+    const songlist = this.sortedSongs.filter((song, index) => index >= startIndex)
+
+    this.setQueue({ songlist, toPlay: song })
+    this.play()
+  }
 }
 </script>

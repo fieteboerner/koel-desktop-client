@@ -18,7 +18,7 @@ const mutations: MutationTree<QueueState> = {
     })
 
     each(state.queue, (item: QueueItem) => {
-      if (item.song === toPlay) {
+      if (item.song.id === toPlay.id) {
         state.current = item
         return false
       }

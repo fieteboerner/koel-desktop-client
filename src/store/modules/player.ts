@@ -1,7 +1,7 @@
 import plyr from 'plyr'
 import { MutationTree, ActionTree, GetterTree, Module } from 'vuex';
 import { PlayerState, RootState } from '../types';
-import { RepeatTypes } from '@/interfaces';
+import { RepeatTypes, Song } from '@/interfaces';
 import StorageService from '@/services/storage'
 
 function updatePersistentOptions(options){
@@ -175,6 +175,7 @@ const getters: GetterTree<PlayerState, RootState> = {
   current: (state, getters, test, rootGetters) => {
     return rootGetters['queue/currentSong']
   },
+  isCurrent: (state, getters) => (song: Song) =>  (getters.current || {}).id === song.id,
   currentTime: state => state.currentTime,
   muted: state => state.options.muted,
   playing: state => state.playing,

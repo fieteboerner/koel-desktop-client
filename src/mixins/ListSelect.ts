@@ -25,6 +25,7 @@ export default class ListSelect<T> extends Vue {
   selectItem(event: MouseEvent, item: T): void {
     if(!this.multiselect) {
       this.selected = [item]
+      this.$emit('selection-changed', item)
       return
     }
 
@@ -33,7 +34,7 @@ export default class ListSelect<T> extends Vue {
       if (this.isSelected(item)) {
         this.selected = without(this.selected, item)
       } else {
-        this.selected.push(item)
+        this.selected = [...this.selected, item]
       }
       // select from to with shift
     } else if (this.selected.length && event.shiftKey) {
@@ -44,12 +45,15 @@ export default class ListSelect<T> extends Vue {
 
       for (let i = indexes[0]; i <= indexes[1]; i++) {
         if (this.selected.includes(this.items[i])) continue
-        this.selected.push(this.items[i])
+        this.selected = [...this.selected, this.items[i]]
       }
       // set item if no button is hold
     } else {
       this.selected = [item]
     }
+
+
+    this.$emit('selection-changed', this.selected)
   }
 }
 
