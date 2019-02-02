@@ -6,7 +6,6 @@
     album
     virtual-scroll
     @play="onPlay"
-    @context=""
     >
 
   </SongList>

@@ -3,12 +3,12 @@
     <slot name="header" class="song-list-item"></slot>
     <ItemList
       :items="songs"
-      :selected="selected"
       :itemHeight="42"
       :virtualScroll="virtualScroll"
+      :selection-context="selectionContext"
       item-class="song-list-item"
-      @select="selectItem"
       @open="onPlay"
+      @context="onContext"
     >
       <template slot-scope="item">
         <div class="track-number">
@@ -52,7 +52,7 @@ import { Component, Prop, Mixins, Watch } from "vue-property-decorator";
 import { forOwn, includes, sortBy } from "lodash";
 
 import { playerModule, queueModule } from "@/store/namespaces";
-import ListSelectMixin from "@/mixins/ListSelect";
+import SelectionContext from "@/services/selection-context";
 
 import ItemList from "@/components/shared/ItemList.vue";
 import { Song } from "@/interfaces";
@@ -62,8 +62,9 @@ import { Song } from "@/interfaces";
     ItemList
   }
 })
-export default class SongList extends Mixins(ListSelectMixin) {
+export default class SongList extends Vue {
   @Prop(Array) songs: Song[];
+  @Prop(SelectionContext) selectionContext: SelectionContext<Song>
   @Prop(Array) value: Song[];
   @Prop(Boolean) artist: Boolean;
   @Prop(Boolean) album: Boolean;
@@ -75,17 +76,12 @@ export default class SongList extends Mixins(ListSelectMixin) {
   @playerModule.Action resume;
   @playerModule.Action pause;
 
-  get items(): Song[] {
-    return this.songs;
+  onContext(event: MouseEvent, song: Song = null) {
+    this.$emit('context', event, song)
   }
 
   onPlay(event: MouseEvent|KeyboardEvent, song: Song = null) {
     this.$emit('play', event, song)
-  }
-
-  @Watch("value", { immediate: true })
-  onSelectedChange(value) {
-    this.selected = [value];
   }
 }
 </script>

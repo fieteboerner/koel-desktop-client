@@ -1,9 +1,9 @@
 <template>
   <ItemList
     :items="artists"
-    :selected="selected"
     item-class="sidebar-list-item"
     :item-height="62"
+    :selection-context="selectionContext"
     virtual-scroll
     @open="onPlay"
     @select="onSelect"
@@ -23,32 +23,28 @@
 import Vue from "vue";
 import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
 import { mixins } from "vue-class-component";
-import ListSelectMixin from "@/mixins/ListSelect";
 
 import ItemList from "@/components/shared/ItemList.vue";
 import { Artist } from "@/interfaces";
+import SelectionContext from '@/services/selection-context';
 
 @Component({
   components: {
     ItemList,
   }
 })
-export default class ArtistList extends Mixins(ListSelectMixin) {
+export default class ArtistList extends Vue {
+  selectionContext: SelectionContext<Artist> = new SelectionContext()
   @Prop(Array) artists: Array<Artist>;
   @Prop(Object) value: any;
 
-  get multiselect() {
-    return false;
+  created() {
+    this.$set(this.selectionContext, 'items', this.artists)
   }
 
-  get items() {
-    return this.artists;
-  }
-
-  onSelect(event: MouseEvent, item: Artist) {
-    this.selectItem(event, item);
-    this.$emit("select", event, item);
-    this.$emit("input", item);
+  onSelect(event: MouseEvent, artist: Artist) {
+    this.$emit("select", event, artist);
+    this.$emit("input", artist);
   }
 
   onPlay(event: MouseEvent, artist: Artist) {
@@ -57,7 +53,7 @@ export default class ArtistList extends Mixins(ListSelectMixin) {
 
   @Watch("value", { immediate: true })
   onSelectedChange(value) {
-    this.selected = [value];
+    this.selectionContext.selected = [value];
   }
 }
 </script>

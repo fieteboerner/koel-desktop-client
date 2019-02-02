@@ -2,33 +2,12 @@
 <div class="album-song-list">
   <div v-for="(disc, index) in discs" :key="index">
     <div class="song-list-item disk-item" v-if="discs.length > 1"><div class="track-name">DISC {{ disc.number }}</div></div>
-    <div
-      v-for="song in sortSongs(disc.songs)"
-      :class="{'is-selected': isSelected(song), 'is-current': current === song, 'is-highlighted': isHighlighted(song)}"
-      :key="song.id"
-      class="song-list-item"
-      @click.right="$emit('context', $event, song)"
-      @click="$emit('select', $event, song)"
-      @dblclick="$emit('play', song)"
-    >
-      <div class="track-number">
-        <div class="show-on-hover">
-          <b-icon v-if="current === song && playing" icon="pause-circle-outline" @click.native="pause"></b-icon>
-          <b-icon v-else-if="current === song && !playing" icon="play-circle-outline" @click.native="resume"></b-icon>
-          <b-icon v-else icon="play-circle-outline" @click.native="$emit('play', song)"></b-icon>
-        </div>
-        <div class="hide-on-hover">
-          <b-icon v-if="current === song && playing" icon="volume-high"></b-icon>
-          <b-icon v-else-if="current === song && !playing" icon="volume-low"></b-icon>
-          <span v-else>{{ song.track }}</span>
-        </div>
-        </div>
-      <div class="track-name">{{ song.title }}</div>
-      <div class="track-options show-on-hover">
-        <b-icon icon="dots-horizontal" @click.native="$emit('context', $event, song)" title="more"></b-icon>
-      </div>
-      <div class="track-time">{{ song.length | timecode }}</div>
-    </div>
+    <SongList
+      :songs="sortSongs(disc.songs)"
+      :selection-context="selectionContext"
+      @context="onContext"
+      @play="onPlay"
+    />
   </div>
 </div>
 </template>
@@ -38,11 +17,16 @@ import { Component, Prop } from 'vue-property-decorator'
 import { forOwn, includes, sortBy } from 'lodash'
 
 import { playerModule } from '@/store/namespaces'
+import { Song } from '@/interfaces'
+import SongList from './SongList.vue'
+import SelectionContext from '@/services/selection-context';
 
-@Component
+@Component({
+  components: { SongList }
+})
 export default class AlbumSongList extends Vue {
-   @Prop(Array) songs
-   @Prop(Array) selected
+   @Prop(Array) songs: Song[]
+   @Prop(SelectionContext) selectionContext: SelectionContext<Song>
 
    @playerModule.Getter current
    @playerModule.Getter playing
@@ -74,8 +58,12 @@ export default class AlbumSongList extends Vue {
     return this.$route.query.highlightedSongId === song.id
   }
 
-  isSelected (song) {
-    return includes(this.selected, song)
+  onContext(event: MouseEvent, song: Song = null) {
+    this.$emit('context', event, song)
+  }
+
+  onPlay(event: MouseEvent|KeyboardEvent, song: Song = null) {
+    this.$emit('play', event, song)
   }
 }
 </script>
@@ -109,14 +97,6 @@ export default class AlbumSongList extends Vue {
     }
   }
 
-  & .song-list-item.is-selected {
-    background-color: $cyan;
-    color: $white !important;
-
-    & .track-name {
-      color: $white !important;
-    }
-  }
 
   & .song-list-item.is-current {
     color: $primary;

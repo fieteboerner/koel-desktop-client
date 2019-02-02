@@ -2,7 +2,7 @@
   <div>
     <context-menu
       ref="ctx"
-      :items="sortedSelected"
+      :items="selectionContext.sortedSelected"
       context="album:song"
       @play="onPlay"
     />
@@ -15,11 +15,10 @@
         <div class="subtitle is-4">{{ album.artist.name }}</div>
 
         <album-song-list
-          :selected="selected"
+          :selection-context="selectionContext"
           :songs="album.songs"
           @context="onContext"
           @play="onPlay"
-          @select="selectItem"
         />
       </div>
     </div>
@@ -36,7 +35,8 @@ import { playerModule, queueModule } from '@/store/namespaces'
 import CoverTile from '@/components/shared/CoverTile.vue'
 import ContextMenu from '@/components/shared/ContextMenu.vue'
 import AlbumSongList from '@/components/shared/AlbumSongList.vue'
-import ListSelectMixin from '@/mixins/ListSelect'
+import { Song } from '@/interfaces';
+import SelectionContext from '@/services/selection-context';
 
 
 @Component({
@@ -46,31 +46,36 @@ import ListSelectMixin from '@/mixins/ListSelect'
     CoverTile
   },
 })
-export default class AlbumCard extends mixins(ListSelectMixin) {
+export default class AlbumCard extends Vue {
   $refs: {
     ctx: any,
   }
+  selectionContext: SelectionContext<Song> = new SelectionContext(true)
   @Prop(Object) album
 
   @playerModule.Action play
   @queueModule.Action('set') setQueue
 
-  get items() {
+  created() {
+    this.$set(this.selectionContext, 'items', this.songs)
+  }
+
+  get songs(): Song[] {
     return sortBy(this.album.songs, ['disc', 'track'])
   }
 
-  onPlay(song) {
-    song = song || this.sortedSelected[0] || this.items[0]
-    const startIndex = this.items.indexOf(song)
-    const songlist = this.items.filter((song, index) => index >= startIndex)
+  onPlay(song: Song = null) {
+    song = song || this.selectionContext.sortedSelected[0] || this.songs[0]
+    const startIndex = this.songs.indexOf(song)
+    const songlist = this.songs.filter((song, index) => index >= startIndex)
 
     this.setQueue({ songlist, toPlay: song })
     this.play()
   }
 
-  onContext(event, song) {
-      if (!this.isSelected(song)) {
-        this.selected = [song]
+  onContext(event, song: Song) {
+      if (!this.selectionContext.isSelected(song)) {
+        this.selectionContext.selected = [song]
       }
       this.$refs.ctx.open(event)
   }

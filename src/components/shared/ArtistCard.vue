@@ -1,6 +1,6 @@
 <template>
     <div class="artist-card-root" tabindex="-1" @keypress.enter="onPlay">
-      <context-menu ref="ctx" context="artist:song" @play="onPlay" :items="sortedSelected"/>
+      <context-menu ref="ctx" context="artist:song" @play="onPlay" :items="selectionContext.sortedSelected"/>
       <div>
         <p class="title is-3" style="margin-bottom: 2.25rem;">{{ artist.name }}</p>
         <p class="subtitle is-5">
@@ -34,8 +34,7 @@
           <hr>
           <album-song-list
             :songs="album.songs"
-            :selected="selected"
-            @select="selectItem"
+            :selection-context="selectionContext"
             @play="onPlay"
             @context="context" />
         </div>
@@ -51,7 +50,8 @@ import { playerModule, queueModule, mediaModule } from '@/store/namespaces'
 
 import AlbumSongList from '@/components/shared/AlbumSongList.vue'
 import ContextMenu from '@/components/shared/ContextMenu.vue'
-import ListSelectMixin from '@/mixins/ListSelect'
+import SelectionContext from '@/services/selection-context';
+import { Song } from '@/interfaces';
 
 @Component({
   components: {
@@ -59,21 +59,20 @@ import ListSelectMixin from '@/mixins/ListSelect'
     ContextMenu,
   }
 })
-export default class ArtistCard extends Mixins(ListSelectMixin) {
-  $refs: {
-    ctx: any,
-  }
+export default class ArtistCard extends Vue {
+  $refs: { ctx: any }
+  selectionContext: SelectionContext<Song> = new SelectionContext(true)
   @Prop(Object) artist
   @mediaModule.Getter albums
   @playerModule.Action play
   @queueModule.Action('set') setQueue
 
-  get sortedAlbums () {
-    return sortBy(this.artist.albums, ['year', 'name'])
+  created() {
+    this.$set(this.selectionContext, 'items', this.songList);
   }
 
-  get items () {
-    return this.songList
+  get sortedAlbums () {
+    return sortBy(this.artist.albums, ['year', 'name'])
   }
 
   get songList () {
@@ -85,8 +84,8 @@ export default class ArtistCard extends Mixins(ListSelectMixin) {
   }
 
   context (event, song) {
-    if (!this.isSelected(song)) {
-      this.selected = [song]
+    if (!this.selectionContext.isSelected(song)) {
+      this.selectionContext.selected = [song]
     }
     this.$refs.ctx.open(event)
   }
@@ -100,9 +99,9 @@ export default class ArtistCard extends Mixins(ListSelectMixin) {
   }
 
   onPlay (song) {
-    song = song || this.sortedSelected[0] || this.items[0]
-    const startIndex = this.items.indexOf(song)
-    const songlist = this.items.filter((song, index) => index >= startIndex)
+    song = song || this.selectionContext.sortedSelected[0] || this.songList[0]
+    const startIndex = this.songList.indexOf(song)
+    const songlist = this.songList.filter((song, index) => index >= startIndex)
 
     this.setQueue({ songlist, toPlay: song })
     this.play()

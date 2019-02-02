@@ -15,7 +15,8 @@
           slot-scope="{ item }"
           :class="itemClasses(item)"
           class="item-list-item"
-          @click="$emit('select', $event, item)"
+          @click="onSelectItem($event, item)"
+          @click.right="$emit('context', $event, item)"
           @dblclick="$emit('open', $event, item)"
         >
           <slot v-bind="item"></slot>
@@ -27,7 +28,8 @@
           :class="itemClasses(item)"
           v-for="item in items"
           :key="item[keyField]"
-          @click="$emit('select', $event, item)"
+          @click="onSelectItem($event, item)"
+          @click.right="$emit('context', $event, item)"
           @dblclick="$emit('open', $event, item)"
         >
           <slot v-bind="item"/>
@@ -43,17 +45,28 @@ import Vue, { CreateElement, VNode } from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import { RecycleScroller } from "vue-virtual-scroller";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
+import SelectionContext from '@/services/selection-context';
 
 @Component({
   components: { RecycleScroller }
 })
 export default class ItemList extends Vue {
   @Prop(Array) items: Array<any>;
-  @Prop(Array) selected: Array<any>;
+  @Prop({ type: SelectionContext, default: () => {
+    const context = new SelectionContext(true)
+    context.dynamic = true
+    return context
+  }}) selectionContext: SelectionContext<any>
   @Prop(String) itemClass: string;
   @Prop(Boolean) virtualScroll: Boolean;
   @Prop({ type: String, default: "id" }) keyField: string;
   @Prop(Number) itemHeight: Number;
+
+  created() {
+    if (this.selectionContext.dynamic) {
+      this.$set(this.selectionContext, 'items', this.items)
+    }
+  }
 
   itemClasses(item: any) {
     const classes: Object = {
@@ -61,14 +74,19 @@ export default class ItemList extends Vue {
     };
 
     if (this.itemClass) {
-      classes[this.itemClass] = true;
+      classes[this.itemClass] = true
     }
 
     return classes;
   }
 
-  isSelected(item: any): Boolean {
-    return this.selected.includes(item);
+  isSelected(item) {
+    return this.selectionContext.isSelected(item);
+  }
+
+  onSelectItem(event: MouseEvent, item) {
+    this.selectionContext.selectItem(event, item)
+    this.$emit('select', event, item)
   }
 }
 </script>
