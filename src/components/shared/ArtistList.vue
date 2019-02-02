@@ -38,10 +38,6 @@ export default class ArtistList extends Vue {
   @Prop(Array) artists: Array<Artist>;
   @Prop(Object) value: any;
 
-  created() {
-    this.$set(this.selectionContext, 'items', this.artists)
-  }
-
   onSelect(event: MouseEvent, artist: Artist) {
     this.$emit("select", event, artist);
     this.$emit("input", artist);
@@ -54,6 +50,11 @@ export default class ArtistList extends Vue {
   @Watch("value", { immediate: true })
   onSelectedChange(value) {
     this.selectionContext.selected = [value];
+  }
+
+  @Watch('artists', { immediate: true })
+  onItemChange(artists) {
+    this.$set(this.selectionContext, 'items', artists);
   }
 }
 </script>

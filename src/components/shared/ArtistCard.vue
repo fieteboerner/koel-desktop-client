@@ -44,7 +44,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { sortBy } from 'lodash'
-import { Component, Mixins, Prop } from 'vue-property-decorator'
+import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import { Getter } from 'vuex-class'
 import { playerModule, queueModule, mediaModule } from '@/store/namespaces'
 
@@ -66,10 +66,6 @@ export default class ArtistCard extends Vue {
   @mediaModule.Getter albums
   @playerModule.Action play
   @queueModule.Action('set') setQueue
-
-  created() {
-    this.$set(this.selectionContext, 'items', this.songList);
-  }
 
   get sortedAlbums () {
     return sortBy(this.artist.albums, ['year', 'name'])
@@ -109,6 +105,11 @@ export default class ArtistCard extends Vue {
 
   sortSongs (songs) {
     return sortBy(songs, ['disc', 'track'])
+  }
+
+  @Watch('songList', { immediate: true })
+  onItemChange(songs) {
+    this.$set(this.selectionContext, 'items', songs);
   }
 }
 </script>

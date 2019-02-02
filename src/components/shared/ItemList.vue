@@ -62,12 +62,6 @@ export default class ItemList extends Vue {
   @Prop({ type: String, default: "id" }) keyField: string;
   @Prop(Number) itemHeight: Number;
 
-  created() {
-    if (this.selectionContext.dynamic) {
-      this.$set(this.selectionContext, 'items', this.items)
-    }
-  }
-
   itemClasses(item: any) {
     const classes: Object = {
       "is-selected": this.isSelected(item)
@@ -87,6 +81,12 @@ export default class ItemList extends Vue {
   onSelectItem(event: MouseEvent, item) {
     this.selectionContext.selectItem(event, item)
     this.$emit('select', event, item)
+  }
+  @Watch('items', { immediate: true })
+  onItemChange(items) {
+    if(this.selectionContext.dynamic) {
+      this.$set(this.selectionContext, 'items', items);
+    }
   }
 }
 </script>

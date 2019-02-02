@@ -3,11 +3,20 @@ import { without, sortBy, indexOf, last } from 'lodash'
 export default class SelectionContext<T> {
     dynamic: Boolean = false
     multiselect: Boolean = false
-    items: T[] = []
+    _items: T[] = []
     selected: T[] = []
 
     constructor(multiselect: Boolean = true) {
         this.multiselect = multiselect
+    }
+
+    get items () {
+        return this._items || []
+    }
+
+    set items (items: T[]) {
+        this._items = items;
+        this.selected = []
     }
 
     get sortedSelected(): T[] {
