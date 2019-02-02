@@ -50,7 +50,7 @@ import { playerModule, queueModule, mediaModule } from '@/store/namespaces'
 
 import AlbumSongList from '@/components/shared/AlbumSongList.vue'
 import ContextMenu from '@/components/shared/ContextMenu.vue'
-import SelectionContext from '@/services/selection-context';
+import SelectionContext from '@/classes/selection-context';
 import { Song } from '@/interfaces';
 
 @Component({
@@ -94,7 +94,7 @@ export default class ArtistCard extends Vue {
     return count
   }
 
-  onPlay (song) {
+  onPlay (event: MouseEvent|KeyboardEvent, song: Song = null) {
     song = song || this.selectionContext.sortedSelected[0] || this.songList[0]
     const startIndex = this.songList.indexOf(song)
     const songlist = this.songList.filter((song, index) => index >= startIndex)

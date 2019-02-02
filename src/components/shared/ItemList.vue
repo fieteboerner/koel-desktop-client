@@ -44,8 +44,7 @@ import { indexOf, last, sortBy, without } from "lodash";
 import Vue, { CreateElement, VNode } from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import { RecycleScroller } from "vue-virtual-scroller";
-import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
-import SelectionContext from '@/services/selection-context';
+import SelectionContext from '@/classes/selection-context';
 
 @Component({
   components: { RecycleScroller }

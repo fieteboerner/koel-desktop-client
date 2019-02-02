@@ -26,7 +26,7 @@ import { mixins } from "vue-class-component";
 
 import ItemList from "@/components/shared/ItemList.vue";
 import { Artist } from "@/interfaces";
-import SelectionContext from '@/services/selection-context';
+import SelectionContext from '@/classes/selection-context';
 
 @Component({
   components: {

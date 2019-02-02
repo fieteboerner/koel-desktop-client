@@ -26,7 +26,7 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import { mixins } from 'vue-class-component'
 import { sortBy } from 'lodash'
 
@@ -36,7 +36,7 @@ import CoverTile from '@/components/shared/CoverTile.vue'
 import ContextMenu from '@/components/shared/ContextMenu.vue'
 import AlbumSongList from '@/components/shared/AlbumSongList.vue'
 import { Song } from '@/interfaces';
-import SelectionContext from '@/services/selection-context';
+import SelectionContext from '@/classes/selection-context';
 
 
 @Component({
@@ -56,15 +56,11 @@ export default class AlbumCard extends Vue {
   @playerModule.Action play
   @queueModule.Action('set') setQueue
 
-  created() {
-    this.$set(this.selectionContext, 'items', this.songs)
-  }
-
   get songs(): Song[] {
     return sortBy(this.album.songs, ['disc', 'track'])
   }
 
-  onPlay(song: Song = null) {
+  onPlay (event: MouseEvent|KeyboardEvent, song: Song = null) {
     song = song || this.selectionContext.sortedSelected[0] || this.songs[0]
     const startIndex = this.songs.indexOf(song)
     const songlist = this.songs.filter((song, index) => index >= startIndex)
@@ -78,6 +74,11 @@ export default class AlbumCard extends Vue {
         this.selectionContext.selected = [song]
       }
       this.$refs.ctx.open(event)
+  }
+
+  @Watch('songs', { immediate: true })
+  onItemChange(songs) {
+    this.$set(this.selectionContext, 'items', songs);
   }
 }
 </script>

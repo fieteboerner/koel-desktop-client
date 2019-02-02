@@ -52,7 +52,7 @@ import { Component, Prop, Mixins, Watch } from "vue-property-decorator";
 import { forOwn, includes, sortBy } from "lodash";
 
 import { playerModule, queueModule } from "@/store/namespaces";
-import SelectionContext from "@/services/selection-context";
+import SelectionContext from "@/classes/selection-context";
 
 import ItemList from "@/components/shared/ItemList.vue";
 import { Song } from "@/interfaces";

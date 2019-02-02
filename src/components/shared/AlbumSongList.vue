@@ -19,7 +19,7 @@ import { forOwn, includes, sortBy } from 'lodash'
 import { playerModule } from '@/store/namespaces'
 import { Song } from '@/interfaces'
 import SongList from './SongList.vue'
-import SelectionContext from '@/services/selection-context';
+import SelectionContext from '@/classes/selection-context';
 
 @Component({
   components: { SongList }

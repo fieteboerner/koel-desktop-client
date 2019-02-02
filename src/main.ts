@@ -3,6 +3,7 @@ import Buefy from 'buefy'
 import InfiniteScroll from 'vue-infinite-scroll'
 import VueScrollto from 'vue-scrollto'
 import 'mdi/css/materialdesignicons.css'
+import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 
 import App from './App.vue'
 import router from './router'
