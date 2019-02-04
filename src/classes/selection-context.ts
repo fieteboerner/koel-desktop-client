@@ -4,10 +4,27 @@ export default class SelectionContext<T> {
     dynamic: Boolean = false
     multiselect: Boolean = false
     _items: T[] = []
-    selected: T[] = []
+    _selected: T[] = []
 
     constructor(multiselect: Boolean = true) {
         this.multiselect = multiselect
+    }
+
+    get selected(): T[] {
+        return this._selected || []
+    }
+
+    set selected(items) {
+        if(typeof items === 'undefined') {
+            return;
+        }
+
+        if (!Array.isArray(items)){
+            this._selected = [items]
+            return;
+        }
+
+        this._selected = items
     }
 
     get items () {
@@ -15,8 +32,13 @@ export default class SelectionContext<T> {
     }
 
     set items (items: T[]) {
+        // reset selected only if the item list was filled before
+        // otherwise the selected data could be there before the list was initialized
+        if(this._items.length) {
+            this.selected = []
+        }
+
         this._items = items;
-        this.selected = []
     }
 
     get sortedSelected(): T[] {

@@ -34,7 +34,7 @@ import SelectionContext from '@/classes/selection-context';
   }
 })
 export default class ArtistList extends Vue {
-  selectionContext: SelectionContext<Artist> = new SelectionContext()
+  selectionContext: SelectionContext<Artist> = new SelectionContext(false)
   @Prop(Array) artists: Array<Artist>;
   @Prop(Object) value: any;
 
@@ -49,7 +49,7 @@ export default class ArtistList extends Vue {
 
   @Watch("value", { immediate: true })
   onSelectedChange(value) {
-    this.selectionContext.selected = [value];
+    this.$set(this.selectionContext, 'selected', value);
   }
 
   @Watch('artists', { immediate: true })
