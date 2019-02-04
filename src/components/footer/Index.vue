@@ -92,6 +92,17 @@ export default class Index extends Vue {
 <style lang="scss">
 @import '../../styles/settings';
 
+.modal {
+  justify-content: flex-start;
+  padding-top: 80px;
+
+  .modal-card, .modal-content {
+    max-height: calc(100vh - 120px);
+  }
+  .modal-content {
+    width: 960px;
+  }
+}
 .footer-root {
   flex: 1;
   display: flex;
