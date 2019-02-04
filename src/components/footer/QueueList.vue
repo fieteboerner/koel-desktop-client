@@ -7,58 +7,86 @@
 		<b-tabs position="is-centered">
 			<b-tab-item label="Queue">
 				<div class="title is-5">Now Playing</div>
-				{{ currentSong ? currentSong.title : '-' }}
+          <SongList
+            v-if="currentSong"
+            :songs="[currentSong]"
+            :selection-context="selectionContext"
+            album
+            artist
+          />
+				<div v-else class="has-text-centered subtitle is-5"></div>
 
 				<div v-if="prio.length">
 					<div class="title is-5">Next in Queue</div>
-					<ul>
+          <SongList
+            v-if="prioSongs.length"
+            :songs="prioSongs"
+            :selection-context="selectionContext"
+            album
+            artist
+          />
+					<!-- <ul>
 						<draggable :value="prio" @input="onPrioSort" :options="{group:'queue'}">
 							<li v-for="item in prio" :key="item.id">
 								{{ item.song.title }} - {{ item.song.artist.name }}
 							</li>
 						</draggable>
-					</ul>
+					</ul> -->
 				</div>
 				<div class="title is-5">Next Up</div>
-				<ul v-if="queue.length">
+        <SongList
+          v-if="queueSongs.length"
+          :songs="queueSongs"
+          :selection-context="selectionContext"
+          album
+          artist
+        />
+				<!-- <ul v-if="queue.length">
 					<draggable :value="queue" @input="onQueueSort" :options="{group:'queue'}">
 						<li v-for="item in queue" :key="item.id">
 							{{ item.song.title }} - {{ item.song.artist.name }} <a @click="remove(item)">remove</a>
 						</li>
 					</draggable>
-				</ul>
+				</ul> -->
 				<div v-else class="has-text-centered subtitle is-5">No items</div>
 
 			</b-tab-item>
 			<b-tab-item label="History">
-				<ul v-if="history.length">
-					<li v-for="historyItem in history" :key="historyItem.id">
-						{{ historyItem.playStart }} - {{ historyItem.song.title }}
-					</li>
-				</ul>
+        <SongList
+          v-if="historySongs.length"
+          :songs="historySongs"
+          album
+          artist
+        />
 				<div v-else class="has-text-centered subtitle is-5">No items</div>
 			</b-tab-item>
 		</b-tabs>
 	</section>
 	<footer class="modal-card-foot">
-		<button class="button is-primary" @click="$parent.close">OK</button>
+		<button class="button is-primary" @click="$parent.close">Close</button>
 	</footer>
 </div>
 </template>
 <script lang="ts">
 import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { sortBy } from 'lodash'
+import { Component, Watch } from 'vue-property-decorator'
 import { queueModule } from '@/store/namespaces'
+import SongList from '@/components/shared/SongList.vue'
 
 import draggable from 'vuedraggable'
+import { QueueItem, Song } from '@/interfaces';
+import SelectionContext from '@/classes/selection-context';
 
 
 @Component({
   components: {
-    draggable
+    draggable,
+    SongList,
   },
 })
 export default class QueueList extends Vue {
+  selectionContext: SelectionContext<Song> = new SelectionContext(true)
   @queueModule.Action remove
 
   @queueModule.Getter history
@@ -69,7 +97,25 @@ export default class QueueList extends Vue {
   @queueModule.Mutation('sort') queueSort
 
   get queueList() {
-    return this.prio.concat(this.queue)
+    return [
+      this.currentSong,
+      ...this.prioSongs,
+      ...this.queueSongs,
+    ]
+  }
+
+  get prioSongs () {
+    return this.prio.map((queueItem: QueueItem) => queueItem.song)
+  }
+
+  get queueSongs () {
+    return this.queue.map((queueItem: QueueItem) => queueItem.song)
+  }
+
+  get historySongs () {
+    return this.history
+      .map((queueItem: QueueItem) => queueItem.song)
+      .reverse()
   }
 
   onPrioSort (queue) {
@@ -78,6 +124,11 @@ export default class QueueList extends Vue {
 
   onQueueSort (queue) {
     this.queueSort({prio: false, queueItems: queue})
+  }
+
+  @Watch('queueList', { immediate: true })
+  onQueueListChange(songs) {
+    this.$set(this.selectionContext, 'items', songs);
   }
 }
 </script>
