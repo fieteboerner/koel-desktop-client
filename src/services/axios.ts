@@ -10,7 +10,7 @@ client.interceptors.response.use(
       if (error.response.status === 401 && error.config && !error.config.__isRetryRequest) {
         // if you ever get an unauthorized, logout the user
         store.dispatch('auth/logout')
-        router.push('/login')
+          .then(() => router.push('/login'))
         return
       }
       throw error
