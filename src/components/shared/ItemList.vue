@@ -15,14 +15,14 @@
           slot-scope="{ item }"
           :class="itemClasses(item)"
           class="item-list-item"
-          draggable="true"
+          :draggable="allowItemReordering"
           @click="onSelectItem($event, item)"
           @click.right="$emit('context', $event, item)"
           @dblclick="$emit('open', $event, item)"
           @dragstart="onDragStart($event, item)"
-          @dragenter.prevent="onDragEnter"
+          @dragenter.stop.prevent="onDragEnter"
           @dragover.prevent
-          @dragleave="onDragLeave"
+          @dragleave.stop.prevent="onDragLeave"
           @drop.prevent="onDrop"
         >
           <slot v-bind="item"></slot>
@@ -34,15 +34,15 @@
           :class="itemClasses(item)"
           :key="item[keyField]"
           class="item-list-item"
-          draggable="true"
+          :draggable="allowItemReordering"
           @click="onSelectItem($event, item)"
           @click.right="$emit('context', $event, item)"
           @dblclick="$emit('open', $event, item)"
           @dragstart="onDragStart($event, item)"
-          @dragenter.prevent="onDragEnter"
+          @dragenter.prevent="onDragEnter($event, item)"
           @dragover.prevent
-          @dragleave="onDragLeave"
-          @drop.prevent="onDrop"
+          @dragleave="onDragLeave($event, item)"
+          @drop.prevent="onDrop($event, item)"
         >
           <slot v-bind="item"/>
         </div>
@@ -57,11 +57,13 @@ import Vue, { CreateElement, VNode } from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import { RecycleScroller } from "vue-virtual-scroller";
 import SelectionContext from '@/classes/selection-context';
+import DragStore from '@/classes/drag-store';
 
 @Component({
   components: { RecycleScroller }
 })
 export default class ItemList extends Vue {
+  dragStore: DragStore = new DragStore('drag-over')
   @Prop(Array) items: Array<any>;
   @Prop({ type: SelectionContext, default: () => {
     const context = new SelectionContext(true)
@@ -72,7 +74,11 @@ export default class ItemList extends Vue {
   @Prop(Boolean) virtualScroll: Boolean
   @Prop({ type: String, default: "id" }) keyField: string
   @Prop(Number) itemHeight: Number
-  @Prop(Boolean) allowSongReordering: Boolean
+  @Prop(Boolean) allowItemReordering: Boolean
+
+  destroyed() {
+    this.dragStore = null // GC
+  }
 
   itemClasses(item: any) {
     const classes: Object = {
@@ -107,27 +113,22 @@ export default class ItemList extends Vue {
     // set Image (ghost)
   }
 
-  onDrop(event: DragEvent) {
-    if (!this.allowSongReordering) {
+  onDrop(event: DragEvent, item) {
+    if (!this.allowItemReordering) {
       return
     }
-
-    this.onDragLeave(event)
-
+    this.dragStore.handleDrop(event, item[this.keyField])
   }
 
-  onDragEnter(event: DragEvent) {
-    if (!this.allowSongReordering) {
+  onDragEnter(event: DragEvent, item) {
+    if (!this.allowItemReordering) {
       return
     }
-
-    const item: HTMLElement = event.target.parentNode
-    item.classList.add('drag-over')
+    this.dragStore.handleEnter(event, item[this.keyField])
   }
 
-  onDragLeave(event: DragEvent) {
-    const item: HTMLElement = event.target.parentNode
-    item.classList.remove('drag-over')
+  onDragLeave(event: DragEvent, item) {
+    this.dragStore.handleLeave(event, item[this.keyField])
   }
 
   @Watch('items', { immediate: true })
@@ -160,6 +161,7 @@ export default class ItemList extends Vue {
 
     &.drag-over {
       border-bottom: 1px solid $primary;
+      box-shadow:0px 1px $primary;
     }
 
     &.is-selected {
