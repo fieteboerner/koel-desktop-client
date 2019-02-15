@@ -1,19 +1,7 @@
 <template>
   <div class="footer-root" tabindex="-1">
     <div class="current-song">
-      <template v-if="currentSong">
-        <figure class="current-song-cover image is-48x48">
-          <img :src="currentSong.album.cover" :alt="currentSong.title">
-        </figure>
-        <div class="current-song-content">
-          <p class="title is-6" @click="goToAlbum">
-            {{ currentSong.title }}
-          </p>
-          <p class="subtitle is-7" @click="goToArtist">
-            {{ currentSong.artist.name }}
-          </p>
-        </div>
-      </template>
+      <CurrentSong />
     </div>
     <div class="controls-wrapper timeline">
       <div class="controls">
@@ -42,13 +30,17 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
+import CurrentSong from './CurrentSong.vue'
 import QueueList from './QueueList.vue'
 import SeekBar from './SeekBar.vue'
 import VolumeControl from './VolumeControl.vue'
+
 import { playerModule } from '@/store/namespaces'
+import { Song } from '@/interfaces';
 
 @Component({
   components: {
+    CurrentSong,
     QueueList,
     SeekBar,
     VolumeControl,
@@ -71,21 +63,6 @@ export default class Index extends Vue {
 
   get repeatIcon() {
     return this.repeat === 'ONE' ? 'repeat-once' : 'repeat'
-  }
-
-  goToArtist() {
-    this.$router.push({
-      name: 'artists',
-      params: { id: this.currentSong.artist.id }
-    })
-  }
-
-  goToAlbum() {
-    this.$router.push({
-      name: 'albums',
-      params: { id: this.currentSong.album.id },
-      query: { highlightedSongId: this.currentSong.id }
-    })
   }
 }
 </script>
@@ -111,25 +88,6 @@ export default class Index extends Vue {
   user-select: none;
   cursor: default;
 
-  .current-song {
-    display: flex;
-    width: 350px;
-    margin: 0 1rem;
-    align-items: center;
-
-    .current-song-cover {
-      margin-right: 1rem;
-    }
-
-    .current-song-content {
-      overflow: hidden;
-
-      .title:hover, .subtitle:hover {
-        text-decoration: underline;
-        cursor: pointer;
-      }
-    }
-  }
 
   .controls-wrapper {
     flex: 1;
