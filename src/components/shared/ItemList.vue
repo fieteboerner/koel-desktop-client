@@ -20,10 +20,10 @@
           @click.right="$emit('context', $event, item)"
           @dblclick="$emit('open', $event, item)"
           @dragstart="onDragStart($event, item)"
-          @dragenter.stop.prevent="onDragEnter"
+          @dragenter.stop.prevent="onDragEnter($event, item)"
           @dragover.prevent
-          @dragleave.stop.prevent="onDragLeave"
-          @drop.prevent="onDrop"
+          @dragleave.stop.prevent="onDragLeave($event, item)"
+          @drop.prevent="onDrop($event, item)"
         >
           <slot v-bind="item"></slot>
         </div>
@@ -63,7 +63,7 @@ import DragStore from '@/classes/drag-store';
   components: { RecycleScroller }
 })
 export default class ItemList extends Vue {
-  dragStore: DragStore = new DragStore('drag-over')
+  dragStore: DragStore<any> = new DragStore('drag-over')
   @Prop(Array) items: Array<any>;
   @Prop({ type: SelectionContext, default: () => {
     const context = new SelectionContext(true)
