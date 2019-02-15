@@ -1,12 +1,12 @@
-export default class DragStore {
-    store: Object = {}
+export default class DragStore<T> {
+    storeMap: Map<T, Set<Node>> = new Map;
     dragOverClass: String = ''
 
     constructor(dragOverClass: String) {
         this.dragOverClass = dragOverClass
     }
 
-    handleEnter(event: DragEvent, id): void {
+    handleEnter(event: DragEvent, id: T): void {
         const store = this.getStoreById(id)
 
         if (store.size || event.currentTarget === event.target) {
@@ -19,7 +19,7 @@ export default class DragStore {
         }
     }
 
-    handleLeave(event: DragEvent, id): void {
+    handleLeave(event: DragEvent, id: T): void {
         const store = this.getStoreById(id)
         store.delete(<Node> event.target)
 
@@ -29,25 +29,21 @@ export default class DragStore {
         }
     }
 
-    handleDrop(event: DragEvent, id): void {
+    handleDrop(event: DragEvent, id: T): void {
         const store = this.getStoreById(id)
         store.clear()
         this.handleLeave(event, id)
     }
 
-    hasStoreForId(id): Boolean {
-        return this.store.hasOwnProperty(id)
-    }
-
-    getStoreById(id): Set<Node> {
-        if (!this.hasStoreForId(id)) {
-            this.store[id] = new Set()
+    getStoreById(id: any): Set<Node> {
+        if (!this.storeMap.has(id)) {
+            this.storeMap.set(id, new Set)
         }
 
-        return this.store[id]
+        return this.storeMap.get(id)
     }
 
-    isDraggingOver(id): Boolean {
+    isDraggingOver(id: T): Boolean {
         const store = this.getStoreById(id)
         return Boolean(store.size)
     }
