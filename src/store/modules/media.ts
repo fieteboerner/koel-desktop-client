@@ -1,6 +1,6 @@
 import { first, sortBy, uniq } from 'lodash'
 import axios from '@/services/axios'
-import { Album, Artist, Song } from '@/interfaces'
+import { Album, Artist, Song, Interaction } from '@/interfaces'
 import { MediaState, RootState } from '../types';
 import { MutationTree, ActionTree, GetterTree, Module } from 'vuex';
 
@@ -14,28 +14,33 @@ const state: MediaState = {
 const mutations: MutationTree<MediaState> = {
   initializeData (state, data) {
     let artistAlbumCache = {}
-    state.albums = data.albums.map(album => {
+    state.albums = data.albums.map((album: Album) => {
       album.songs = data.songs.filter(
-        song => parseInt(song.album_id) === album.id
+        (song: Song) => parseInt(song.album_id.toString()) === album.id
       )
       album.artist = data.artists.find(
-        artist => artist.id === album.artist_id
+        (artist: Artist) => artist.id === album.artist_id
       )
       return album
     })
-    state.songs = data.songs.map(song => {
+    state.songs = data.songs.map((song: Song) => {
       song.album = state.albums.find(
-        album => album.id === parseInt(song.album_id)
+        album => album.id === parseInt(song.album_id.toString())
       )
       song.artist = data.artists.find(
-        artist => artist.id === parseInt(song.artist_id)
+        (artist: Artist) => artist.id === parseInt(song.artist_id.toString())
       )
-      const artistId = parseInt(song.artist_id)
+      const artistId = parseInt(song.artist_id.toString())
       if (!artistAlbumCache[artistId]) artistAlbumCache[artistId] = []
       artistAlbumCache[artistId].push(song.album)
+
+      const interaction: Interaction = data.interactions.find((interaction: Interaction) => interaction.song_id === song.id) || {}
+      song.liked = interaction.liked || false
+      song.playCount = interaction.play_count || 0
+
       return song
     })
-    state.artists = data.artists.map(artist => {
+    state.artists = data.artists.map((artist: Artist) => {
       artist.albums = uniq(artistAlbumCache[artist.id])
       return artist
     })
@@ -86,19 +91,20 @@ const getters: GetterTree<MediaState, RootState> = {
     first(state.artists.filter(artist => artist.id === parseInt(id))),
   artists: state => state.artists,
   songs: state => state.songs,
-  songurl: (state, getters, rootState, rootGetters) => song =>
+  favoriteSongs: (state, getters) => getters.songs.filter((song: Song) => song.liked),
+  songurl: (state, getters, rootState, rootGetters) => (song: Song) =>
     `${rootGetters['auth/url']}/api/${song.id}/play?jwt-token=${rootGetters['auth/token']}`,
-  sharableUrl: (state, getters, rootState, rootGetters) => song =>
+  sharableUrl: (state, getters, rootState, rootGetters) => (song: Song) =>
     `${rootGetters['auth/url']}#!/song/${song.id}`,
-  albumSongs: state => album => {
+  albumSongs: state => (album: Album) => {
     let songs = []
-    sortBy(album.songs, ['disc', 'track']).forEach(song => songs.push(song))
+    sortBy(album.songs, ['disc', 'track']).forEach((song: Song) => songs.push(song))
     return songs
   },
-  artistSongs: (state, getters) => artist => {
+  artistSongs: (state, getters) => (artist: Artist) => {
     let albums = sortBy(artist.albums, ['year', 'name'])
     let songs = []
-    albums.forEach(album => getters.albumSongs(album).forEach(song => songs.push(song)))
+    albums.forEach((album: Album) => getters.albumSongs(album).forEach((song: Song) => songs.push(song)))
     return songs
   },
   loading: state => state.loading
