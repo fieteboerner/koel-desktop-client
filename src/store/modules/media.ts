@@ -52,7 +52,13 @@ const mutations: MutationTree<MediaState> = {
 
   setNotLoading (state) {
     state.loading = false
-  }
+  },
+
+  toggleLike(state, songToUpdate: Song) {
+    state.songs = state.songs.map((song: Song) => {
+      return (song.id === songToUpdate.id) ? { ...song, liked: !song.liked } : song
+    })
+  },
 }
 
 const actions: ActionTree<MediaState, RootState> = {
@@ -80,6 +86,12 @@ const actions: ActionTree<MediaState, RootState> = {
         .then(response => resolve(response))
         .catch(error => reject(error))
     })
+  },
+  toggleLike({ rootGetters, commit }, song) {
+    commit('toggleLike', song)
+    axios
+      .post(`${rootGetters['auth/url']}/api/interaction/like`, { song: song.id })
+      .catch( () => commit('toggleLike', song))
   }
 }
 
@@ -91,7 +103,8 @@ const getters: GetterTree<MediaState, RootState> = {
     first(state.artists.filter(artist => artist.id === parseInt(id))),
   artists: state => state.artists,
   songs: state => state.songs,
-  favoriteSongs: (state, getters) => getters.songs.filter((song: Song) => song.liked),
+  likedSongs: (state, getters) => getters.songs.filter((song: Song) => song.liked),
+  isSongLiked: (state, getters) => (songToCheck: Song) => !!getters.likedSongs.find((song: Song) => song.id === songToCheck.id && song.liked),
   songurl: (state, getters, rootState, rootGetters) => (song: Song) =>
     `${rootGetters['auth/url']}/api/${song.id}/play?jwt-token=${rootGetters['auth/token']}`,
   sharableUrl: (state, getters, rootState, rootGetters) => (song: Song) =>

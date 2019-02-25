@@ -1,6 +1,7 @@
 .DS_Store
 dist_electron/
 node_modules/
+.history/
 npm-debug.log
 npm-debug.log.*
 yarn-error.log

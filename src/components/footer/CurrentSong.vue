@@ -4,16 +4,18 @@
       <img :src="currentSong.album.cover" :alt="currentSong.title">
     </figure>
     <div class="current-song-content">
-      <p class="title is-6">
-        <span class="title-text" @click="goToAlbum">{{ currentSong.title }}</span>
+      <div class="title is-6">
+        <router-link :to="albumRoute" class="title-text" tag="span">{{ currentSong.title }}</router-link>
         <b-icon
           :class="{ liked: currentSongLiked }"
-          class="title-favorite"
+          class="title-like"
           :icon="likeIcon"
-          @click="toggleFavorite"
+          @click.native="toggleLike(currentSong)"
         />
-      </p>
-      <p class="subtitle is-7" @click="goToArtist">{{ currentSong.artist.name }}</p>
+      </div>
+      <router-link :to="artistRoute" class="subtitle is-7" tag="div">
+        {{ currentSong.artist.name }}
+      </router-link>
     </div>
   </div>
 </template>
@@ -22,38 +24,36 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 
-import { playerModule } from "@/store/namespaces";
+import { mediaModule, playerModule } from "@/store/namespaces";
 import { Song } from "@/interfaces";
 
 @Component
 export default class CurrentSong extends Vue {
-  @playerModule.Getter("current") currentSong;
+  @playerModule.Getter("current") currentSong: Song|null
+  @mediaModule.Getter isSongLiked: Function
+  @mediaModule.Action toggleLike
 
   get currentSongLiked() {
-    const currentSong: Song = this.currentSong || {};
-
-    return !!currentSong.liked;
+    return this.isSongLiked(this.currentSong)
   }
 
   get likeIcon() {
     return this.currentSongLiked ? "heart" : "heart-outline";
   }
 
-  toggleFavorite() {}
-
-  goToArtist() {
-    this.$router.push({
+  get artistRoute() {
+    return {
       name: "artists",
       params: { id: this.currentSong.artist.id }
-    });
+    }
   }
 
-  goToAlbum() {
-    this.$router.push({
+  get albumRoute() {
+    return {
       name: "albums",
       params: { id: this.currentSong.album.id },
       query: { highlightedSongId: this.currentSong.id }
-    });
+    }
   }
 }
 </script>
@@ -73,7 +73,7 @@ export default class CurrentSong extends Vue {
   .current-song-content {
     overflow: hidden;
 
-    .title-favorite {
+    .title-like {
       margin-left: 5px;
       cursor: pointer;
 
