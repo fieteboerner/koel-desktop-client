@@ -22,6 +22,14 @@ export interface Song {
   album: Album,
   artist_id: number,
   artist: Artist,
+  liked: boolean,
+  playCount: number,
+}
+
+export interface Interaction {
+  song_id: string,
+  liked: boolean,
+  play_count: number,
 }
 
 export interface QueueItem {
