@@ -10,6 +10,7 @@
       @open="onPlay"
       @context="onContext"
     >
+      <slot name="empty" v-if="$slots.empty" slot="empty" />
       <template slot-scope="item">
         <div class="track-number">
           <div class="show-on-hover">
