@@ -26,6 +26,14 @@ export interface Song {
   playCount: number,
 }
 
+export interface Playlist {
+  id: number,
+  isFavorite: boolean,
+  name: string,
+  loaded: boolean,
+  songs: Song[],
+}
+
 export interface Interaction {
   song_id: string,
   liked: boolean,

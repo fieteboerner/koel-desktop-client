@@ -1,6 +1,6 @@
 import { first, sortBy, uniq } from 'lodash'
 import axios from '@/services/axios'
-import { Album, Artist, Song, Interaction } from '@/interfaces'
+import { Album, Artist, Song, Interaction, Playlist } from '@/interfaces'
 import { MediaState, RootState } from '../types';
 import { MutationTree, ActionTree, GetterTree, Module } from 'vuex';
 
@@ -8,7 +8,8 @@ const state: MediaState = {
   loading: false,
   albums: [],
   artists: [],
-  songs: []
+  songs: [],
+  playlists: [],
 }
 
 const mutations: MutationTree<MediaState> = {
@@ -44,6 +45,10 @@ const mutations: MutationTree<MediaState> = {
       artist.albums = uniq(artistAlbumCache[artist.id])
       return artist
     })
+
+    state.playlists = data.playlists.map((playlist: Playlist) => {
+      return { ...playlist, isFavorite: false, loaded: false, songs: [] }
+    })
   },
 
   setLoading (state) {
@@ -52,6 +57,12 @@ const mutations: MutationTree<MediaState> = {
 
   setNotLoading (state) {
     state.loading = false
+  },
+
+  setPlaylistSongs (state, { playlist, songs }) {
+    state.playlists = state.playlists.map((currentPlaylist: Playlist) => {
+      return currentPlaylist.id === playlist.id ? {...playlist, loaded: true, songs } : currentPlaylist
+    })
   },
 
   toggleLike(state, songToUpdate: Song) {
@@ -79,6 +90,15 @@ const actions: ActionTree<MediaState, RootState> = {
         })
     })
   },
+  loadPlaylistSongs ({ rootGetters, commit, getters }, playlist: Playlist) {
+    if(!playlist.id || playlist.loaded) return
+
+    return axios.get(`${rootGetters['auth/url']}/api/playlist/${playlist.id}/songs`)
+      .then(response => {
+        const songs = getters.songsByIds(response.data)
+        commit('setPlaylistSongs', { playlist, songs })
+      })
+  },
   increasePlayCount ({ rootGetters }, song) {
     return new Promise((resolve, reject) => {
       axios
@@ -102,7 +122,9 @@ const getters: GetterTree<MediaState, RootState> = {
   artist: state => id =>
     first(state.artists.filter(artist => artist.id === parseInt(id))),
   artists: state => state.artists,
+  song: (state, getters) => (id: string)=> getters.songs.find((song: Song) => song.id === id),
   songs: state => state.songs,
+  songsByIds: (state, getters) => (ids: string[]) => ids.map((id: string) => getters.song(id)),
   likedSongs: (state, getters) => getters.songs.filter((song: Song) => song.liked),
   isSongLiked: (state, getters) => (songToCheck: Song) => !!getters.likedSongs.find((song: Song) => song.id === songToCheck.id && song.liked),
   songurl: (state, getters, rootState, rootGetters) => (song: Song) =>
@@ -119,6 +141,13 @@ const getters: GetterTree<MediaState, RootState> = {
     let songs = []
     albums.forEach((album: Album) => getters.albumSongs(album).forEach((song: Song) => songs.push(song)))
     return songs
+  },
+  playlist: (state, getters) => (id: string) => getters.playlists.find((playlist: Playlist) => playlist.id === parseInt(id, 10)),
+  playlists: (state, getters) => {
+    return [
+      { id: 0, isFavorite: true, loaded: true, name: 'Favorites', songs: getters.likedSongs },
+      ...state.playlists,
+    ]
   },
   loading: state => state.loading
 }
