@@ -1,4 +1,11 @@
-import { Album, Artist, Song, QueueItem, RepeatTypes } from "@/interfaces";
+import {
+  Album,
+  Artist,
+  Playlist,
+  QueueItem,
+  RepeatTypes,
+  Song,
+} from '@/interfaces'
 
 export interface RootState {
     auth: AuthState
@@ -19,6 +26,7 @@ export interface MediaState {
   albums: Album[]
   artists: Artist[]
   songs: Song[]
+  playlists: Playlist[]
 }
 
 export interface PlayerState {

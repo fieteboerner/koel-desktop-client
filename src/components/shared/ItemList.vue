@@ -141,7 +141,7 @@ export default class ItemList extends Vue {
 </script>
 
 <style lang="scss">
-@import "../../styles/settings";
+@import "~@/styles/settings";
 
 .scroller {
   height: 100%;
@@ -156,7 +156,6 @@ export default class ItemList extends Vue {
     display: flex;
     align-items: center;
     overflow: hidden;
-    line-height: 1.75em;
     cursor: default;
 
     &.drag-over {

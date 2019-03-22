@@ -13,11 +13,11 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "@mdi/font": "^3.5.95",
     "axios": "0.18.0",
     "buefy": "0.7.1",
     "js-sha256": "^0.9.0",
     "lodash": "^4.17.5",
-    "mdi": "^2.1.19",
     "plyr": "2",
     "vue": "^2.3.3",
     "vue-class-component": "^6.3.2",

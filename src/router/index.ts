@@ -32,9 +32,9 @@ const router =  new Router({
           beforeEnter: ifAuthenticated
         },
         {
-          path: '/playlists',
+          path: '/playlists/:id?',
           name: 'playlists',
-          component: require('@/views/main/Artists.vue').default,
+          component: require('@/views/main/Playlists.vue').default,
           beforeEnter: ifAuthenticated
         },
         {
