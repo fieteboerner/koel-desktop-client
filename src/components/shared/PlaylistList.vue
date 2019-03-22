@@ -68,16 +68,9 @@ export default class PlaylistList extends Vue {
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 3px solid $text;
+      box-shadow: inset 0 0 0 3px $text;
+      box-shadow: inset 0 0 0 3px;
       border-radius: 50%;
-    }
-  }
-
-  &.is-selected {
-    .sidebar-item-image {
-      .icon-image {
-        border-color: $white;
-      }
     }
   }
 
