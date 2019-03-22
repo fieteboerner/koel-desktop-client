@@ -10,11 +10,10 @@
   >
     <template slot-scope="item">
       <div class="sidebar-item-image">
-        <figure class="image is-48x48">
-          <!-- <img v-if="!item.isFavorite" :src="item.cover" alt="item.name"> -->
+        <figure class="image is-48x48 icon-image">
           <b-icon
             class="liked-icon"
-            :icon="item.isFavorite ? 'heart' : 'file'"
+            :icon="item.isFavorite ? 'heart' : 'playlist-music'"
           />
         </figure>
       </div>
@@ -59,12 +58,27 @@ export default class PlaylistList extends Vue {
 </script>
 
 <style lang="scss">
+@import "~@/styles/settings";
+
 .sidebar-list-item {
   padding: 7px 10px;
 
-  .sidebar-item-image img {
-    height: 100%;
-    border-radius: 50%;
+  .sidebar-item-image {
+    .icon-image {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid $text;
+      border-radius: 50%;
+    }
+  }
+
+  &.is-selected {
+    .sidebar-item-image {
+      .icon-image {
+        border-color: $white;
+      }
+    }
   }
 
   .sidebar-item-content {
