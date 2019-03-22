@@ -1,7 +1,13 @@
 <template>
     <single-layout>
-      <div v-infinite-scroll="infiniteHandler" infinite-scroll-disabled="busy" infinite-scroll-distance="100"
-           class="cover-container" @click.self="deselect" tabindex="-1" @keyup.esc="deselect">
+      <div v-if="sortedAlbums.length"
+           v-infinite-scroll="infiniteHandler"
+           infinite-scroll-disabled="busy"
+           infinite-scroll-distance="100"
+           class="cover-container"
+           tabindex="-1"
+           @click.self="deselect"
+           @keyup.esc="deselect">
         <template v-for="album in infiniteAlbums">
           <cover-tile :img="album.cover" :title="album.name" :subtitle="album.artist.name"
             :class="{'is-selected': selected === album}" class="album-item"
@@ -16,6 +22,7 @@
           </transition>
         </template>
       </div>
+      <empty-list-message v-else message="No Albums" />
     </single-layout>
 </template>
 <script lang="ts">
@@ -28,11 +35,13 @@ import VueScrollto from 'vue-scrollto'
 import { mediaModule } from '@/store/namespaces'
 import CoverTile from '@/components/shared/CoverTile.vue'
 import AlbumCard from '@/components/shared/AlbumCard.vue'
+import EmptyListMessage from '@/components/shared/EmptyListMessage.vue';
 
 @Component({
   components: {
     AlbumCard,
     CoverTile,
+    EmptyListMessage,
   },
 })
 export default class Albums extends Vue {
@@ -41,7 +50,7 @@ export default class Albums extends Vue {
   @mediaModule.Getter albums
 
   busy = false
-  items = 0
+  items = 250
 
   get sortedAlbums () {
     return sortBy(this.albums, ['artist.name', 'name'])
@@ -79,7 +88,7 @@ export default class Albums extends Vue {
 }
 </script>
 <style lang="scss">
-@import "../../styles/settings";
+@import "~@/styles/settings";
 
 .cover-container {
   display: grid;

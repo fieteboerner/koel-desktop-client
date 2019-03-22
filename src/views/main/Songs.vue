@@ -7,7 +7,7 @@
     virtual-scroll
     @play="onPlay"
     >
-
+    <empty-list-message slot="empty" message="No Songs" />
   </SongList>
 </template>
 <script lang="ts">
@@ -19,10 +19,12 @@ import { playerModule, queueModule, mediaModule } from '@/store/namespaces'
 
 import SongList from '@/components/shared/SongList.vue'
 import { Artist, Song } from '@/interfaces';
+import EmptyListMessage from '@/components/shared/EmptyListMessage.vue';
 
 @Component({
   components: {
     SongList,
+    EmptyListMessage,
   },
 })
 export default class Songs extends Vue {

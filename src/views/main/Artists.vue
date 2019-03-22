@@ -10,7 +10,7 @@
     </div>
     <div class="artist-albums">
       <artist-card :artist="selected" v-if="selected"></artist-card>
-      <div v-else class="subtitle is-3">No Artists</div>
+      <empty-list-message v-else message="No Artists" />
     </div>
   </sidebar-layout>
 </template>
@@ -20,6 +20,7 @@ import { Component } from "vue-property-decorator";
 import { first, sortBy } from "lodash";
 import { Getter } from "vuex-class";
 import { playerModule, queueModule, mediaModule } from "@/store/namespaces";
+import EmptyListMessage from '@/components/shared/EmptyListMessage.vue';
 
 import ArtistCard from "@/components/shared/ArtistCard.vue";
 import ArtistList from "@/components/shared/ArtistList.vue";
@@ -29,6 +30,7 @@ import { Artist, Song } from "@/interfaces";
   components: {
     ArtistCard,
     ArtistList,
+    EmptyListMessage,
   }
 })
 export default class Artists extends Vue {
