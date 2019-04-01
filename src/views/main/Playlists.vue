@@ -17,9 +17,9 @@
         virtual-scroll
         @play="onPlay"
       >
-        <div slot="empty" class="subtitle is-3">There are no songs in this Playlist yet</div>
+        <empty-list-message slot="empty" message="There are no songs in this playlist yet" />
       </SongList>
-      <div v-else class="subtitle is-3">No Playlist selected</div>
+      <empty-list-message v-else message="No Playlist selected" />
     </div>
   </sidebar-layout>
 </template>
@@ -32,10 +32,12 @@ import { playerModule, queueModule, mediaModule } from "@/store/namespaces";
 
 import SongList from "@/components/shared/SongList.vue";
 import PlaylistList from "@/components/shared/PlaylistList.vue";
+import EmptyListMessage from '@/components/shared/EmptyListMessage.vue';
 import { Artist, Song, Playlist } from "@/interfaces";
 
 @Component({
   components: {
+    EmptyListMessage,
     PlaylistList,
     SongList
   }
