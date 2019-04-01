@@ -92,10 +92,12 @@ const actions: ActionTree<MediaState, RootState> = {
   },
   loadPlaylistSongs ({ rootGetters, commit, getters }, playlist: Playlist) {
     if(!playlist.id || playlist.loaded) return
+    commit('setLoading')
 
     return axios.get(`${rootGetters['auth/url']}/api/playlist/${playlist.id}/songs`)
       .then(response => {
         const songs = getters.songsByIds(response.data)
+        commit('setNotLoading')
         commit('setPlaylistSongs', { playlist, songs })
       })
   },
