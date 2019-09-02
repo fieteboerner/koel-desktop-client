@@ -1,15 +1,15 @@
 <template>
-<div class="album-song-list">
-  <div v-for="(disc, index) in discs" :key="index">
-    <div class="song-list-item disk-item" v-if="discs.length > 1"><div class="track-name">DISC {{ disc.number }}</div></div>
-    <SongList
-      :songs="sortSongs(disc.songs)"
-      :selection-context="selectionContext"
-      @context="onContext"
-      @play="onPlay"
-    />
+  <div class="album-song-list">
+    <div v-for="(disc, index) in discs" :key="index">
+      <div class="song-list-item disk-item" v-if="discs.length > 1"><div class="track-name">DISC {{ disc.number }}</div></div>
+      <SongList
+        :songs="sortSongs(disc.songs)"
+        :selection-context="selectionContext"
+        @context="onContext"
+        @play="onPlay"
+      />
+    </div>
   </div>
-</div>
 </template>
 <script lang="ts">
 import Vue from 'vue'
@@ -19,7 +19,7 @@ import { forOwn, includes, sortBy } from 'lodash'
 import { playerModule } from '@/store/namespaces'
 import { Song } from '@/interfaces'
 import SongList from './SongList.vue'
-import SelectionContext from '@/classes/selection-context';
+import SelectionContext from '@/classes/selection-context'
 
 @Component({
   components: { SongList }
@@ -35,36 +35,36 @@ export default class AlbumSongList extends Vue {
    @playerModule.Action pause
 
    get discs() {
-      let discs = []
-      this.songs.forEach(song => {
-        if (!discs[song.disc]) discs[song.disc] = []
-        discs[song.disc].push(song)
-      })
+     let discs = []
+     this.songs.forEach(song => {
+       if (!discs[song.disc]) discs[song.disc] = []
+       discs[song.disc].push(song)
+     })
 
-      let discArray = []
-      forOwn(discs, (songs, disc) => {
-        if (disc === '0') return
-        discArray.push({number: disc, songs})
-      })
+     let discArray = []
+     forOwn(discs, (songs, disc) => {
+       if (disc === '0') return
+       discArray.push({ number: disc, songs })
+     })
 
-      return sortBy(discArray, ['number'])
+     return sortBy(discArray, ['number'])
    }
 
-  sortSongs (songs) {
-    return sortBy(songs, ['track'])
-  }
+   sortSongs (songs) {
+     return sortBy(songs, ['track'])
+   }
 
-  isHighlighted(song) {
-    return this.$route.query.highlightedSongId === song.id
-  }
+   isHighlighted(song) {
+     return this.$route.query.highlightedSongId === song.id
+   }
 
-  onContext(event: MouseEvent, song: Song = null) {
-    this.$emit('context', event, song)
-  }
+   onContext(event: MouseEvent, song: Song = null) {
+     this.$emit('context', event, song)
+   }
 
-  onPlay(event: MouseEvent|KeyboardEvent, song: Song = null) {
-    this.$emit('play', event, song)
-  }
+   onPlay(event: MouseEvent|KeyboardEvent, song: Song = null) {
+     this.$emit('play', event, song)
+   }
 }
 </script>
 <style lang="scss">

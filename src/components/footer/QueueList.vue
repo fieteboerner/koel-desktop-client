@@ -58,15 +58,15 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from "vue";
-import { sortBy } from "lodash";
-import { Component, Watch } from "vue-property-decorator";
-import { queueModule } from "@/store/namespaces";
-import SongList from "@/components/shared/SongList.vue";
+import Vue from 'vue'
+import { sortBy } from 'lodash'
+import { Component, Watch } from 'vue-property-decorator'
+import { queueModule } from '@/store/namespaces'
+import SongList from '@/components/shared/SongList.vue'
 
-import draggable from "vuedraggable";
-import { QueueItem, Song } from "@/interfaces";
-import SelectionContext from "@/classes/selection-context";
+import draggable from 'vuedraggable'
+import { QueueItem, Song } from '@/interfaces'
+import SelectionContext from '@/classes/selection-context'
 
 @Component({
   components: {
@@ -83,35 +83,35 @@ export default class QueueList extends Vue {
   @queueModule.Getter queue;
   @queueModule.Getter currentSong;
 
-  @queueModule.Mutation("sort") queueSort;
+  @queueModule.Mutation('sort') queueSort;
 
   get queueList() {
-    return [this.currentSong, ...this.prioSongs, ...this.queueSongs];
+    return [this.currentSong, ...this.prioSongs, ...this.queueSongs]
   }
 
   get prioSongs() {
-    return this.prio.map((queueItem: QueueItem) => queueItem.song);
+    return this.prio.map((queueItem: QueueItem) => queueItem.song)
   }
 
   get queueSongs() {
-    return this.queue.map((queueItem: QueueItem) => queueItem.song);
+    return this.queue.map((queueItem: QueueItem) => queueItem.song)
   }
 
   get historySongs() {
-    return this.history.map((queueItem: QueueItem) => queueItem.song).reverse();
+    return this.history.map((queueItem: QueueItem) => queueItem.song).reverse()
   }
 
   onPrioSort(queue) {
-    this.queueSort({ prio: true, queueItems: queue });
+    this.queueSort({ prio: true, queueItems: queue })
   }
 
   onQueueSort(queue) {
-    this.queueSort({ prio: false, queueItems: queue });
+    this.queueSort({ prio: false, queueItems: queue })
   }
 
-  @Watch("queueList", { immediate: true })
+  @Watch('queueList', { immediate: true })
   onQueueListChange(songs) {
-    this.$set(this.selectionContext, "items", songs);
+    this.$set(this.selectionContext, 'items', songs)
   }
 }
 </script>

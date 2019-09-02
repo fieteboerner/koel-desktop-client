@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { ifAuthenticated, ifNotAuthenticated } from './guards'
-import StorageService from '@/services/storage';
+import StorageService from '@/services/storage'
 
 Vue.use(Router)
 

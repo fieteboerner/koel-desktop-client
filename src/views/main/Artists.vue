@@ -15,16 +15,16 @@
   </sidebar-layout>
 </template>
 <script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { first, sortBy } from "lodash";
-import { Getter } from "vuex-class";
-import { playerModule, queueModule, mediaModule } from "@/store/namespaces";
-import EmptyListMessage from '@/components/shared/EmptyListMessage.vue';
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
+import { first, sortBy } from 'lodash'
+import { Getter } from 'vuex-class'
+import { mediaModule, playerModule, queueModule } from '@/store/namespaces'
+import EmptyListMessage from '@/components/shared/EmptyListMessage.vue'
 
-import ArtistCard from "@/components/shared/ArtistCard.vue";
-import ArtistList from "@/components/shared/ArtistList.vue";
-import { Artist, Song } from "@/interfaces";
+import ArtistCard from '@/components/shared/ArtistCard.vue'
+import ArtistList from '@/components/shared/ArtistList.vue'
+import { Artist, Song } from '@/interfaces'
 
 @Component({
   components: {
@@ -38,32 +38,32 @@ export default class Artists extends Vue {
   @mediaModule.Getter artists;
   @mediaModule.Getter artistSongs;
   @playerModule.Action play;
-  @queueModule.Action("set") setQueue;
+  @queueModule.Action('set') setQueue;
 
   get sortedArtists() {
-    return sortBy(this.artists, ["name"]).filter(
+    return sortBy(this.artists, ['name']).filter(
       artist => artist.albums.length
-    );
+    )
   }
 
   get selected() {
     return (
       this.artist(this.$route.params.id) ||
       first(this.sortedArtists)
-    );
+    )
   }
 
   onArtistSelect(artist: Artist) {
     this.$router.push({
-      name: "artists",
+      name: 'artists',
       params: { id: artist.id.toString() }
-    });
+    })
   }
 
   onPlay(artist: Artist) {
-    const songlist: Array<Song> = this.artistSongs(artist);
-    this.setQueue({ songlist, toPlay: songlist[0] });
-    this.play();
+    const songlist: Array<Song> = this.artistSongs(artist)
+    this.setQueue({ songlist, toPlay: songlist[0] })
+    this.play()
   }
 }
 </script>

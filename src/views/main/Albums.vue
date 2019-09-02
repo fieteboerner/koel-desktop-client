@@ -1,29 +1,29 @@
 <template>
-    <single-layout>
-      <div v-if="sortedAlbums.length"
-           v-infinite-scroll="infiniteHandler"
-           infinite-scroll-disabled="busy"
-           infinite-scroll-distance="100"
-           class="cover-container"
-           tabindex="-1"
-           @click.self="deselect"
-           @keyup.esc="deselect">
-        <template v-for="album in infiniteAlbums">
-          <cover-tile :img="album.cover" :title="album.name" :subtitle="album.artist.name"
-            :class="{'is-selected': selected === album}" class="album-item"
-            :key="album.id"
-            @cover="selectAlbum(album)" @title="selectAlbum(album)"
-            @subtitle="$router.push({name: 'artists', params: {id: album.artist.id}})"></cover-tile>
-          <transition name="detail-toggle" @after-enter="scrollToSelected" @appear="scrollToSelected"
-            :key="album.id" >
-            <div class="details" v-if="selected === album">
-              <album-card :album="album"></album-card>
-            </div>
-          </transition>
-        </template>
-      </div>
-      <empty-list-message v-else message="No Albums" />
-    </single-layout>
+  <single-layout>
+    <div v-if="sortedAlbums.length"
+         v-infinite-scroll="infiniteHandler"
+         infinite-scroll-disabled="busy"
+         infinite-scroll-distance="100"
+         class="cover-container"
+         tabindex="-1"
+         @click.self="deselect"
+         @keyup.esc="deselect">
+      <template v-for="album in infiniteAlbums">
+        <cover-tile :img="album.cover" :title="album.name" :subtitle="album.artist.name"
+                    :class="{'is-selected': selected === album}" class="album-item"
+                    :key="album.id"
+                    @cover="selectAlbum(album)" @title="selectAlbum(album)"
+                    @subtitle="$router.push({name: 'artists', params: {id: album.artist.id}})"></cover-tile>
+        <transition name="detail-toggle" @after-enter="scrollToSelected" @appear="scrollToSelected"
+                    :key="album.id" >
+          <div class="details" v-if="selected === album">
+            <album-card :album="album"></album-card>
+          </div>
+        </transition>
+      </template>
+    </div>
+    <empty-list-message v-else message="No Albums" />
+  </single-layout>
 </template>
 <script lang="ts">
 import Vue from 'vue'
@@ -35,7 +35,7 @@ import VueScrollto from 'vue-scrollto'
 import { mediaModule } from '@/store/namespaces'
 import CoverTile from '@/components/shared/CoverTile.vue'
 import AlbumCard from '@/components/shared/AlbumCard.vue'
-import EmptyListMessage from '@/components/shared/EmptyListMessage.vue';
+import EmptyListMessage from '@/components/shared/EmptyListMessage.vue'
 
 @Component({
   components: {
@@ -83,7 +83,7 @@ export default class Albums extends Vue {
   }
 
   scrollToSelected () {
-    VueScrollto.scrollTo('.details', 500, {container: '.main-content', offset: -150})
+    VueScrollto.scrollTo('.details', 500, { container: '.main-content', offset: -150 })
   }
 }
 </script>

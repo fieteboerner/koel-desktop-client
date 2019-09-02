@@ -1,6 +1,6 @@
 <template>
   <div ref="contextMenu" @click.stop @contextmenu.stop :id="id" :style="ctxStyle" class="dropdown is-active">
-		<div style="background-color:transparent" class="dropdown-menu">
+    <div style="background-color:transparent" class="dropdown-menu">
       <ul class="dropdown-content">
         <a class="dropdown-item" @click="$emit('play')">Play</a>
         <a class="dropdown-item" @click="queue">Add to queue</a>
@@ -16,8 +16,8 @@
         <a class="dropdown-item">Save to disk</a>
         <a v-if="subCtx === 'song' && items.length === 1" class="dropdown-item" @click="copyShare">Copy sharable url</a>
       </ul>
-		</div>
-	</div>
+    </div>
+  </div>
 </template>
 <script>
 import { clipboard } from 'electron'
@@ -42,12 +42,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions('queue', {queueSongs: 'queue'}),
+    ...mapActions('queue', { queueSongs: 'queue' }),
     goToArtist () {
-      this.$router.push({name: 'artists', params: {id: this.firstItem.artist.id}})
+      this.$router.push({ name: 'artists', params: { id: this.firstItem.artist.id } })
     },
     goToAlbum () {
-      this.$router.push({name: 'albums', params: {id: this.firstItem.album.id}})
+      this.$router.push({ name: 'albums', params: { id: this.firstItem.album.id } })
     },
     queue () {
       if (this.subCtx === 'song') {

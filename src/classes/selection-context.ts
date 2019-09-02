@@ -1,4 +1,4 @@
-import { without, sortBy, indexOf, last } from 'lodash'
+import { indexOf, last, sortBy, without } from 'lodash'
 
 export default class SelectionContext<T> {
     dynamic: Boolean = false
@@ -7,75 +7,75 @@ export default class SelectionContext<T> {
     _selected: T[] = []
 
     constructor(multiselect: Boolean = true) {
-        this.multiselect = multiselect
+      this.multiselect = multiselect
     }
 
     get selected(): T[] {
-        return this._selected || []
+      return this._selected || []
     }
 
     set selected(items) {
-        if(typeof items === 'undefined') {
-            return;
-        }
+      if(typeof items === 'undefined') {
+        return
+      }
 
-        if (!Array.isArray(items)){
-            this._selected = [items]
-            return;
-        }
+      if (!Array.isArray(items)){
+        this._selected = [items]
+        return
+      }
 
-        this._selected = items
+      this._selected = items
     }
 
     get items () {
-        return this._items || []
+      return this._items || []
     }
 
     set items (items: T[]) {
-        // reset selected only if the item list was filled before
-        // otherwise the selected data could be there before the list was initialized
-        if(this._items.length) {
-            this.selected = []
-        }
+      // reset selected only if the item list was filled before
+      // otherwise the selected data could be there before the list was initialized
+      if(this._items.length) {
+        this.selected = []
+      }
 
-        this._items = items;
+      this._items = items
     }
 
     get sortedSelected(): T[] {
-        return this.items.filter(item => this.isSelected(item))
+      return this.items.filter(item => this.isSelected(item))
     }
 
     isSelected(item: T): Boolean {
-        return this.selected.includes(item)
+      return this.selected.includes(item)
     }
 
     selectItem(event: MouseEvent, item: T): void {
-        if (!this.multiselect) {
-            this.selected = [item]
-            return
-        }
+      if (!this.multiselect) {
+        this.selected = [item]
+        return
+      }
 
-        // toggle single item with ctrl or cmd
-        if (event.ctrlKey || event.metaKey) {
-            if (this.isSelected(item)) {
-                this.selected = without(this.selected, item)
-            } else {
-                this.selected = [...this.selected, item]
-            }
-            // select from to with shift
-        } else if (this.selected.length && event.shiftKey) {
-            let indexes = sortBy([
-                indexOf(this.items, last(this.selected)),
-                indexOf(this.items, item)
-            ])
-
-            for (let i = indexes[0]; i <= indexes[1]; i++) {
-                if (this.selected.includes(this.items[i])) continue
-                this.selected = [...this.selected, this.items[i]]
-            }
-            // set item if no button is hold
+      // toggle single item with ctrl or cmd
+      if (event.ctrlKey || event.metaKey) {
+        if (this.isSelected(item)) {
+          this.selected = without(this.selected, item)
         } else {
-            this.selected = [item]
+          this.selected = [...this.selected, item]
         }
+        // select from to with shift
+      } else if (this.selected.length && event.shiftKey) {
+        let indexes = sortBy([
+          indexOf(this.items, last(this.selected)),
+          indexOf(this.items, item)
+        ])
+
+        for (let i = indexes[0]; i <= indexes[1]; i++) {
+          if (this.selected.includes(this.items[i])) continue
+          this.selected = [...this.selected, this.items[i]]
+        }
+        // set item if no button is hold
+      } else {
+        this.selected = [item]
+      }
     }
 }

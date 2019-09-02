@@ -21,15 +21,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 
-import { mediaModule, playerModule } from "@/store/namespaces";
-import { Song } from "@/interfaces";
+import { mediaModule, playerModule } from '@/store/namespaces'
+import { Song } from '@/interfaces'
 
 @Component
 export default class CurrentSong extends Vue {
-  @playerModule.Getter("current") currentSong: Song|null
+  @playerModule.Getter('current') currentSong: Song|null
   @mediaModule.Getter isSongLiked: Function
   @mediaModule.Action toggleLike
 
@@ -38,19 +38,19 @@ export default class CurrentSong extends Vue {
   }
 
   get likeIcon() {
-    return this.currentSongLiked ? "heart" : "heart-outline";
+    return this.currentSongLiked ? 'heart' : 'heart-outline'
   }
 
   get artistRoute() {
     return {
-      name: "artists",
+      name: 'artists',
       params: { id: this.currentSong.artist.id }
     }
   }
 
   get albumRoute() {
     return {
-      name: "albums",
+      name: 'albums',
       params: { id: this.currentSong.album.id },
       query: { highlightedSongId: this.currentSong.id }
     }

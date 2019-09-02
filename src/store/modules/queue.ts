@@ -1,7 +1,7 @@
 import { clone, each, find, findIndex, findLastIndex, first } from 'lodash'
-import { QueueItem, Song } from '@/interfaces';
-import { QueueState, RootState } from '../types';
-import { MutationTree, ActionTree, GetterTree, Module } from 'vuex';
+import { QueueItem, Song } from '@/interfaces'
+import { QueueState, RootState } from '../types'
+import { ActionTree, GetterTree, Module, MutationTree } from 'vuex'
 
 const state: QueueState = {
   context: null,
@@ -29,7 +29,7 @@ const mutations: MutationTree<QueueState> = {
 
     state.queue = state.queue.filter((queueItem: QueueItem) => queueItem.id !== item.id)
   },
-  sort (state, {prio, queueItems}) {
+  sort (state, { prio, queueItems }) {
     let queue = []
     if (prio) {
       queue = queueItems.map((item: QueueItem) => {
@@ -47,7 +47,7 @@ const mutations: MutationTree<QueueState> = {
       })
     }
     if(!queue.find((item: QueueItem) => item.id === state.current.id)){
-      queue.unshift(state.current);
+      queue.unshift(state.current)
     }
     state.queue = queue
   },

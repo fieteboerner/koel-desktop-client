@@ -24,16 +24,16 @@
   </sidebar-layout>
 </template>
 <script lang="ts">
-import Vue from "vue";
-import { first, sortBy } from "lodash";
-import { Component, Mixins } from "vue-property-decorator";
-import { mixins } from "vue-class-component";
-import { playerModule, queueModule, mediaModule } from "@/store/namespaces";
+import Vue from 'vue'
+import { first, sortBy } from 'lodash'
+import { Component, Mixins } from 'vue-property-decorator'
+import { mixins } from 'vue-class-component'
+import { mediaModule, playerModule, queueModule } from '@/store/namespaces'
 
-import SongList from "@/components/shared/SongList.vue";
-import PlaylistList from "@/components/shared/PlaylistList.vue";
-import EmptyListMessage from '@/components/shared/EmptyListMessage.vue';
-import { Artist, Song, Playlist } from "@/interfaces";
+import SongList from '@/components/shared/SongList.vue'
+import PlaylistList from '@/components/shared/PlaylistList.vue'
+import EmptyListMessage from '@/components/shared/EmptyListMessage.vue'
+import { Artist, Playlist, Song } from '@/interfaces'
 
 @Component({
   components: {
@@ -46,7 +46,7 @@ export default class Playlists extends Vue {
   @mediaModule.Getter songs: Array<Song>
 
   @playerModule.Action play
-  @queueModule.Action("set") setQueue
+  @queueModule.Action('set') setQueue
   @mediaModule.Getter playlists: Playlist[]
   @mediaModule.Getter playlist: Function
   @mediaModule.Action loadPlaylistSongs
@@ -54,7 +54,7 @@ export default class Playlists extends Vue {
   get selected() {
     const playlistId = this.$route.params.id
     const playlist = this.playlist(playlistId) || first(this.playlists)
-    this.loadPlaylistSongs(playlist);
+    this.loadPlaylistSongs(playlist)
 
     return playlist
   }
@@ -65,9 +65,9 @@ export default class Playlists extends Vue {
 
   onPlaylistSelected(playlist: Playlist) {
     this.$router.push({
-      name: "playlists",
+      name: 'playlists',
       params: { id: playlist.id.toString() }
-    });
+    })
   }
 
   onPlay (event: MouseEvent|KeyboardEvent, song: Song = null) {
@@ -82,7 +82,7 @@ export default class Playlists extends Vue {
   onPlayPlaylist(playlist: Playlist) {
     const songlist: Song[] = playlist.songs
     this.setQueue({ songlist, toPlay: songlist[0] })
-    this.play();
+    this.play()
   }
 
 }

@@ -48,15 +48,15 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Mixins, Watch } from "vue-property-decorator";
-import { forOwn, includes, sortBy } from "lodash";
+import Vue from 'vue'
+import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
+import { forOwn, includes, sortBy } from 'lodash'
 
-import { playerModule, queueModule } from "@/store/namespaces";
-import SelectionContext from "@/classes/selection-context";
+import { playerModule, queueModule } from '@/store/namespaces'
+import SelectionContext from '@/classes/selection-context'
 
-import ItemList from "@/components/shared/ItemList.vue";
-import { Song } from "@/interfaces";
+import ItemList from '@/components/shared/ItemList.vue'
+import { Song } from '@/interfaces'
 
 @Component({
   components: {

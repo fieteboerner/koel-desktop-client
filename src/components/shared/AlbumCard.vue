@@ -35,8 +35,8 @@ import { playerModule, queueModule } from '@/store/namespaces'
 import CoverTile from '@/components/shared/CoverTile.vue'
 import ContextMenu from '@/components/shared/ContextMenu.vue'
 import AlbumSongList from '@/components/shared/AlbumSongList.vue'
-import { Song } from '@/interfaces';
-import SelectionContext from '@/classes/selection-context';
+import { Song } from '@/interfaces'
+import SelectionContext from '@/classes/selection-context'
 
 
 @Component({
@@ -70,15 +70,15 @@ export default class AlbumCard extends Vue {
   }
 
   onContext(event, song: Song) {
-      if (!this.selectionContext.isSelected(song)) {
-        this.selectionContext.selected = [song]
-      }
-      this.$refs.ctx.open(event)
+    if (!this.selectionContext.isSelected(song)) {
+      this.selectionContext.selected = [song]
+    }
+    this.$refs.ctx.open(event)
   }
 
   @Watch('songs', { immediate: true })
   onItemChange(songs) {
-    this.$set(this.selectionContext, 'items', songs);
+    this.$set(this.selectionContext, 'items', songs)
   }
 }
 </script>

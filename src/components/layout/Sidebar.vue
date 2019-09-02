@@ -1,11 +1,11 @@
 <template>
   <div class="sidebar-wrapper">
-      <div class="sidebar" :style="{width}">
-        <slot name="sidebar"></slot>
-      </div>
-      <div class="layout-content">
-          <slot></slot>
-      </div>
+    <div class="sidebar" :style="{width}">
+      <slot name="sidebar"></slot>
+    </div>
+    <div class="layout-content">
+      <slot></slot>
+    </div>
   </div>
 </template>
 <script lang="ts">

@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, globalShortcut } from 'electron'
+import { BrowserWindow, app, globalShortcut, protocol } from 'electron'
 import {
   createProtocol,
   installVueDevtools
@@ -22,7 +22,7 @@ function createWindow () {
     minWidth: 1200,
     minHeight: 700,
     webPreferences: {
-        webSecurity: false
+      webSecurity: false
     }
   })
   mainWindow.webContents.openDevTools()

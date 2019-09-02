@@ -59,7 +59,20 @@
       "eslint:recommended",
       "@vue/typescript"
     ],
-    "rules": {},
+    "rules": {
+      "semi": ["error", "never"],
+      "quotes": ["error", "single"],
+      "no-console": "error",
+      "indent": ["error", 2],
+      "object-curly-spacing": ["error", "always"],
+      "vue/html-indent": ["error", 2, {
+        "attribute": 1,
+        "baseIndent": 1,
+        "closeBracket": 0,
+        "alignAttributesVertically": true,
+        "ignores": []
+      }]
+    },
     "parserOptions": {
       "parser": "@typescript-eslint/parser"
     }

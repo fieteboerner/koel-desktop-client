@@ -23,13 +23,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
-import { mixins } from "vue-class-component";
+import Vue from 'vue'
+import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
+import { mixins } from 'vue-class-component'
 
-import ItemList from "@/components/shared/ItemList.vue";
-import { Playlist, Song } from "@/interfaces";
-import SelectionContext from "@/classes/selection-context";
+import ItemList from '@/components/shared/ItemList.vue'
+import { Playlist, Song } from '@/interfaces'
+import SelectionContext from '@/classes/selection-context'
 
 @Component({
   components: {
@@ -42,17 +42,17 @@ export default class PlaylistList extends Vue {
   @Prop(Object) value: Playlist;
 
   onSelect(event: MouseEvent, playlist: Playlist) {
-    this.$emit("select", event, playlist);
-    this.$emit("input", playlist);
+    this.$emit('select', event, playlist)
+    this.$emit('input', playlist)
   }
 
   onPlay(event: MouseEvent, playlist: Playlist) {
-    this.$emit("play", playlist);
+    this.$emit('play', playlist)
   }
 
-  @Watch("value", { immediate: true })
+  @Watch('value', { immediate: true })
   onSelectedChange(value) {
-    this.$set(this.selectionContext, "selected", value);
+    this.$set(this.selectionContext, 'selected', value)
   }
 }
 </script>

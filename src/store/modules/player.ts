@@ -1,7 +1,7 @@
 import plyr from 'plyr'
-import { MutationTree, ActionTree, GetterTree, Module } from 'vuex';
-import { PlayerState, RootState } from '../types';
-import { RepeatTypes, Song } from '@/interfaces';
+import { ActionTree, GetterTree, Module, MutationTree } from 'vuex'
+import { PlayerState, RootState } from '../types'
+import { RepeatTypes, Song } from '@/interfaces'
 import StorageService from '@/services/storage'
 
 function updatePersistentOptions(options){

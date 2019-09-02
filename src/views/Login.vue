@@ -62,15 +62,15 @@ export default class Login extends Vue {
           })
           .catch(({ response }) => {
             switch (response.status) {
-                case 422:
-                this.errors = response.data
-                break
-              case 401:
-                this.errors = { password: 'Invalid credentials' }
-                break
-              default:
-                this.errors = { email: 'An unknown error occurred' }
-                break
+            case 422:
+              this.errors = response.data
+              break
+            case 401:
+              this.errors = { password: 'Invalid credentials' }
+              break
+            default:
+              this.errors = { email: 'An unknown error occurred' }
+              break
             }
           })
       }

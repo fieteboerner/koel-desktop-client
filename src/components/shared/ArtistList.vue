@@ -20,13 +20,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
-import { mixins } from "vue-class-component";
+import Vue from 'vue'
+import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
+import { mixins } from 'vue-class-component'
 
-import ItemList from "@/components/shared/ItemList.vue";
-import { Artist } from "@/interfaces";
-import SelectionContext from '@/classes/selection-context';
+import ItemList from '@/components/shared/ItemList.vue'
+import { Artist } from '@/interfaces'
+import SelectionContext from '@/classes/selection-context'
 
 @Component({
   components: {
@@ -39,22 +39,22 @@ export default class ArtistList extends Vue {
   @Prop(Object) value: any;
 
   onSelect(event: MouseEvent, artist: Artist) {
-    this.$emit("select", event, artist);
-    this.$emit("input", artist);
+    this.$emit('select', event, artist)
+    this.$emit('input', artist)
   }
 
   onPlay(event: MouseEvent, artist: Artist) {
-    this.$emit("play", artist);
+    this.$emit('play', artist)
   }
 
-  @Watch("value", { immediate: true })
+  @Watch('value', { immediate: true })
   onSelectedChange(value) {
-    this.$set(this.selectionContext, 'selected', value);
+    this.$set(this.selectionContext, 'selected', value)
   }
 
   @Watch('artists', { immediate: true })
   onItemChange(artists) {
-    this.$set(this.selectionContext, 'items', artists);
+    this.$set(this.selectionContext, 'items', artists)
   }
 }
 </script>

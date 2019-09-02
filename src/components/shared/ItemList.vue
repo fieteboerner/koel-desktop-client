@@ -52,12 +52,12 @@
 </template>
 
 <script lang="ts">
-import { indexOf, last, sortBy, without } from "lodash";
-import Vue, { CreateElement, VNode } from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
-import { RecycleScroller } from "vue-virtual-scroller";
-import SelectionContext from '@/classes/selection-context';
-import DragStore from '@/classes/drag-store';
+import { indexOf, last, sortBy, without } from 'lodash'
+import Vue, { CreateElement, VNode } from 'vue'
+import { Component, Prop, Watch } from 'vue-property-decorator'
+import { RecycleScroller } from 'vue-virtual-scroller'
+import SelectionContext from '@/classes/selection-context'
+import DragStore from '@/classes/drag-store'
 
 @Component({
   components: { RecycleScroller }
@@ -69,10 +69,10 @@ export default class ItemList extends Vue {
     const context = new SelectionContext(true)
     context.dynamic = true
     return context
-  }}) selectionContext: SelectionContext<any>
+  } }) selectionContext: SelectionContext<any>
   @Prop(String) itemClass: string
   @Prop(Boolean) virtualScroll: Boolean
-  @Prop({ type: String, default: "id" }) keyField: string
+  @Prop({ type: String, default: 'id' }) keyField: string
   @Prop(Number) itemHeight: Number
   @Prop(Boolean) allowItemReordering: Boolean
 
@@ -82,18 +82,18 @@ export default class ItemList extends Vue {
 
   itemClasses(item: any) {
     const classes: Object = {
-      "is-selected": this.isSelected(item)
-    };
+      'is-selected': this.isSelected(item)
+    }
 
     if (this.itemClass) {
       classes[this.itemClass] = true
     }
 
-    return classes;
+    return classes
   }
 
   isSelected(item) {
-    return this.selectionContext.isSelected(item);
+    return this.selectionContext.isSelected(item)
   }
 
   onSelectItem(event: MouseEvent, item) {
@@ -134,7 +134,7 @@ export default class ItemList extends Vue {
   @Watch('items', { immediate: true })
   onItemsChange(items) {
     if(this.selectionContext.dynamic) {
-      this.$set(this.selectionContext, 'items', items);
+      this.$set(this.selectionContext, 'items', items)
     }
   }
 }

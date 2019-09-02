@@ -3,7 +3,7 @@ import Buefy from 'buefy'
 import InfiniteScroll from 'vue-infinite-scroll'
 import VueScrollto from 'vue-scrollto'
 import '@mdi/font/css/materialdesignicons.css'
-import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 
 import App from './App.vue'
 import router from './router'
@@ -11,7 +11,7 @@ import store from './store'
 
 import SingleLayout from './components/layout/Single.vue'
 import SidebarLayout from './components/layout/Sidebar.vue'
-import StorageService from './services/storage';
+import StorageService from './services/storage'
 
 const token = store.getters['auth/token']
 if (token) {

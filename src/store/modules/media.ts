@@ -1,8 +1,8 @@
 import { first, sortBy, uniq } from 'lodash'
 import axios from '@/services/axios'
-import { Album, Artist, Song, Interaction, Playlist } from '@/interfaces'
-import { MediaState, RootState } from '../types';
-import { MutationTree, ActionTree, GetterTree, Module } from 'vuex';
+import { Album, Artist, Interaction, Playlist, Song } from '@/interfaces'
+import { MediaState, RootState } from '../types'
+import { ActionTree, GetterTree, Module, MutationTree } from 'vuex'
 
 const state: MediaState = {
   loading: false,
@@ -61,7 +61,7 @@ const mutations: MutationTree<MediaState> = {
 
   setPlaylistSongs (state, { playlist, songs }) {
     state.playlists = state.playlists.map((currentPlaylist: Playlist) => {
-      return currentPlaylist.id === playlist.id ? {...playlist, loaded: true, songs } : currentPlaylist
+      return currentPlaylist.id === playlist.id ? { ...playlist, loaded: true, songs } : currentPlaylist
     })
   },
 

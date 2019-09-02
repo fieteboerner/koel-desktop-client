@@ -1,6 +1,6 @@
 <template>
   <div class="single-wrapper">
-      <slot></slot>
+    <slot></slot>
   </div>
 </template>
 <script lang="ts">

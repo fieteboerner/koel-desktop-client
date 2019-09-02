@@ -1,13 +1,13 @@
 <template>
-	<div class="volume-control">
-		<b-icon size="is-small" :icon="volumeIcon" @click.native="toggleMute" />
-		<progress-range :value="volume" :max="10" :step=".1" @input="onUpdateVolume" class="volume-control-slider" />
-	</div>
+  <div class="volume-control">
+    <b-icon size="is-small" :icon="volumeIcon" @click.native="toggleMute" />
+    <progress-range :value="volume" :max="10" :step=".1" @input="onUpdateVolume" class="volume-control-slider" />
+  </div>
 </template>
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import { namespace } from 'vuex-class';
+import { namespace } from 'vuex-class'
 import { playerModule } from '@/store/namespaces'
 import ProgressRange from '@/components/shared/ProgressRange.vue'
 

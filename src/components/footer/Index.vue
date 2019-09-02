@@ -36,7 +36,7 @@ import SeekBar from './SeekBar.vue'
 import VolumeControl from './VolumeControl.vue'
 
 import { playerModule } from '@/store/namespaces'
-import { Song } from '@/interfaces';
+import { Song } from '@/interfaces'
 
 @Component({
   components: {

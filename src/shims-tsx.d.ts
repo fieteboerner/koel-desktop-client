@@ -11,3 +11,7 @@ declare global {
     }
   }
 }
+
+declare var process : {
+  env: any
+}

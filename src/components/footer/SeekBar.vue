@@ -35,12 +35,12 @@ export default class SeekBar extends Vue {
   }
 
   get duration() {
-      if (!this.current) return 0
-      return this.current.length
+    if (!this.current) return 0
+    return this.current.length
   }
 
   get timeLeft() {
-      return -1 * (this.duration - this.currentTime)
+    return -1 * (this.duration - this.currentTime)
   }
 }
 </script>

@@ -1,43 +1,43 @@
 <template>
-    <div class="main-wrapper"
-      tabindex="-1"
-      @keypress.space.prevent="togglePlayback"
-      @keyup.ctrl.left="back"
-      @keyup.ctrl.right="skip"
-    >
-      <b-loading :active="isLoading"/>
-      <nav class="">
-        <div class="navbar">
-          <div class="navbar-menu">
-            <div class="navbar-end">
-              <a class="navbar-item">{{ user.name }}</a>
-              <a class="navbar-item" @click="logout"><b-icon icon="exit-to-app"></b-icon></a>
-            </div>
+  <div class="main-wrapper"
+       tabindex="-1"
+       @keypress.space.prevent="togglePlayback"
+       @keyup.ctrl.left="back"
+       @keyup.ctrl.right="skip"
+  >
+    <b-loading :active="isLoading"/>
+    <nav class="">
+      <div class="navbar">
+        <div class="navbar-menu">
+          <div class="navbar-end">
+            <a class="navbar-item">{{ user.name }}</a>
+            <a class="navbar-item" @click="logout"><b-icon icon="exit-to-app"></b-icon></a>
           </div>
+        </div>
 
-        </div>
-        <div class="tabs is-centered">
-          <ul>
-            <router-link :to="{name: 'artists'}" tag="li" active-class="is-active"><a>Artists</a></router-link>
-            <router-link :to="{name: 'albums'}" tag="li" active-class="is-active"><a>Albums</a></router-link>
-            <router-link :to="{name: 'songs'}" tag="li" active-class="is-active"><a>Songs</a></router-link>
-            <router-link :to="{name: 'playlists'}" tag="li" active-class="is-active"><a>Playlists</a></router-link>
-          </ul>
-        </div>
-      </nav>
-      <div class="main-content">
-          <router-view></router-view>
-        </div>
-      <footer>
-        <site-footer></site-footer>
-      </footer>
+      </div>
+      <div class="tabs is-centered">
+        <ul>
+          <router-link :to="{name: 'artists'}" tag="li" active-class="is-active"><a>Artists</a></router-link>
+          <router-link :to="{name: 'albums'}" tag="li" active-class="is-active"><a>Albums</a></router-link>
+          <router-link :to="{name: 'songs'}" tag="li" active-class="is-active"><a>Songs</a></router-link>
+          <router-link :to="{name: 'playlists'}" tag="li" active-class="is-active"><a>Playlists</a></router-link>
+        </ul>
+      </div>
+    </nav>
+    <div class="main-content">
+      <router-view></router-view>
     </div>
+    <footer>
+      <site-footer></site-footer>
+    </footer>
+  </div>
 </template>
 <script lang="ts">
 import Vue from 'vue'
 import { ipcRenderer } from 'electron'
 import { Component } from 'vue-property-decorator'
-import { Getter, Action } from 'vuex-class';
+import { Action, Getter } from 'vuex-class'
 
 import { authModule, mediaModule, playerModule } from '@/store/namespaces'
 import SiteFooter from '@/components/footer/Index.vue'
@@ -58,15 +58,15 @@ export default class Main extends Vue {
   mounted() {
     ipcRenderer.on('media-key', (event, key) => {
       switch (key) {
-        case 'playpause':
-          this.togglePlayback()
-          break
-        case 'next':
-          this.skip()
-          break
-        case 'previous':
-          this.back()
-          break
+      case 'playpause':
+        this.togglePlayback()
+        break
+      case 'next':
+        this.skip()
+        break
+      case 'previous':
+        this.back()
+        break
       }
     })
   }

@@ -1,7 +1,7 @@
 import axios from '@/services/axios'
 import StorageService from '@/services/storage'
-import { AuthState, RootState } from '../types';
-import { GetterTree, MutationTree, ActionTree, Module } from 'vuex';
+import { AuthState, RootState } from '../types'
+import { ActionTree, GetterTree, Module, MutationTree } from 'vuex'
 
 const state: AuthState = {
   token: StorageService.get('authToken', ''),

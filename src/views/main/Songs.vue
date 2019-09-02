@@ -6,7 +6,7 @@
     album
     virtual-scroll
     @play="onPlay"
-    >
+  >
     <empty-list-message slot="empty" message="No Songs" />
   </SongList>
 </template>
@@ -15,11 +15,11 @@ import Vue from 'vue'
 import { sortBy } from 'lodash'
 import { Component, Mixins } from 'vue-property-decorator'
 import { mixins } from 'vue-class-component'
-import { playerModule, queueModule, mediaModule } from '@/store/namespaces'
+import { mediaModule, playerModule, queueModule } from '@/store/namespaces'
 
 import SongList from '@/components/shared/SongList.vue'
-import { Artist, Song } from '@/interfaces';
-import EmptyListMessage from '@/components/shared/EmptyListMessage.vue';
+import { Artist, Song } from '@/interfaces'
+import EmptyListMessage from '@/components/shared/EmptyListMessage.vue'
 
 @Component({
   components: {
