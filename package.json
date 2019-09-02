@@ -33,6 +33,7 @@
     "vuex-class": "0.3.2"
   },
   "devDependencies": {
+    "@typescript-eslint/parser": "^2.1.0",
     "@vue/cli-plugin-babel": "3.11.0",
     "@vue/cli-plugin-eslint": "3.11.0",
     "@vue/cli-plugin-typescript": "3.11.0",
@@ -60,7 +61,7 @@
     ],
     "rules": {},
     "parserOptions": {
-      "parser": "typescript-eslint-parser"
+      "parser": "@typescript-eslint/parser"
     }
   },
   "postcss": {
