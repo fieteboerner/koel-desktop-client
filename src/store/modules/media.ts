@@ -1,5 +1,6 @@
 import { first, sortBy, uniq } from 'lodash'
 import axios from '@/services/axios'
+import StorageService from '@/services/storage'
 import { Album, Artist, Interaction, Playlist, Song } from '@/interfaces'
 import { MediaState, RootState } from '../types'
 import { ActionTree, GetterTree, Module, MutationTree } from 'vuex'
@@ -51,7 +52,7 @@ const mutations: MutationTree<MediaState> = {
         ...playlist,
         isFavorite: false,
         loaded: false,
-        songs: [] 
+        songs: []
       }
     })
   },
@@ -69,7 +70,7 @@ const mutations: MutationTree<MediaState> = {
       return currentPlaylist.id === playlist.id ? {
         ...playlist,
         loaded: true,
-        songs 
+        songs
       } : currentPlaylist
     })
   },
@@ -78,7 +79,7 @@ const mutations: MutationTree<MediaState> = {
     state.songs = state.songs.map((song: Song) => {
       return (song.id === songToUpdate.id) ? {
         ...song,
-        liked: !song.liked 
+        liked: !song.liked
       } : song
     })
   },
@@ -86,13 +87,19 @@ const mutations: MutationTree<MediaState> = {
 
 const actions: ActionTree<MediaState, RootState> = {
   loadData ({ commit, rootGetters }) {
-    commit('setLoading')
+    const lastData = StorageService.get('data')
+    if (lastData) {
+      commit('initializeData', JSON.parse(lastData))
+    } else {
+      commit('setLoading')
+    }
     return new Promise((resolve, reject) => {
       axios
         .get(rootGetters['auth/url'] + '/api/data')
-        .then(resp => {
-          commit('auth/setUser', resp.data, { root: true })
-          commit('initializeData', resp.data)
+        .then(response => {
+          StorageService.set('data', JSON.stringify(response.data))
+          commit('auth/setUser', response.data, { root: true })
+          commit('initializeData', response.data)
           commit('setNotLoading')
           resolve()
         })
@@ -112,7 +119,7 @@ const actions: ActionTree<MediaState, RootState> = {
         commit('setNotLoading')
         commit('setPlaylistSongs', {
           playlist,
-          songs 
+          songs
         })
       })
   },
@@ -167,7 +174,7 @@ const getters: GetterTree<MediaState, RootState> = {
         isFavorite: true,
         loaded: true,
         name: 'Favorites',
-        songs: getters.likedSongs 
+        songs: getters.likedSongs
       },
       ...state.playlists,
     ]
