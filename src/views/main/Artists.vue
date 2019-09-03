@@ -1,14 +1,13 @@
 <template>
   <SidebarLayout>
-    <div slot="sidebar">
-      <ArtistList
-        :artists="sortedArtists"
-        :value="selected"
-        @input="onArtistSelect"
-        @play="onPlay"
-      />
-    </div>
-    <div class="artist-albums">
+    <ArtistList
+      slot="sidebar"
+      :artists="sortedArtists"
+      :value="selected"
+      @input="onArtistSelect"
+      @play="onPlay"
+    />
+    <div>
       <ArtistCard v-if="selected" :artist="selected" />
       <EmptyListMessage v-else message="No Artists" />
     </div>
@@ -64,7 +63,7 @@ export default class Artists extends Vue {
     const songlist: Array<Song> = this.artistSongs(artist)
     this.setQueue({
       songlist,
-      toPlay: songlist[0] 
+      toPlay: songlist[0]
     })
     this.play()
   }

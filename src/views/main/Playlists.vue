@@ -1,14 +1,13 @@
 <template>
   <SidebarLayout>
-    <div slot="sidebar">
-      <PlaylistList
-        :playlists="playlists"
-        :value="selected"
-        @input="onPlaylistSelected"
-        @play="onPlayPlaylist"
-      />
-    </div>
-    <div class="artist-albums">
+    <PlaylistList
+      slot="sidebar"
+      :playlists="playlists"
+      :value="selected"
+      @input="onPlaylistSelected"
+      @play="onPlayPlaylist"
+    />
+    <div>
       <SongList
         v-if="selected"
         :songs="selected.songs"
@@ -77,7 +76,7 @@ export default class Playlists extends Vue {
 
     this.setQueue({
       songlist,
-      toPlay: song 
+      toPlay: song
     })
     this.play()
   }
@@ -86,7 +85,7 @@ export default class Playlists extends Vue {
     const songlist: Song[] = playlist.songs
     this.setQueue({
       songlist,
-      toPlay: songlist[0] 
+      toPlay: songlist[0]
     })
     this.play()
   }
