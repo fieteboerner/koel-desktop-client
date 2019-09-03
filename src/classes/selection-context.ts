@@ -10,6 +10,10 @@ export default class SelectionContext<T> {
       this.multiselect = multiselect
     }
 
+    get hasSelection() {
+      return Boolean(this.selected.length)
+    }
+
     get selected(): T[] {
       return this._selected || []
     }
@@ -62,7 +66,7 @@ export default class SelectionContext<T> {
         } else {
           this.selected = [...this.selected, item]
         }
-        // select from to with shift
+        // select range when shift was hold
       } else if (this.selected.length && event.shiftKey) {
         let indexes = sortBy([
           indexOf(this.items, last(this.selected)),
@@ -73,7 +77,7 @@ export default class SelectionContext<T> {
           if (this.selected.includes(this.items[i])) continue
           this.selected = [...this.selected, this.items[i]]
         }
-        // set item if no button is hold
+        // set item if no button was hold
       } else {
         this.selected = [item]
       }
