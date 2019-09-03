@@ -58,21 +58,14 @@ export default class AlbumCard extends Vue {
   @Prop(Object) album
 
   @playerModule.Action play
-  @queueModule.Action('set') setQueue
+  @queueModule.Action setQueueBySelection
 
   get songs(): Song[] {
     return sortBy(this.album.songs, ['disc', 'track'])
   }
 
-  onPlay (event: MouseEvent|KeyboardEvent, song: Song = null) {
-    song = song || this.selectionContext.sortedSelected[0] || this.songs[0]
-    const startIndex = this.songs.indexOf(song)
-    const songlist = this.songs.filter((song, index) => index >= startIndex)
-
-    this.setQueue({
-      songlist,
-      toPlay: song 
-    })
+  onPlay() {
+    this.setQueueBySelection(this.selectionContext)
     this.play()
   }
 

@@ -2,6 +2,7 @@ import { clone, each, find, findIndex, findLastIndex, first } from 'lodash'
 import { QueueItem, Song } from '@/interfaces'
 import { QueueState, RootState } from '../types'
 import { ActionTree, GetterTree, Module, MutationTree } from 'vuex'
+import SelectionContext from '@/classes/selection-context'
 
 const state: QueueState = {
   context: null,
@@ -17,7 +18,7 @@ const mutations: MutationTree<QueueState> = {
       return {
         id: generateId(),
         song,
-        prio: false 
+        prio: false
       }
     })
 
@@ -65,7 +66,7 @@ const mutations: MutationTree<QueueState> = {
       return {
         id: generateId(),
         song,
-        prio: true 
+        prio: true
       }
     })
     if (lastIndex === -1) {
@@ -94,7 +95,21 @@ const actions: ActionTree<QueueState, RootState> = {
   set ({ commit }, { songlist, toPlay }) {
     commit('set', {
       songlist,
-      toPlay 
+      toPlay
+    })
+  },
+  setQueueBySelection({ dispatch }, selection: SelectionContext<Song>) {
+    const firstSortedSelected = selection.firstSortedSelected
+    const lastSelectedSong = selection.lastSortedSelected
+
+    const startIndex = selection.items.indexOf(lastSelectedSong)
+    const songlist = [
+      ...selection.sortedSelected,
+      ...selection.items.filter((song, index) => index > startIndex)
+    ]
+    dispatch('set', {
+      songlist,
+      toPlay: firstSortedSelected
     })
   },
   queue ({ commit, dispatch, state }, songs: Song[]) {

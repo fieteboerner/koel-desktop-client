@@ -75,7 +75,7 @@ export default class ArtistCard extends Vue {
   @Prop(Object) artist
   @mediaModule.Getter albums
   @playerModule.Action play
-  @queueModule.Action('set') setQueue
+  @queueModule.Action setQueueBySelection
 
   get sortedAlbums () {
     return sortBy(this.artist.albums, ['year', 'name'])
@@ -104,15 +104,8 @@ export default class ArtistCard extends Vue {
     return count
   }
 
-  onPlay (event: MouseEvent|KeyboardEvent, song: Song = null) {
-    song = song || this.selectionContext.sortedSelected[0] || this.songList[0]
-    const startIndex = this.songList.indexOf(song)
-    const songlist = this.songList.filter((song, index) => index >= startIndex)
-
-    this.setQueue({
-      songlist,
-      toPlay: song 
-    })
+  onPlay() {
+    this.setQueueBySelection(this.selectionContext)
     this.play()
   }
 
