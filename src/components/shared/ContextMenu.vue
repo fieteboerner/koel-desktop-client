@@ -10,18 +10,18 @@
     <div style="background-color:transparent" class="dropdown-menu">
       <ul class="dropdown-content">
         <a class="dropdown-item" @click="$emit('play')">Play</a>
-        <a class="dropdown-item" @click="queue">Add to queue</a>
+        <a class="dropdown-item" @click="queue">Add to Queue</a>
         <hr class="dropdown-divider">
         <template v-if="subCtx === 'song' && items.length === 1">
-          <a v-if="mainCtx !== 'artist'" class="dropdown-item" @click="goToArtist">Go to artist</a>
-          <a v-if="mainCtx !== 'album'" class="dropdown-item" @click="goToAlbum">Go to album</a>
+          <a v-if="mainCtx !== 'artist'" class="dropdown-item" @click="goToArtist">Go to Artist</a>
+          <a v-if="mainCtx !== 'album'" class="dropdown-item" @click="goToAlbum">Go to Album</a>
           <hr class="dropdown-divider">
         </template>
-        <a class="dropdown-item">Add to playlist</a>
-        <a v-if="mainCtx === 'playlist' && subCtx === 'song'" class="dropdown-item">Remove from this playlist</a>
+        <a class="dropdown-item">Add to Playlist</a>
+        <a v-if="mainCtx === 'playlist' && subCtx === 'song'" class="dropdown-item">Remove from this Playlist</a>
         <hr class="dropdown-divider">
-        <a class="dropdown-item">Save to disk</a>
-        <a v-if="subCtx === 'song' && items.length === 1" class="dropdown-item" @click="copyShare">Copy sharable url</a>
+        <a class="dropdown-item">Save to Disk</a>
+        <a v-if="subCtx === 'song' && items.length === 1" class="dropdown-item" @click="copyShare">Copy sharable URL</a>
       </ul>
     </div>
   </div>
