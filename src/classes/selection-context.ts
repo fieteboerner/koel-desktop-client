@@ -49,6 +49,23 @@ export default class SelectionContext<T> {
       return this.items.filter(item => this.isSelected(item))
     }
 
+    get firstSortedSelected(): null|T {
+      if (!this.hasSelection) {
+        return null
+      }
+
+      return this.sortedSelected[0]
+    }
+
+    get lastSortedSelected(): null|T {
+      if (!this.hasSelection) {
+        return null
+      }
+      const lastIndex = this.sortedSelected.length - 1
+
+      return this.sortedSelected[lastIndex]
+    }
+
     isSelected(item: T): Boolean {
       return this.selected.includes(item)
     }
