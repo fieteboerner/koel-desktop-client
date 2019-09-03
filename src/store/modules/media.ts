@@ -4,6 +4,7 @@ import StorageService from '@/services/storage'
 import { Album, Artist, Interaction, Playlist, Song } from '@/interfaces'
 import { MediaState, RootState } from '../types'
 import { ActionTree, GetterTree, Module, MutationTree } from 'vuex'
+import MessageCenter from '@/services/MessageCenter'
 
 const state: MediaState = {
   loading: false,
@@ -100,22 +101,26 @@ const actions: ActionTree<MediaState, RootState> = {
       commit('auth/setUser', data, { root: true })
       commit('initializeData', data)
       commit('setNotLoading')
-    }
-    finally {
+    } catch (error) {
+      MessageCenter.error('Unable to fetch data from server')
+    } finally {
       commit('setNotLoading')
     }
   },
   async loadPlaylistSongs ({ rootGetters, commit, getters }, playlist: Playlist) {
     if(!playlist.id || playlist.loaded) return
     commit('setLoading')
-
-    const { data } = await axios.get(`${rootGetters['auth/url']}/api/playlist/${playlist.id}/songs`)
-    const songs = getters.songsByIds(data)
-    commit('setNotLoading')
-    commit('setPlaylistSongs', {
-      playlist,
-      songs
-    })
+    try {
+      const { data } = await axios.get(`${rootGetters['auth/url']}/api/playlist/${playlist.id}/songs`)
+      const songs = getters.songsByIds(data)
+      commit('setNotLoading')
+      commit('setPlaylistSongs', {
+        playlist,
+        songs
+      })
+    } catch (error) {
+      MessageCenter.error('Unable to fetch playlist songs from server')
+    }
   },
   increasePlayCount ({ rootGetters }, song) {
     return axios.post(`${rootGetters['auth/url']}/api/interaction/play`, { song: song.id })
@@ -126,6 +131,7 @@ const actions: ActionTree<MediaState, RootState> = {
       await axios.post(`${rootGetters['auth/url']}/api/interaction/like`, { song: song.id })
     } catch (e) {
       commit('toggleLike', song)
+      MessageCenter.error('Unable to update the favorite state to the server')
     }
   }
 }

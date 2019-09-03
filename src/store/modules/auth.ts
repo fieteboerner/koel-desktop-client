@@ -50,9 +50,9 @@ const actions: ActionTree<AuthState, RootState> = {
       commit('setMail', email)
       commit('loginSuccess', data.token)
       StorageService.setUserPrefix(email)
-    } catch (e) {
+    } catch (error) {
       commit('logout')
-
+      throw error
     }
   },
 

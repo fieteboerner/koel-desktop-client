@@ -50,6 +50,7 @@ import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
 import { authModule } from '@/store/namespaces'
+import MessageCenter from '@/services/MessageCenter'
 
 @Component
 export default class Login extends Vue {
@@ -78,7 +79,12 @@ export default class Login extends Vue {
           })
           this.errors = {}
           this.$router.push('/')
-        } catch ({ response }) {
+        } catch (error) {
+          const { response } = error
+          if (!response) {
+            throw error
+          }
+
           switch (response.status) {
           case 422:
             this.errors = response.data

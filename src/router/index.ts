@@ -9,7 +9,7 @@ const router =  new Router({
   routes: [
     {
       path: '/login',
-      name: 'Login',
+      name: 'login',
       component: require('@/views/Login.vue').default,
       beforeEnter: ifNotAuthenticated
     },
@@ -21,7 +21,7 @@ const router =  new Router({
         {
           path: '',
           name: 'koel',
-          redirect: '/artists' 
+          redirect: '/artists'
         },
         {
           path: '/albums/:id?',
