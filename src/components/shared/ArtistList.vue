@@ -8,14 +8,14 @@
     @open="onPlay"
     @select="onSelect"
   >
-    <template slot-scope="item">
+    <template slot-scope="{ item: artist }">
       <div class="sidebar-item-image">
         <figure class="image is-48x48">
-          <img :src="item.albums[0].cover" alt="item.name">
+          <img :src="artist.albums[0].cover" :alt="artist.name">
         </figure>
       </div>
       <div class="sidebar-item-content subtitle is-6 truncate">
-        {{ item.name }}
+        {{ artist.name }}
       </div>
     </template>
   </ItemList>

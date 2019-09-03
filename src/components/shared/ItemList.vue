@@ -27,7 +27,7 @@
           @dragleave.stop.prevent="onDragLeave($event, item)"
           @drop.prevent="onDrop($event, item)"
         >
-          <slot v-bind="item" />
+          <slot :item="item" />
         </div>
       </RecycleScroller>
       <div v-else class="item-list">
@@ -46,7 +46,7 @@
           @dragleave="onDragLeave($event, item)"
           @drop.prevent="onDrop($event, item)"
         >
-          <slot v-bind="item" />
+          <slot :item="item" />
         </div>
       </div>
     </template>
@@ -73,13 +73,13 @@ export default class ItemList extends Vue {
       const context = new SelectionContext(true)
       context.dynamic = true
       return context
-    } 
+    }
   }) selectionContext: SelectionContext<any>
   @Prop(String) itemClass: string
   @Prop(Boolean) virtualScroll: Boolean
   @Prop({
     type: String,
-    default: 'id' 
+    default: 'id'
   }) keyField: string
   @Prop(Number) itemHeight: Number
   @Prop(Boolean) allowItemReordering: Boolean

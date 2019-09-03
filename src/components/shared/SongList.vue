@@ -11,45 +11,49 @@
       @context="onContext"
     >
       <slot v-if="$slots.empty" slot="empty" name="empty" />
-      <template slot-scope="item">
+      <template slot-scope="{ item: song }">
         <div class="track-number">
           <div class="show-on-hover">
             <b-icon
-              v-if="isCurrent(item) && playing"
+              v-if="isCurrent(song) && playing"
               icon="pause-circle-outline"
               @click.native="pause"
             />
             <b-icon
-              v-else-if="isCurrent(item) && !playing"
+              v-else-if="isCurrent(song) && !playing"
               icon="play-circle-outline"
               @click.native="resume"
             />
-            <b-icon v-else icon="play-circle-outline" @click.native="onPlay($event, item)" />
+            <b-icon
+              v-else
+              icon="play-circle-outline"
+              @click.native.stop="onSelectAndPlay($event, song)"
+            />
           </div>
           <div class="hide-on-hover">
-            <b-icon v-if="isCurrent(item) && playing" icon="volume-high" />
-            <b-icon v-else-if="isCurrent(item) && !playing" icon="volume-low" />
-            <span v-else>{{ item.track }}</span>
+            <b-icon v-if="isCurrent(song) && playing" icon="volume-high" />
+            <b-icon v-else-if="isCurrent(song) && !playing" icon="volume-low" />
+            <span v-else>{{ song.track }}</span>
           </div>
         </div>
         <div class="track-name">
-          {{ item.title }}
+          {{ song.title }}
         </div>
         <div v-if="artist" class="track-name">
-          {{ item.artist.name }}
+          {{ song.artist.name }}
         </div>
         <div v-if="album" class="track-name">
-          {{ item.album.name }}
+          {{ song.album.name }}
         </div>
         <div class="track-options visible-on-hover">
           <b-icon
             icon="dots-horizontal"
             title="more"
-            @click.native="$emit('context', $event, item)"
+            @click.native="$emit('context', $event, song)"
           />
         </div>
         <div class="track-time">
-          {{ item.length | timecode }}
+          {{ song.length | timecode }}
         </div>
       </template>
     </ItemList>
@@ -89,8 +93,13 @@ export default class SongList extends Vue {
     this.$emit('context', event, song)
   }
 
-  onPlay(event: MouseEvent|KeyboardEvent, song: Song = null) {
-    this.$emit('play', event, song)
+  onSelectAndPlay(event: MouseEvent, song: Song) {
+    this.selectionContext.selectItem(event, song)
+    this.onPlay(event, song)
+  }
+
+  onPlay(event: MouseEvent | KeyboardEvent, song: Song = null) {
+    this.$emit('play', event)
   }
 }
 </script>

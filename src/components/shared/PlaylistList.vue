@@ -8,17 +8,17 @@
     @open="onPlay"
     @select="onSelect"
   >
-    <template slot-scope="item">
+    <template slot-scope="{ item: playlist }">
       <div class="sidebar-item-image">
         <figure class="image is-48x48 icon-image">
           <b-icon
             class="liked-icon"
-            :icon="item.isFavorite ? 'heart' : 'playlist-music'"
+            :icon="playlist.isFavorite ? 'heart' : 'playlist-music'"
           />
         </figure>
       </div>
       <div class="sidebar-item-content subtitle is-6 truncate">
-        {{ item.name }}
+        {{ playlist.name }}
       </div>
     </template>
   </ItemList>
