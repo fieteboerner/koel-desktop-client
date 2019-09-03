@@ -7,11 +7,13 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
+    "lint": "vue-cli-service lint --no-fix",
+    "lint:fix": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps"
   },
+  "precommit": "lint:fix",
   "dependencies": {
     "@mdi/font": "4.2.95",
     "axios": "0.19.0",
@@ -43,6 +45,7 @@
     "electron": "^6.0.0",
     "eslint": "6.3.0",
     "eslint-plugin-vue": "5.2.3",
+    "pre-commit": "^1.2.2",
     "sass": "^1.22.10",
     "sass-loader": "8.0.0",
     "typescript": "3.6.2",
