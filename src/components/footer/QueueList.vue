@@ -47,7 +47,7 @@
               Next Up
             </div>
             <SongList
-              :songs="queueSongs"
+              :songs="queueSongsToShow"
               :selection-context="selectionContext"
               album
               artist
@@ -83,7 +83,7 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
-import { sortBy } from 'lodash'
+import { take, sortBy } from 'lodash'
 import { Component, Watch } from 'vue-property-decorator'
 import { queueModule } from '@/store/namespaces'
 import SongList from '@/components/shared/SongList.vue'
@@ -125,17 +125,21 @@ export default class QueueList extends Vue {
     return this.history.map((queueItem: QueueItem) => queueItem.song).reverse()
   }
 
+  get queueSongsToShow() {
+    return take(this.queueSongs, 100)
+  }
+
   onPrioSort(queue) {
     this.queueSort({
       prio: true,
-      queueItems: queue 
+      queueItems: queue
     })
   }
 
   onQueueSort(queue) {
     this.queueSort({
       prio: false,
-      queueItems: queue 
+      queueItems: queue
     })
   }
 
