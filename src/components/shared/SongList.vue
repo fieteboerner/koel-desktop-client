@@ -94,7 +94,7 @@ export default class SongList extends Vue {
   }
 
   onSelectAndPlay(event: MouseEvent, song: Song) {
-    this.selectionContext.selectItem(event, song)
+    this.selectionContext.selected = [song]
     this.onPlay(event, song)
   }
 
