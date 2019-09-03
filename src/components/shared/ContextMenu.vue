@@ -82,6 +82,7 @@ export default {
 <style lang="scss">
 .dropdown {
   position: fixed;
+  z-index: 1;
 
   & .dropdown-menu {
     padding: 0;

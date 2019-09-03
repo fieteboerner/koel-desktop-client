@@ -1,52 +1,72 @@
 <template>
-  <SongList
-    :songs="sortedSongs"
-    :value="[]"
-    artist
-    album
-    virtual-scroll
-    @play="onPlay"
-  >
-    <EmptyListMessage slot="empty" message="No Songs" />
-  </SongList>
+  <div style="height: 100%;">
+    <ContextMenu
+      ref="ctx"
+      context="songs:song"
+      :items="selectionContext.sortedSelected"
+      @play="onPlay"
+    />
+    <SongList
+      :songs="sortedSongs"
+      :value="[]"
+      :selection-context="selectionContext"
+      artist
+      album
+      virtual-scroll
+      @play="onPlay"
+      @context="context"
+    >
+      <EmptyListMessage slot="empty" message="No Songs" />
+    </SongList>
+  </div>
 </template>
 <script lang="ts">
 import Vue from 'vue'
 import { sortBy } from 'lodash'
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { mixins } from 'vue-class-component'
 import { mediaModule, playerModule, queueModule } from '@/store/namespaces'
 
 import SongList from '@/components/shared/SongList.vue'
 import { Artist, Song } from '@/interfaces'
+import ContextMenu from '@/components/shared/ContextMenu.vue'
 import EmptyListMessage from '@/components/shared/EmptyListMessage.vue'
+import SelectionContext from '@/classes/selection-context'
 
 @Component({
   components: {
+    ContextMenu,
     SongList,
     EmptyListMessage,
   },
 })
 export default class Songs extends Vue {
-  @mediaModule.Getter songs: Array<Song>
+  selectionContext: SelectionContext<Song> = new SelectionContext(true)
+
+  @mediaModule.Getter songs: Song[]
 
   @playerModule.Action play
-  @queueModule.Action('set') setQueue
+  @queueModule.Action setQueueBySelection
 
   get sortedSongs() {
     return sortBy(this.songs, ['artist.name', 'album.year', 'album.name', 'disc', 'track'])
   }
 
-  onPlay(event: KeyboardEvent|MouseEvent, song: Song = null) {
-    song = song || this.sortedSongs[0]
-    const startIndex = this.sortedSongs.indexOf(song)
-    const songlist = this.sortedSongs.filter((song, index) => index >= startIndex)
-
-    this.setQueue({
-      songlist,
-      toPlay: song 
-    })
+  onPlay() {
+    this.setQueueBySelection(this.selectionContext)
     this.play()
+  }
+
+  context(event: MouseEvent, song: Song) {
+    if (!this.selectionContext.isSelected(song)) {
+      this.selectionContext.selected = [song]
+    }
+    this.$refs.ctx.open(event)
+  }
+
+  @Watch('sortedSongs', { immediate: true })
+  onItemChange(songs) {
+    this.$set(this.selectionContext, 'items', songs)
   }
 }
 </script>
