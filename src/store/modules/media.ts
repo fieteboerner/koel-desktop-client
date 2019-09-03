@@ -86,56 +86,47 @@ const mutations: MutationTree<MediaState> = {
 }
 
 const actions: ActionTree<MediaState, RootState> = {
-  loadData ({ commit, rootGetters }) {
+  async loadData ({ commit, rootGetters }) {
     const lastData = StorageService.get('data')
     if (lastData) {
       commit('initializeData', JSON.parse(lastData))
     } else {
       commit('setLoading')
     }
-    return new Promise((resolve, reject) => {
-      axios
-        .get(rootGetters['auth/url'] + '/api/data')
-        .then(response => {
-          StorageService.set('data', JSON.stringify(response.data))
-          commit('auth/setUser', response.data, { root: true })
-          commit('initializeData', response.data)
-          commit('setNotLoading')
-          resolve()
-        })
-        .catch(error => {
-          commit('setNotLoading')
-          reject(error)
-        })
-    })
+    try {
+      const { data } = await axios.get(rootGetters['auth/url'] + '/api/data')
+
+      StorageService.set('data', JSON.stringify(data))
+      commit('auth/setUser', data, { root: true })
+      commit('initializeData', data)
+      commit('setNotLoading')
+    }
+    finally {
+      commit('setNotLoading')
+    }
   },
-  loadPlaylistSongs ({ rootGetters, commit, getters }, playlist: Playlist) {
+  async loadPlaylistSongs ({ rootGetters, commit, getters }, playlist: Playlist) {
     if(!playlist.id || playlist.loaded) return
     commit('setLoading')
 
-    return axios.get(`${rootGetters['auth/url']}/api/playlist/${playlist.id}/songs`)
-      .then(response => {
-        const songs = getters.songsByIds(response.data)
-        commit('setNotLoading')
-        commit('setPlaylistSongs', {
-          playlist,
-          songs
-        })
-      })
-  },
-  increasePlayCount ({ rootGetters }, song) {
-    return new Promise((resolve, reject) => {
-      axios
-        .post(`${rootGetters['auth/url']}/api/interaction/play`, { song: song.id })
-        .then(response => resolve(response))
-        .catch(error => reject(error))
+    const { data } = await axios.get(`${rootGetters['auth/url']}/api/playlist/${playlist.id}/songs`)
+    const songs = getters.songsByIds(data)
+    commit('setNotLoading')
+    commit('setPlaylistSongs', {
+      playlist,
+      songs
     })
   },
-  toggleLike({ rootGetters, commit }, song) {
+  increasePlayCount ({ rootGetters }, song) {
+    return axios.post(`${rootGetters['auth/url']}/api/interaction/play`, { song: song.id })
+  },
+  async toggleLike({ rootGetters, commit }, song) {
     commit('toggleLike', song)
-    axios
-      .post(`${rootGetters['auth/url']}/api/interaction/like`, { song: song.id })
-      .catch( () => commit('toggleLike', song))
+    try {
+      await axios.post(`${rootGetters['auth/url']}/api/interaction/like`, { song: song.id })
+    } catch (e) {
+      commit('toggleLike', song)
+    }
   }
 }
 

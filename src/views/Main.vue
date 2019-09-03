@@ -87,10 +87,9 @@ export default class Main extends Vue {
     ipcRenderer.removeAllListeners('media-key')
   }
 
-  logout() {
-    this.$store.dispatch('auth/logout').then(() => {
-      this.$router.push('/login')
-    })
+  async logout() {
+    await this.$store.dispatch('auth/logout')
+    this.$router.push('/login')
   }
 }
 </script>

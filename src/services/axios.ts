@@ -5,16 +5,14 @@ import router from '../router/index'
 const client = axios.create()
 client.interceptors.response.use(
   null,
-  (error) => {
-    return new Promise(function (resolve, reject) {
-      if (error.response.status === 401 && error.config && !error.config.__isRetryRequest) {
-        // if you ever get an unauthorized, logout the user
-        store.dispatch('auth/logout')
-          .then(() => router.push('/login'))
-        return
-      }
-      throw error
-    })
+  async (error) => {
+    if (error.response.status === 401 && error.config && !error.config.__isRetryRequest) {
+      // if you ever get an unauthorized, logout the user
+      await store.dispatch('auth/logout')
+      router.push('/login')
+      return
+    }
+    throw error
   }
 )
 

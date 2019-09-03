@@ -68,30 +68,29 @@ export default class Login extends Vue {
         this.email  = this.storeEmail
       }
 
-      login () {
+      async login () {
         const { email, password, url } = this
         this.setUrl(url)
-        this.authRequest({
-          email,
-          password 
-        })
-          .then(() => {
-            this.errors = {}
-            this.$router.push('/')
+        try {
+          await this.authRequest({
+            email,
+            password
           })
-          .catch(({ response }) => {
-            switch (response.status) {
-            case 422:
-              this.errors = response.data
-              break
-            case 401:
-              this.errors = { password: 'Invalid credentials' }
-              break
-            default:
-              this.errors = { email: 'An unknown error occurred' }
-              break
-            }
-          })
+          this.errors = {}
+          this.$router.push('/')
+        } catch ({ response }) {
+          switch (response.status) {
+          case 422:
+            this.errors = response.data
+            break
+          case 401:
+            this.errors = { password: 'Invalid credentials' }
+            break
+          default:
+            this.errors = { email: 'An unknown error occurred' }
+            break
+          }
+        }
       }
 }
 </script>

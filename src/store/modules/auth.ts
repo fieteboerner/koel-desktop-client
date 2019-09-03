@@ -41,37 +41,24 @@ const mutations: MutationTree<AuthState> = {
 }
 
 const actions: ActionTree<AuthState, RootState> = {
-  login ({ commit, state }, { email, password }) {
+  async login ({ commit, state }, { email, password }) {
+    try{
+      const { data } = await axios.post(state.url + '/api/me', {
+        email,
+        password
+      })
+      commit('setMail', email)
+      commit('loginSuccess', data.token)
+      StorageService.setUserPrefix(email)
+    } catch (e) {
+      commit('logout')
 
-    return new Promise((resolve, reject) => {
-      axios
-        .post(state.url + '/api/me', {
-          email,
-          password 
-        })
-        .then(resp => {
-          commit('setMail', email)
-          commit('loginSuccess', resp.data.token)
-          StorageService.setUserPrefix(email)
-          resolve(resp)
-        })
-        .catch(err => {
-          commit('logout')
-          reject(err)
-        })
-    })
+    }
   },
 
-  logout ({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      return axios
-        .delete(state.url + '/api/me')
-        .then(resp => {
-          commit('logout')
-          resolve()
-        })
-        .catch(error => reject(error))
-    })
+  async logout ({ commit, state }) {
+    await axios.delete(state.url + '/api/me')
+    commit('logout')
   },
 
   setMail ({ commit }, mail: string) {
