@@ -1,7 +1,13 @@
 <template>
   <div class="progress-range-root">
-    <input type="range" :step="step" :value="val" :max="max" @input="change">
-    <progress :value="val" :max="max"></progress>
+    <input
+      type="range"
+      :step="step"
+      :value="val"
+      :max="max"
+      @input="change"
+    >
+    <progress :value="val" :max="max" />
   </div>
 </template>
 <script lang="ts">
@@ -11,8 +17,14 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 @Component
 export default class ProgessRange extends Vue {
   @Prop(Number) value
-  @Prop({ type: Number, default: 100 }) max
-  @Prop({ type: Number, default: 1 }) step
+  @Prop({
+    type: Number,
+    default: 100 
+  }) max
+  @Prop({
+    type: Number,
+    default: 1 
+  }) step
 
   val = this.value
 

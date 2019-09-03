@@ -1,16 +1,16 @@
 <template>
   <div class="song-list" tabindex="-1" @keypress.enter="onPlay">
-    <slot name="header" class="song-list-item"></slot>
+    <slot name="header" class="song-list-item" />
     <ItemList
       :items="songs"
-      :itemHeight="42"
-      :virtualScroll="virtualScroll"
+      :item-height="42"
+      :virtual-scroll="virtualScroll"
       :selection-context="selectionContext"
       item-class="song-list-item"
       @open="onPlay"
       @context="onContext"
     >
-      <slot name="empty" v-if="$slots.empty" slot="empty" />
+      <slot v-if="$slots.empty" slot="empty" name="empty" />
       <template slot-scope="item">
         <div class="track-number">
           <div class="show-on-hover">
@@ -24,25 +24,33 @@
               icon="play-circle-outline"
               @click.native="resume"
             />
-            <b-icon v-else icon="play-circle-outline" @click.native="onPlay($event, item)"/>
+            <b-icon v-else icon="play-circle-outline" @click.native="onPlay($event, item)" />
           </div>
           <div class="hide-on-hover">
-            <b-icon v-if="isCurrent(item) && playing" icon="volume-high"/>
-            <b-icon v-else-if="isCurrent(item) && !playing" icon="volume-low"/>
+            <b-icon v-if="isCurrent(item) && playing" icon="volume-high" />
+            <b-icon v-else-if="isCurrent(item) && !playing" icon="volume-low" />
             <span v-else>{{ item.track }}</span>
           </div>
         </div>
-        <div class="track-name">{{ item.title }}</div>
-        <div v-if="artist" class="track-name">{{ item.artist.name }}</div>
-        <div v-if="album" class="track-name">{{ item.album.name }}</div>
+        <div class="track-name">
+          {{ item.title }}
+        </div>
+        <div v-if="artist" class="track-name">
+          {{ item.artist.name }}
+        </div>
+        <div v-if="album" class="track-name">
+          {{ item.album.name }}
+        </div>
         <div class="track-options visible-on-hover">
           <b-icon
             icon="dots-horizontal"
-            @click.native="$emit('context', $event, item)"
             title="more"
+            @click.native="$emit('context', $event, item)"
           />
         </div>
-        <div class="track-time">{{ item.length | timecode }}</div>
+        <div class="track-time">
+          {{ item.length | timecode }}
+        </div>
       </template>
     </ItemList>
   </div>

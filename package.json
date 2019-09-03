@@ -49,50 +49,6 @@
     "vue-cli-plugin-electron-builder": "1.4.0",
     "vue-template-compiler": "2.6.10"
   },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended",
-      "@vue/typescript"
-    ],
-    "rules": {
-      "semi": [
-        "error",
-        "never"
-      ],
-      "quotes": [
-        "error",
-        "single"
-      ],
-      "no-console": "error",
-      "indent": [
-        "error",
-        2
-      ],
-      "object-curly-spacing": [
-        "error",
-        "always"
-      ],
-      "vue/html-indent": [
-        "error",
-        2,
-        {
-          "attribute": 1,
-          "baseIndent": 1,
-          "closeBracket": 0,
-          "alignAttributesVertically": true,
-          "ignores": []
-        }
-      ]
-    },
-    "parserOptions": {
-      "parser": "@typescript-eslint/parser"
-    }
-  },
   "postcss": {
     "plugins": {
       "autoprefixer": {}

@@ -6,24 +6,33 @@
     <div class="controls-wrapper timeline">
       <div class="controls">
         <div class="buttons level">
-          <b-icon icon="shuffle" :class="{active: shuffle}" @click.native="toggleShuffle"></b-icon>
-          <b-icon icon="skip-previous" @click.native="back"></b-icon>
-          <b-icon v-if="!playing" icon="play-circle-outline" size="is-large" @click.native="resume"></b-icon>
-          <b-icon v-else icon="pause-circle-outline" size="is-large" @click.native="pause"></b-icon>
-          <b-icon icon="skip-next" @click.native="skip"></b-icon>
-          <b-icon :icon="repeatIcon" :class="{active: ['ONE', 'ALL'].indexOf(repeat) > -1}" @click.native="toggleRepeat"></b-icon>
+          <b-icon icon="shuffle" :class="{active: shuffle}" @click.native="toggleShuffle" />
+          <b-icon icon="skip-previous" @click.native="back" />
+          <b-icon
+            v-if="!playing"
+            icon="play-circle-outline"
+            size="is-large"
+            @click.native="resume"
+          />
+          <b-icon
+            v-else
+            icon="pause-circle-outline"
+            size="is-large"
+            @click.native="pause"
+          />
+          <b-icon icon="skip-next" @click.native="skip" />
+          <b-icon :icon="repeatIcon" :class="{active: ['ONE', 'ALL'].indexOf(repeat) > -1}" @click.native="toggleRepeat" />
         </div>
       </div>
-      <seek-bar/>
+      <SeekBar />
     </div>
     <div class="special-control">
-      <b-icon icon="playlist-play" @click.native="queueListActive = true"></b-icon>
+      <b-icon icon="playlist-play" @click.native="queueListActive = true" />
       <b-modal :active.sync="queueListActive" :can-cancel="['escape', 'outside']">
-        <queue-list/>
+        <QueueList />
       </b-modal>
-      <volume-control/>
+      <VolumeControl />
     </div>
-
   </div>
 </template>
 <script lang="ts">

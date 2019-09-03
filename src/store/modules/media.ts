@@ -47,7 +47,12 @@ const mutations: MutationTree<MediaState> = {
     })
 
     state.playlists = data.playlists.map((playlist: Playlist) => {
-      return { ...playlist, isFavorite: false, loaded: false, songs: [] }
+      return {
+        ...playlist,
+        isFavorite: false,
+        loaded: false,
+        songs: [] 
+      }
     })
   },
 
@@ -61,13 +66,20 @@ const mutations: MutationTree<MediaState> = {
 
   setPlaylistSongs (state, { playlist, songs }) {
     state.playlists = state.playlists.map((currentPlaylist: Playlist) => {
-      return currentPlaylist.id === playlist.id ? { ...playlist, loaded: true, songs } : currentPlaylist
+      return currentPlaylist.id === playlist.id ? {
+        ...playlist,
+        loaded: true,
+        songs 
+      } : currentPlaylist
     })
   },
 
   toggleLike(state, songToUpdate: Song) {
     state.songs = state.songs.map((song: Song) => {
-      return (song.id === songToUpdate.id) ? { ...song, liked: !song.liked } : song
+      return (song.id === songToUpdate.id) ? {
+        ...song,
+        liked: !song.liked 
+      } : song
     })
   },
 }
@@ -98,7 +110,10 @@ const actions: ActionTree<MediaState, RootState> = {
       .then(response => {
         const songs = getters.songsByIds(response.data)
         commit('setNotLoading')
-        commit('setPlaylistSongs', { playlist, songs })
+        commit('setPlaylistSongs', {
+          playlist,
+          songs 
+        })
       })
   },
   increasePlayCount ({ rootGetters }, song) {
@@ -147,7 +162,13 @@ const getters: GetterTree<MediaState, RootState> = {
   playlist: (state, getters) => (id: string) => getters.playlists.find((playlist: Playlist) => playlist.id === parseInt(id, 10)),
   playlists: (state, getters) => {
     return [
-      { id: 0, isFavorite: true, loaded: true, name: 'Favorites', songs: getters.likedSongs },
+      {
+        id: 0,
+        isFavorite: true,
+        loaded: true,
+        name: 'Favorites',
+        songs: getters.likedSongs 
+      },
       ...state.playlists,
     ]
   },

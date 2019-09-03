@@ -45,7 +45,10 @@ const actions: ActionTree<AuthState, RootState> = {
 
     return new Promise((resolve, reject) => {
       axios
-        .post(state.url + '/api/me', { email, password })
+        .post(state.url + '/api/me', {
+          email,
+          password 
+        })
         .then(resp => {
           commit('setMail', email)
           commit('loginSuccess', resp.data.token)

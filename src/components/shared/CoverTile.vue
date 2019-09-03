@@ -5,9 +5,13 @@
         <img :src="img" :alt="title">
       </figure>
     </div>
-    <div class="card-content" v-if="title || subtitle">
-      <div class="title is-5 truncate" @click="$emit('title')">{{ title }}</div>
-      <div v-if="subtitle" class="subtitle is-6 truncate" @click="$emit('subtitle')">{{ subtitle }}</div>
+    <div v-if="title || subtitle" class="card-content">
+      <div class="title is-5 truncate" @click="$emit('title')">
+        {{ title }}
+      </div>
+      <div v-if="subtitle" class="subtitle is-6 truncate" @click="$emit('subtitle')">
+        {{ subtitle }}
+      </div>
     </div>
   </div>
 </template>

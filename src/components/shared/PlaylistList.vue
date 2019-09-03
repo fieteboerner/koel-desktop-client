@@ -17,7 +17,9 @@
           />
         </figure>
       </div>
-      <div class="sidebar-item-content subtitle is-6 truncate">{{ item.name }}</div>
+      <div class="sidebar-item-content subtitle is-6 truncate">
+        {{ item.name }}
+      </div>
     </template>
   </ItemList>
 </template>

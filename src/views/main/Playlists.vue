@@ -1,5 +1,5 @@
 <template>
-  <sidebar-layout>
+  <SidebarLayout>
     <div slot="sidebar">
       <PlaylistList
         :playlists="playlists"
@@ -17,11 +17,11 @@
         virtual-scroll
         @play="onPlay"
       >
-        <empty-list-message slot="empty" message="There are no songs in this playlist yet" />
+        <EmptyListMessage slot="empty" message="There are no songs in this playlist yet" />
       </SongList>
-      <empty-list-message v-else message="No Playlist selected" />
+      <EmptyListMessage v-else message="No Playlist selected" />
     </div>
-  </sidebar-layout>
+  </SidebarLayout>
 </template>
 <script lang="ts">
 import Vue from 'vue'
@@ -75,13 +75,19 @@ export default class Playlists extends Vue {
     const startIndex = this.sortedSongs.indexOf(song)
     const songlist = this.sortedSongs.filter((song, index) => index >= startIndex)
 
-    this.setQueue({ songlist, toPlay: song })
+    this.setQueue({
+      songlist,
+      toPlay: song 
+    })
     this.play()
   }
 
   onPlayPlaylist(playlist: Playlist) {
     const songlist: Song[] = playlist.songs
-    this.setQueue({ songlist, toPlay: songlist[0] })
+    this.setQueue({
+      songlist,
+      toPlay: songlist[0] 
+    })
     this.play()
   }
 

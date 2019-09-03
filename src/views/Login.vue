@@ -3,24 +3,40 @@
     <div class="hero-body">
       <div class="container has-text-centered">
         <div class="column is-4 is-offset-4">
-          <h3 class="title has-text-grey">Login</h3>
-          <p class="subtitle has-text-grey">Login to listen.</p>
+          <h3 class="title has-text-grey">
+            Login
+          </h3>
+          <p class="subtitle has-text-grey">
+            Login to listen.
+          </p>
           <div class="box">
             <figure class="avatar">
               <img src="https://placehold.it/128x128" alt="Logo">
             </figure>
             <form class="login" @submit.prevent="login">
               <b-field :type="errors.url ? 'is-danger' : ''" :message="errors.url">
-                <b-input placeholder="Koel-URL" v-model="url" required></b-input>
+                <b-input v-model="url" placeholder="Koel-URL" required />
               </b-field>
               <b-field :type="errors.email ? 'is-danger' : ''" :message="errors.email">
-                <b-input placeholder="E-Mail" v-model="email" required autofocus></b-input>
+                <b-input
+                  v-model="email"
+                  placeholder="E-Mail"
+                  required
+                  autofocus
+                />
               </b-field>
               <b-field :type="errors.password ? 'is-danger' : ''" :message="errors.password">
-                <b-input type="password" placeholder="Password" v-model="password" required></b-input>
+                <b-input
+                  v-model="password"
+                  type="password"
+                  placeholder="Password"
+                  required
+                />
               </b-field>
               <b-field>
-                <button class="button is-fullwidth is-info" type="submit">Login</button>
+                <button class="button is-fullwidth is-info" type="submit">
+                  Login
+                </button>
               </b-field>
             </form>
           </div>
@@ -55,7 +71,10 @@ export default class Login extends Vue {
       login () {
         const { email, password, url } = this
         this.setUrl(url)
-        this.authRequest({ email, password })
+        this.authRequest({
+          email,
+          password 
+        })
           .then(() => {
             this.errors = {}
             this.$router.push('/')

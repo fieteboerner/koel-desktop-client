@@ -1,5 +1,5 @@
 <template>
-  <sidebar-layout>
+  <SidebarLayout>
     <div slot="sidebar">
       <ArtistList
         :artists="sortedArtists"
@@ -9,10 +9,10 @@
       />
     </div>
     <div class="artist-albums">
-      <artist-card :artist="selected" v-if="selected"></artist-card>
-      <empty-list-message v-else message="No Artists" />
+      <ArtistCard v-if="selected" :artist="selected" />
+      <EmptyListMessage v-else message="No Artists" />
     </div>
-  </sidebar-layout>
+  </SidebarLayout>
 </template>
 <script lang="ts">
 import Vue from 'vue'
@@ -62,7 +62,10 @@ export default class Artists extends Vue {
 
   onPlay(artist: Artist) {
     const songlist: Array<Song> = this.artistSongs(artist)
-    this.setQueue({ songlist, toPlay: songlist[0] })
+    this.setQueue({
+      songlist,
+      toPlay: songlist[0] 
+    })
     this.play()
   }
 }

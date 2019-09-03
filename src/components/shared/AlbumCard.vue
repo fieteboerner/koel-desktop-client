@@ -1,6 +1,6 @@
 <template>
   <div>
-    <context-menu
+    <ContextMenu
       ref="ctx"
       :items="selectionContext.sortedSelected"
       context="album:song"
@@ -8,13 +8,17 @@
     />
     <div class="columns card-root" tabindex="-1" @keypress.enter="onPlay">
       <div class="column is-4 cover-column">
-        <cover-tile :img="album.cover"></cover-tile>
+        <CoverTile :img="album.cover" />
       </div>
       <div class="column is-8 info-column">
-        <div class="title is-3">{{ album.name }}</div>
-        <div class="subtitle is-4">{{ album.artist.name }}</div>
+        <div class="title is-3">
+          {{ album.name }}
+        </div>
+        <div class="subtitle is-4">
+          {{ album.artist.name }}
+        </div>
 
-        <album-song-list
+        <AlbumSongList
           :selection-context="selectionContext"
           :songs="album.songs"
           @context="onContext"
@@ -65,7 +69,10 @@ export default class AlbumCard extends Vue {
     const startIndex = this.songs.indexOf(song)
     const songlist = this.songs.filter((song, index) => index >= startIndex)
 
-    this.setQueue({ songlist, toPlay: song })
+    this.setQueue({
+      songlist,
+      toPlay: song 
+    })
     this.play()
   }
 

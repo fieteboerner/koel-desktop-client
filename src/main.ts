@@ -25,8 +25,8 @@ Vue.config.productionTip = false
 Vue.use(Buefy)
 Vue.use(InfiniteScroll)
 Vue.use(VueScrollto)
-Vue.component('single-layout', SingleLayout)
-Vue.component('sidebar-layout', SidebarLayout)
+Vue.component('SingleLayout', SingleLayout)
+Vue.component('SidebarLayout', SidebarLayout)
 Vue.filter('timecode', code => {
   let negative = code < 0
   let secNum = Math.abs(parseInt(code, 10))

@@ -1,10 +1,10 @@
 <template>
   <div class="sidebar-wrapper">
     <div class="sidebar" :style="{width}">
-      <slot name="sidebar"></slot>
+      <slot name="sidebar" />
     </div>
     <div class="layout-content">
-      <slot></slot>
+      <slot />
     </div>
   </div>
 </template>
@@ -14,7 +14,10 @@ import { Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class Sidebar extends Vue {
-  @Prop({ type: String, default: '350px' }) width
+  @Prop({
+    type: String,
+    default: '350px' 
+  }) width
 }
 </script>
 <style lang="scss">

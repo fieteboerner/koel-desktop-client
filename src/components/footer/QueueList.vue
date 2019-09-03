@@ -1,19 +1,32 @@
 <template>
   <div class="modal-card" style="width: auto;">
     <header class="modal-card-head">
-      <div class="modal-card-title">Play Queue</div>
+      <div class="modal-card-title">
+        Play Queue
+      </div>
     </header>
     <section class="modal-card-body">
       <b-tabs position="is-centered">
         <b-tab-item label="Queue">
           <div v-if="currentSong">
-            <div class="title is-5">Now Playing</div>
-            <SongList :songs="[currentSong]" :selection-context="selectionContext" album artist/>
+            <div class="title is-5">
+              Now Playing
+            </div>
+            <SongList
+              :songs="[currentSong]"
+              :selection-context="selectionContext"
+              album
+              artist
+            />
           </div>
-          <div v-else class="has-text-centered subtitle is-5">Nothing to play</div>
+          <div v-else class="has-text-centered subtitle is-5">
+            Nothing to play
+          </div>
 
           <div v-if="prioSongs.length">
-            <div class="title is-5">Next in Queue</div>
+            <div class="title is-5">
+              Next in Queue
+            </div>
             <SongList
               v-if="prioSongs.length"
               :songs="prioSongs"
@@ -30,7 +43,9 @@
             </ul>-->
           </div>
           <div v-if="queueSongs.length">
-            <div class="title is-5">Next Up</div>
+            <div class="title is-5">
+              Next Up
+            </div>
             <SongList
               :songs="queueSongs"
               :selection-context="selectionContext"
@@ -47,13 +62,22 @@
           </ul>-->
         </b-tab-item>
         <b-tab-item label="History">
-          <SongList v-if="historySongs.length" :songs="historySongs" album artist/>
-          <div v-else class="has-text-centered subtitle is-5">No items</div>
+          <SongList
+            v-if="historySongs.length"
+            :songs="historySongs"
+            album
+            artist
+          />
+          <div v-else class="has-text-centered subtitle is-5">
+            No items
+          </div>
         </b-tab-item>
       </b-tabs>
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-primary" @click="$parent.close">Close</button>
+      <button class="button is-primary" @click="$parent.close">
+        Close
+      </button>
     </footer>
   </div>
 </template>
@@ -102,11 +126,17 @@ export default class QueueList extends Vue {
   }
 
   onPrioSort(queue) {
-    this.queueSort({ prio: true, queueItems: queue })
+    this.queueSort({
+      prio: true,
+      queueItems: queue 
+    })
   }
 
   onQueueSort(queue) {
-    this.queueSort({ prio: false, queueItems: queue })
+    this.queueSort({
+      prio: false,
+      queueItems: queue 
+    })
   }
 
   @Watch('queueList', { immediate: true })

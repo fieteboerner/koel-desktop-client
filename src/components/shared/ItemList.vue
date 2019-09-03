@@ -1,7 +1,9 @@
 <template>
   <div style="height: 100%">
     <div v-if="!items.length">
-      <slot name="empty">There are no items to show</slot>
+      <slot name="empty">
+        There are no items to show
+      </slot>
     </div>
     <template v-else>
       <RecycleScroller
@@ -25,14 +27,14 @@
           @dragleave.stop.prevent="onDragLeave($event, item)"
           @drop.prevent="onDrop($event, item)"
         >
-          <slot v-bind="item"></slot>
+          <slot v-bind="item" />
         </div>
       </RecycleScroller>
       <div v-else class="item-list">
         <div
           v-for="item in items"
-          :class="itemClasses(item)"
           :key="item[keyField]"
+          :class="itemClasses(item)"
           class="item-list-item"
           :draggable="allowItemReordering"
           @click="onSelectItem($event, item)"
@@ -44,7 +46,7 @@
           @dragleave="onDragLeave($event, item)"
           @drop.prevent="onDrop($event, item)"
         >
-          <slot v-bind="item"/>
+          <slot v-bind="item" />
         </div>
       </div>
     </template>
@@ -65,14 +67,20 @@ import DragStore from '@/classes/drag-store'
 export default class ItemList extends Vue {
   dragStore: DragStore<any> = new DragStore('drag-over')
   @Prop(Array) items: Array<any>;
-  @Prop({ type: SelectionContext, default: () => {
-    const context = new SelectionContext(true)
-    context.dynamic = true
-    return context
-  } }) selectionContext: SelectionContext<any>
+  @Prop({
+    type: SelectionContext,
+    default: () => {
+      const context = new SelectionContext(true)
+      context.dynamic = true
+      return context
+    } 
+  }) selectionContext: SelectionContext<any>
   @Prop(String) itemClass: string
   @Prop(Boolean) virtualScroll: Boolean
-  @Prop({ type: String, default: 'id' }) keyField: string
+  @Prop({
+    type: String,
+    default: 'id' 
+  }) keyField: string
   @Prop(Number) itemHeight: Number
   @Prop(Boolean) allowItemReordering: Boolean
 

@@ -1,5 +1,7 @@
 <template>
-  <div class="is-size-3 empty-list-message">{{ message }}</div>
+  <div class="is-size-3 empty-list-message">
+    {{ message }}
+  </div>
 </template>
 <script lang="ts">
 import Vue from 'vue'
@@ -7,7 +9,10 @@ import { Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class EmptyListMessage extends Vue {
-  @Prop({ type: String, required: true }) message: string;
+  @Prop({
+    type: String,
+    required: true 
+  }) message: string;
 }
 </script>
 

@@ -1,35 +1,43 @@
 <template>
-  <div class="main-wrapper"
-       tabindex="-1"
-       @keypress.space.prevent="togglePlayback"
-       @keyup.ctrl.left="back"
-       @keyup.ctrl.right="skip"
+  <div
+    class="main-wrapper"
+    tabindex="-1"
+    @keypress.space.prevent="togglePlayback"
+    @keyup.ctrl.left="back"
+    @keyup.ctrl.right="skip"
   >
-    <b-loading :active="isLoading"/>
+    <b-loading :active="isLoading" />
     <nav class="">
       <div class="navbar">
         <div class="navbar-menu">
           <div class="navbar-end">
             <a class="navbar-item">{{ user.name }}</a>
-            <a class="navbar-item" @click="logout"><b-icon icon="exit-to-app"></b-icon></a>
+            <a class="navbar-item" @click="logout"><b-icon icon="exit-to-app" /></a>
           </div>
         </div>
-
       </div>
       <div class="tabs is-centered">
         <ul>
-          <router-link :to="{name: 'artists'}" tag="li" active-class="is-active"><a>Artists</a></router-link>
-          <router-link :to="{name: 'albums'}" tag="li" active-class="is-active"><a>Albums</a></router-link>
-          <router-link :to="{name: 'songs'}" tag="li" active-class="is-active"><a>Songs</a></router-link>
-          <router-link :to="{name: 'playlists'}" tag="li" active-class="is-active"><a>Playlists</a></router-link>
+          <router-link :to="{name: 'artists'}" tag="li" active-class="is-active">
+            <a>Artists</a>
+          </router-link>
+          <router-link :to="{name: 'albums'}" tag="li" active-class="is-active">
+            <a>Albums</a>
+          </router-link>
+          <router-link :to="{name: 'songs'}" tag="li" active-class="is-active">
+            <a>Songs</a>
+          </router-link>
+          <router-link :to="{name: 'playlists'}" tag="li" active-class="is-active">
+            <a>Playlists</a>
+          </router-link>
         </ul>
       </div>
     </nav>
     <div class="main-content">
-      <router-view></router-view>
+      <router-view />
     </div>
     <footer>
-      <site-footer></site-footer>
+      <SiteFooter />
     </footer>
   </div>
 </template>

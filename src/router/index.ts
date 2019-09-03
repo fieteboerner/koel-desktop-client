@@ -18,7 +18,11 @@ const router =  new Router({
       component: require('@/views/Main.vue').default,
       beforeEnter: ifAuthenticated,
       children: [
-        { path: '', name: 'koel', redirect: '/artists' },
+        {
+          path: '',
+          name: 'koel',
+          redirect: '/artists' 
+        },
         {
           path: '/albums/:id?',
           name: 'albums',

@@ -1,14 +1,21 @@
 <template>
   <div class="artist-card-root" tabindex="-1" @keypress.enter="onPlay">
-    <context-menu ref="ctx" context="artist:song" @play="onPlay" :items="selectionContext.sortedSelected"/>
+    <ContextMenu
+      ref="ctx"
+      context="artist:song"
+      :items="selectionContext.sortedSelected"
+      @play="onPlay"
+    />
     <div>
-      <p class="title is-3" style="margin-bottom: 2.25rem;">{{ artist.name }}</p>
+      <p class="title is-3" style="margin-bottom: 2.25rem;">
+        {{ artist.name }}
+      </p>
       <p class="subtitle is-5">
         {{ artist.albums.length }} Albums, {{ songCount(artist.albums) }} Songs
       </p>
       <hr>
     </div>
-    <div class="artist-card-columns" v-for="album in sortedAlbums" :key="album.id">
+    <div v-for="album in sortedAlbums" :key="album.id" class="artist-card-columns">
       <div class="column is-one-quarter is-hidden-touch">
         <figure class="image cover is-square">
           <img :src="album.cover" :alt="album.name">
@@ -25,18 +32,21 @@
             </figure>
           </div>
           <div class="media-content">
-            <p class="title is-3">{{ album.name }}</p>
+            <p class="title is-3">
+              {{ album.name }}
+            </p>
           </div>
           <div class="media-right">
-            <i class="fa fa-ellipsis-h"></i>
+            <i class="fa fa-ellipsis-h" />
           </div>
         </div>
         <hr>
-        <album-song-list
+        <AlbumSongList
           :songs="album.songs"
           :selection-context="selectionContext"
           @play="onPlay"
-          @context="context" />
+          @context="context"
+        />
       </div>
     </div>
   </div>
@@ -99,7 +109,10 @@ export default class ArtistCard extends Vue {
     const startIndex = this.songList.indexOf(song)
     const songlist = this.songList.filter((song, index) => index >= startIndex)
 
-    this.setQueue({ songlist, toPlay: song })
+    this.setQueue({
+      songlist,
+      toPlay: song 
+    })
     this.play()
   }
 

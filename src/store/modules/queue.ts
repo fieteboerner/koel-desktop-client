@@ -14,7 +14,11 @@ const state: QueueState = {
 const mutations: MutationTree<QueueState> = {
   set (state, { songlist, toPlay }) {
     state.queue = songlist.map(song => {
-      return { id: generateId(), song, prio: false }
+      return {
+        id: generateId(),
+        song,
+        prio: false 
+      }
     })
 
     each(state.queue, (item: QueueItem) => {
@@ -58,7 +62,11 @@ const mutations: MutationTree<QueueState> = {
       lastIndex = currentIndex >= 0 ? currentIndex : -1
     }
     const queue = songs.map((song: Song) => {
-      return { id: generateId(), song, prio: true }
+      return {
+        id: generateId(),
+        song,
+        prio: true 
+      }
     })
     if (lastIndex === -1) {
       state.queue = queue
@@ -84,7 +92,10 @@ const mutations: MutationTree<QueueState> = {
 
 const actions: ActionTree<QueueState, RootState> = {
   set ({ commit }, { songlist, toPlay }) {
-    commit('set', { songlist, toPlay })
+    commit('set', {
+      songlist,
+      toPlay 
+    })
   },
   queue ({ commit, dispatch, state }, songs: Song[]) {
     commit('queuePrio', songs)

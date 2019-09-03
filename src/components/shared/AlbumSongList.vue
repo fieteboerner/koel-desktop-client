@@ -1,7 +1,11 @@
 <template>
   <div class="album-song-list">
     <div v-for="(disc, index) in discs" :key="index">
-      <div class="song-list-item disk-item" v-if="discs.length > 1"><div class="track-name">DISC {{ disc.number }}</div></div>
+      <div v-if="discs.length > 1" class="song-list-item disk-item">
+        <div class="track-name">
+          DISC {{ disc.number }}
+        </div>
+      </div>
       <SongList
         :songs="sortSongs(disc.songs)"
         :selection-context="selectionContext"
@@ -44,7 +48,10 @@ export default class AlbumSongList extends Vue {
      let discArray = []
      forOwn(discs, (songs, disc) => {
        if (disc === '0') return
-       discArray.push({ number: disc, songs })
+       discArray.push({
+         number: disc,
+         songs 
+       })
      })
 
      return sortBy(discArray, ['number'])

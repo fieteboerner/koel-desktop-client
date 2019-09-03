@@ -7,7 +7,7 @@
     virtual-scroll
     @play="onPlay"
   >
-    <empty-list-message slot="empty" message="No Songs" />
+    <EmptyListMessage slot="empty" message="No Songs" />
   </SongList>
 </template>
 <script lang="ts">
@@ -42,7 +42,10 @@ export default class Songs extends Vue {
     const startIndex = this.sortedSongs.indexOf(song)
     const songlist = this.sortedSongs.filter((song, index) => index >= startIndex)
 
-    this.setQueue({ songlist, toPlay: song })
+    this.setQueue({
+      songlist,
+      toPlay: song 
+    })
     this.play()
   }
 }

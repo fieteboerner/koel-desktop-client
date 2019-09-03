@@ -1,10 +1,14 @@
 <template>
   <div class="full-seek-bar">
-    <div class="current-time">{{ duration | timecode }}</div>
-    <div ref="plyr" class="plyr" id="plyr-player">
-      <audio ref="audio" controls></audio>
+    <div class="current-time">
+      {{ duration | timecode }}
     </div>
-    <div class="full-time" @click="toggleShowRemainingTime">{{ showRemainingTime ? timeLeft : currentTime | timecode }}</div>
+    <div id="plyr-player" ref="plyr" class="plyr">
+      <audio ref="audio" controls />
+    </div>
+    <div class="full-time" @click="toggleShowRemainingTime">
+      {{ showRemainingTime ? timeLeft : currentTime | timecode }}
+    </div>
   </div>
 </template>
 <script lang="ts">

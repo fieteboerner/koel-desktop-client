@@ -1,13 +1,20 @@
 <template>
-  <div ref="contextMenu" @click.stop @contextmenu.stop :id="id" :style="ctxStyle" class="dropdown is-active">
+  <div
+    :id="id"
+    ref="contextMenu"
+    :style="ctxStyle"
+    class="dropdown is-active"
+    @click.stop
+    @contextmenu.stop
+  >
     <div style="background-color:transparent" class="dropdown-menu">
       <ul class="dropdown-content">
         <a class="dropdown-item" @click="$emit('play')">Play</a>
         <a class="dropdown-item" @click="queue">Add to queue</a>
         <hr class="dropdown-divider">
         <template v-if="subCtx === 'song' && items.length === 1">
-          <a v-if="mainCtx !== 'artist'" @click="goToArtist" class="dropdown-item">Go to artist</a>
-          <a v-if="mainCtx !== 'album'"  @click="goToAlbum" class="dropdown-item">Go to album</a>
+          <a v-if="mainCtx !== 'artist'" class="dropdown-item" @click="goToArtist">Go to artist</a>
+          <a v-if="mainCtx !== 'album'" class="dropdown-item" @click="goToAlbum">Go to album</a>
           <hr class="dropdown-divider">
         </template>
         <a class="dropdown-item">Add to playlist</a>
@@ -26,8 +33,14 @@ import ContextMenu from 'vue-context-menu/src/ctx-menu'
 export default {
   extends: ContextMenu,
   props: {
-    context: String,
-    items: Array
+    context: {
+      type: String,
+      required: true
+    },
+    items: {
+      type: Array,
+      required: true
+    }
   },
   computed: {
     ...mapGetters('media', ['sharableUrl']),
@@ -44,10 +57,16 @@ export default {
   methods: {
     ...mapActions('queue', { queueSongs: 'queue' }),
     goToArtist () {
-      this.$router.push({ name: 'artists', params: { id: this.firstItem.artist.id } })
+      this.$router.push({
+        name: 'artists',
+        params: { id: this.firstItem.artist.id }
+      })
     },
     goToAlbum () {
-      this.$router.push({ name: 'albums', params: { id: this.firstItem.album.id } })
+      this.$router.push({
+        name: 'albums',
+        params: { id: this.firstItem.album.id }
+      })
     },
     queue () {
       if (this.subCtx === 'song') {

@@ -5,7 +5,9 @@
     </figure>
     <div class="current-song-content">
       <div class="title is-6">
-        <router-link :to="albumRoute" class="title-text" tag="span">{{ currentSong.title }}</router-link>
+        <router-link :to="albumRoute" class="title-text" tag="span">
+          {{ currentSong.title }}
+        </router-link>
         <b-icon
           :class="{ liked: currentSongLiked }"
           class="title-like"

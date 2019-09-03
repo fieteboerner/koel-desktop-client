@@ -1,7 +1,13 @@
 <template>
   <div class="volume-control">
     <b-icon size="is-small" :icon="volumeIcon" @click.native="toggleMute" />
-    <progress-range :value="volume" :max="10" :step=".1" @input="onUpdateVolume" class="volume-control-slider" />
+    <ProgressRange
+      :value="volume"
+      :max="10"
+      :step=".1"
+      class="volume-control-slider"
+      @input="onUpdateVolume"
+    />
   </div>
 </template>
 <script lang="ts">
