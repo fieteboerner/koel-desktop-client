@@ -15,6 +15,7 @@ export interface RootState {
 }
 
 export interface AuthState {
+    loading: boolean,
     token: string
     url: string
     email: string

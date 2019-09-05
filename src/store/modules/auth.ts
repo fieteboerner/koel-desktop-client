@@ -4,6 +4,7 @@ import { AuthState, RootState } from '../types'
 import { ActionTree, GetterTree, Module, MutationTree } from 'vuex'
 
 const state: AuthState = {
+  loading: false,
   token: StorageService.get('authToken', ''),
   url: StorageService.get('url', ''),
   email: StorageService.get('email', ''),
@@ -11,6 +12,9 @@ const state: AuthState = {
 }
 
 const mutations: MutationTree<AuthState> = {
+  setLoading(state, loading: boolean) {
+    state.loading = loading
+  },
   loginSuccess (state, token: string) {
     state.token = token
     StorageService.set('authToken', token)
@@ -43,6 +47,7 @@ const mutations: MutationTree<AuthState> = {
 const actions: ActionTree<AuthState, RootState> = {
   async login ({ commit, state }, { email, password }) {
     try{
+      commit('setLoading', true)
       const { data } = await axios.post(state.url + '/api/me', {
         email,
         password
@@ -53,6 +58,8 @@ const actions: ActionTree<AuthState, RootState> = {
     } catch (error) {
       commit('logout')
       throw error
+    } finally {
+      commit('setLoading', false)
     }
   },
 
@@ -72,6 +79,7 @@ const actions: ActionTree<AuthState, RootState> = {
 
 const getters: GetterTree<AuthState, RootState> = {
   isAuthenticated: state => !!state.token,
+  isLoading: state => state.loading,
   user: state => state.user,
   url: state => state.url.replace(/\/+$/, ''),
   email: state => state.email,
