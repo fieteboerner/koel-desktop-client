@@ -1,0 +1,17 @@
+// ShakeHorizontal Animation (input error)
+$animation-shakeHorizontal-width: 20px;
+$animation-shakeHorizontal-halfWidth: $animation-shakeHorizontal-width / 2;
+$animation-shakeHorizontal-quarterWidth: $animation-shakeHorizontal-halfWidth / 2;
+
+@keyframes shakeHorizontal {
+  0% { transform: translateX(30px); }
+  20% { transform: translateX($animation-shakeHorizontal-width * -1); }
+  40% { transform: translateX($animation-shakeHorizontal-halfWidth); }
+  60% { transform: translateX($animation-shakeHorizontal-halfWidth * -1); }
+  80% { transform: translateX($animation-shakeHorizontal-quarterWidth); }
+  100% { transform: translateX(0); }
+}
+
+.animation-shake-hrizontal {
+  animation: shakeHorizontal 350ms 1 linear;
+}
