@@ -1,5 +1,10 @@
 @import "settings";
 @import "animations";
+@import "transitions";
+
+#app {
+  user-select: none;
+}
 
 .truncate {
   width: 100%;
