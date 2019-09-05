@@ -1,48 +1,58 @@
 <template>
-  <div class="hero _is-success is-fullheight">
-    <div class="hero-body">
-      <div class="container has-text-centered">
-        <div class="column is-4 is-offset-4">
-          <h3 class="title has-text-grey">
-            Login
-          </h3>
-          <p class="subtitle has-text-grey">
-            Login to listen.
-          </p>
-          <div class="box">
-            <figure class="avatar">
-              <img src="https://placehold.it/128x128" alt="Logo">
-            </figure>
-            <form class="login" @submit.prevent="login">
-              <b-field :type="errors.url ? 'is-danger' : ''" :message="errors.url">
-                <b-input v-model="url" placeholder="Koel-URL" required />
-              </b-field>
-              <b-field :type="errors.email ? 'is-danger' : ''" :message="errors.email">
-                <b-input
-                  v-model="email"
-                  placeholder="E-Mail"
-                  required
-                  autofocus
-                />
-              </b-field>
-              <b-field :type="errors.password ? 'is-danger' : ''" :message="errors.password">
-                <b-input
-                  v-model="password"
-                  type="password"
-                  placeholder="Password"
-                  required
-                />
-              </b-field>
-              <b-field>
-                <button class="button is-fullwidth is-info" type="submit">
-                  Login
-                </button>
-              </b-field>
-            </form>
-          </div>
+  <div class="login">
+    <form
+      class="login-form"
+      :class="{ 'animation-shake-horizontal': showErrorAnimation }"
+      @submit.prevent="login"
+      @animationend="showErrorAnimation = false"
+    >
+      <div class="form-field">
+        <input
+          v-model="url"
+          class="form-input"
+          placeholder="Koel-Server-URL: https://..."
+          required
+          @blur="errors.url = null"
+        >
+        <div v-if="errors.url" class="form-field-error">
+          {{ errors.url[0] }}
         </div>
       </div>
-    </div>
+      <div class="form-field">
+        <input
+          v-model="email"
+          class="form-input"
+          placeholder="E-Mail"
+          required
+          :autofocus="!email"
+          @blur="errors.mail = null"
+        >
+        <div v-if="errors.mail" class="form-field-error">
+          {{ errors.mail[0] }}
+        </div>
+      </div>
+      <div class="form-field">
+        <input
+          v-model="password"
+          class="form-input"
+          type="password"
+          placeholder="Password"
+          required
+          :autofocus="!!email"
+          @blur="errors.password = null"
+        >
+        <div v-if="errors.password" class="form-field-error">
+          {{ errors.password[0] }}
+        </div>
+      </div>
+      <button
+        class="form-button"
+        :class="{ 'is-loading': isLoading }"
+        type="submit"
+      >
+        Login
+      </button>
+    </form>
   </div>
 </template>
 <script lang="ts">
@@ -58,11 +68,13 @@ export default class Login extends Vue {
       @authModule.Action('login') authRequest
       @authModule.Getter('url') storeUrl
       @authModule.Getter('email') storeEmail
+      @authModule.Getter isLoading
 
       url = ''
       email = ''
       password = ''
       errors = {}
+      showErrorAnimation = false
 
       mounted() {
         this.url = this.storeUrl
@@ -90,46 +102,95 @@ export default class Login extends Vue {
             this.errors = response.data
             break
           case 401:
-            this.errors = { password: 'Invalid credentials' }
+            this.errors = { password: ['Invalid credentials'] }
             break
           default:
-            this.errors = { email: 'An unknown error occurred' }
+            this.errors = { email: ['An unknown error occurred'] }
             break
           }
+
+          this.showErrorAnimation = true
         }
       }
 }
 </script>
-<style scoped>
-.hero {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  right: 0;
+<style lang="scss" scoped>
+@import "@/styles/app";
+
+.login {
+  align-items: center;
+  background-color: $light;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  position: relative;
 }
 
-.box {
-  margin-top: 5rem;
+.login-form {
+  background-color: white;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1), 0 5px 5px 0 rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  max-width: 450px;
+  padding: 2.5rem;
+  width: 33.333%;
 }
 
-.avatar {
-  margin-top: -70px;
-  padding-bottom: 20px;
+.form-input {
+  background-color: $light;
+  border: 0;
+  box-sizing: border-box;
+  display: block;
+  font-size: 17px;
+  outline: 0;
+  padding: 1em;
+  transition: background-color 150ms ease-in;
+  width: 100%;
+
+  &:focus {
+    background-color: darken($light, 5%);
+  }
 }
 
-.avatar img {
-  padding: 5px;
-  background: #fff;
-  border-radius: 50%;
-  -webkit-box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1),
-    0 0 0 1px rgba(10, 10, 10, 0.1);
-  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+.form-field {
+  margin-bottom: 1.5rem;
+
 }
-p {
-  font-weight: 700;
+
+.form-field-error {
+  color: $danger;
+  font-size: 14px;
 }
-p.subtitle {
-  padding-top: 1rem;
+
+.form-button {
+  background-color: $primary;
+  border: 0;
+  color: $white;
+  cursor: pointer;
+  display: flex;
+  font-size: 17px;
+  font-weight: bold;
+  outline: 0;
+  padding: 1em;
+  text-transform: uppercase;
+  transition-duration: 150ms;
+  transition-property: background-color, opacity;
+  transition-timing-function: ease-in;
+  width: 100%;
+
+  &.is-loading {
+    opacity: 0.5;
+    pointer-events: none;
+
+    &::before {
+      @extend %loader;
+
+      margin-right: 1em;
+    }
+  }
+  &:hover,
+  &:focus {
+    background-color: darken($primary, 10%);
+  }
 }
 </style>
