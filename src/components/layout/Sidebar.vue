@@ -16,7 +16,7 @@ import { Component, Prop } from 'vue-property-decorator'
 export default class Sidebar extends Vue {
   @Prop({
     type: String,
-    default: '350px' 
+    default: '350px'
   }) width
 }
 </script>
@@ -26,6 +26,7 @@ export default class Sidebar extends Vue {
   display: flex;
   flex-direction: row;
   align-content: stretch;
+  height: 100%;
 
   .sidebar {
     overflow-y: auto;
