@@ -104,21 +104,21 @@ export default class SelectionContext<T> {
       }
     }
 
-    handleKeyboardSelection(event: KeyboardEvent): boolean {
+    handleKeyboardSelection(event: KeyboardEvent): void {
       const isKeyUp = isActionPressed(ListNavigationMap, event, ListNavigationActions.UP)
       const isKeyDown = isActionPressed(ListNavigationMap, event, ListNavigationActions.DOWN)
       const isShiftPressed = event.shiftKey
 
       if (!isValidKey(ListNavigationMap, event) || !this.hasSelection) {
-        return false
+        return
       }
 
       const lastItemsIndex = this.items.length - 1
 
       // abort if the selection is already at the top/bottom
-      if(isKeyDown && this.lastSelected === this.items[this.items.length - 1] ||
+      if(isKeyDown && this.lastSelected === this.items[lastItemsIndex] ||
         isKeyUp && this.firstSelected === first(this.items)) {
-        return false
+        return
       }
 
       event.preventDefault()
@@ -141,7 +141,7 @@ export default class SelectionContext<T> {
             // it is possible that the previous item is already selected (move it to the end of array so it is the lastSelectedItem)
             this.selected = [...without(this.selected, previousItem), previousItem]
           }
-          return true
+          return
         }
 
         if (isKeyDown && isShiftPressed) {
@@ -152,22 +152,20 @@ export default class SelectionContext<T> {
             // it is possible that the next item is already selected (move it to the end of array so it is the lastSelectedItem)
             this.selected = [...without(this.selected, nextItem), nextItem]
           }
-          return true
+          return
         }
       }
 
       // select only previous item
       if (isKeyUp) {
         this.selected = [previousItem]
-        return true
+        return
       }
 
       // select only next item
       if (isKeyDown) {
         this.selected = [nextItem]
-        return true
+        return
       }
-
-      return false
     }
 }
