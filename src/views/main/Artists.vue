@@ -45,7 +45,7 @@ export default class Artists extends Vue {
     )
   }
 
-  get selected() {
+  get selected(): Artist {
     return (
       this.artist(this.$route.params.id) ||
       first(this.sortedArtists)
@@ -59,7 +59,8 @@ export default class Artists extends Vue {
     })
   }
 
-  onPlay(artist: Artist) {
+  onPlay() {
+    const artist = this.selected
     const songlist: Array<Song> = this.artistSongs(artist)
     this.setQueue({
       songlist,

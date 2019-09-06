@@ -20,7 +20,7 @@
           class="item-list-item"
           :draggable="allowItemReordering"
           @click="onSelectItem($event, item)"
-          @click.right="$emit('context', $event, item)"
+          @click.right="onContext($event, item)"
           @dblclick="$emit('open', $event, item)"
           @dragstart="onDragStart($event, item)"
           @dragenter.stop.prevent="onDragEnter($event, item)"
@@ -40,7 +40,7 @@
           class="item-list-item"
           :draggable="allowItemReordering"
           @click="onSelectItem($event, item)"
-          @click.right="$emit('context', $event, item)"
+          @click.right="onContext($event, item)"
           @dblclick="$emit('open', $event, item)"
           @dragstart="onDragStart($event, item)"
           @dragenter.prevent="onDragEnter($event, item)"
@@ -116,7 +116,11 @@ export default class ItemList extends Vue {
 
   onSelectItem(event: MouseEvent, item) {
     this.selectionContext.handleMouseSelection(event, item)
-    this.$emit('select', event, item)
+  }
+
+  onContext(event: MouseEvent, item) {
+    this.onSelectItem(event, item)
+    this.$emit('context', event)
   }
 
   onDragStart(event: DragEvent, item) {
@@ -195,8 +199,11 @@ export default class ItemList extends Vue {
   }
 
   @Watch('selectionContext.lastSelected')
-  scrollToLastSelected(lastSelected) {
-    this.scrollItemIntoView(lastSelected)
+  onSelectionChange(lastSelected, oldLastSelected) {
+    if (lastSelected !== oldLastSelected) {
+      this.scrollItemIntoView(lastSelected)
+      this.$emit('select', this.selectionContext)
+    }
   }
 
   @Watch('items', { immediate: true })

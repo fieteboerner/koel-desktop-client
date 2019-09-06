@@ -51,9 +51,7 @@ import SelectionContext from '@/classes/selection-context'
   },
 })
 export default class AlbumCard extends Vue {
-  $refs: {
-    ctx: any,
-  }
+  $refs: { ctx: any }
   selectionContext: SelectionContext<Song> = new SelectionContext(true)
   @Prop(Object) album
 
@@ -69,10 +67,7 @@ export default class AlbumCard extends Vue {
     this.play()
   }
 
-  onContext(event, song: Song) {
-    if (!this.selectionContext.isSelected(song)) {
-      this.selectionContext.selected = [song]
-    }
+  onContext(event: MouseEvent) {
     this.$refs.ctx.open(event)
   }
 

@@ -40,13 +40,13 @@ export default class ArtistList extends Vue {
   @Prop(Array) artists: Array<Artist>;
   @Prop(Object) value: any;
 
-  onSelect(event: MouseEvent, artist: Artist) {
-    this.$emit('select', event, artist)
+  onSelect() {
+    const artist = this.selectionContext.firstSortedSelected
     this.$emit('input', artist)
   }
 
-  onPlay(event: MouseEvent, artist: Artist) {
-    this.$emit('play', artist)
+  onPlay() {
+    this.$emit('play')
   }
 
   @Watch('value', { immediate: true })

@@ -50,7 +50,7 @@ export default class AlbumSongList extends Vue {
        if (disc === '0') return
        discArray.push({
          number: disc,
-         songs 
+         songs
        })
      })
 
@@ -65,12 +65,12 @@ export default class AlbumSongList extends Vue {
      return this.$route.query.highlightedSongId === song.id
    }
 
-   onContext(event: MouseEvent, song: Song = null) {
-     this.$emit('context', event, song)
+   onContext(event: MouseEvent) {
+     this.$emit('context', event)
    }
 
-   onPlay(event: MouseEvent|KeyboardEvent, song: Song = null) {
-     this.$emit('play', event, song)
+   onPlay() {
+     this.$emit('play')
    }
 }
 </script>

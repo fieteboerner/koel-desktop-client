@@ -45,7 +45,7 @@
           :songs="album.songs"
           :selection-context="selectionContext"
           @play="onPlay"
-          @context="context"
+          @context="onContext"
         />
       </div>
     </div>
@@ -89,10 +89,7 @@ export default class ArtistCard extends Vue {
     return songs
   }
 
-  context (event, song) {
-    if (!this.selectionContext.isSelected(song)) {
-      this.selectionContext.selected = [song]
-    }
+  onContext (event: MouseEvent) {
     this.$refs.ctx.open(event)
   }
 
