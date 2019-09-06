@@ -22,7 +22,7 @@
         album
         virtual-scroll
         @play="onPlay"
-        @context="contextSong"
+        @context="onContextSong"
       >
         <EmptyListMessage slot="empty" message="There are no songs in this playlist yet" />
       </SongList>
@@ -53,6 +53,7 @@ import SelectionContext from '@/classes/selection-context'
   }
 })
 export default class Playlists extends Vue {
+  $refs: { ctx: any }
   selectionContext: SelectionContext<Song> = new SelectionContext(true)
 
   @mediaModule.Getter songs: Song[]
@@ -64,7 +65,7 @@ export default class Playlists extends Vue {
   @mediaModule.Getter playlist: Function
   @mediaModule.Action loadPlaylistSongs
 
-  get selected() {
+  get selected(): Playlist {
     const playlistId = this.$route.params.id
     const playlist = this.playlist(playlistId) || first(this.playlists)
     this.loadPlaylistSongs(playlist)
@@ -83,19 +84,17 @@ export default class Playlists extends Vue {
     })
   }
 
-  contextSong (event, song) {
-    if (!this.selectionContext.isSelected(song)) {
-      this.selectionContext.selected = [song]
-    }
+  onContextSong (event) {
     this.$refs.ctx.open(event)
   }
 
-  onPlay(event: MouseEvent|KeyboardEvent, song: Song = null) {
+  onPlay() {
     this.setQueueBySelection(this.selectionContext)
     this.play()
   }
 
-  onPlayPlaylist(playlist: Playlist) {
+  onPlayPlaylist() {
+    const playlist = this.selected
     const songlist: Song[] = playlist.songs
     this.setQueue({
       songlist,

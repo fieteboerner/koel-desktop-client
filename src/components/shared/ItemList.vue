@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%">
+  <div style="height: 100%" tabindex="-1">
     <div v-if="!items.length">
       <slot name="empty">
         There are no items to show
@@ -8,6 +8,7 @@
     <template v-else>
       <RecycleScroller
         v-if="virtualScroll"
+        ref="recycleScroller"
         class="scroller item-list"
         :items="items"
         :item-height="itemHeight"
@@ -19,7 +20,7 @@
           class="item-list-item"
           :draggable="allowItemReordering"
           @click="onSelectItem($event, item)"
-          @click.right="$emit('context', $event, item)"
+          @click.right="onContext($event, item)"
           @dblclick="$emit('open', $event, item)"
           @dragstart="onDragStart($event, item)"
           @dragenter.stop.prevent="onDragEnter($event, item)"
@@ -33,12 +34,13 @@
       <div v-else class="item-list">
         <div
           v-for="item in items"
+          ref="item"
           :key="item[keyField]"
           :class="itemClasses(item)"
           class="item-list-item"
           :draggable="allowItemReordering"
           @click="onSelectItem($event, item)"
-          @click.right="$emit('context', $event, item)"
+          @click.right="onContext($event, item)"
           @dblclick="$emit('open', $event, item)"
           @dragstart="onDragStart($event, item)"
           @dragenter.prevent="onDragEnter($event, item)"
@@ -60,6 +62,7 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import { RecycleScroller } from 'vue-virtual-scroller'
 import SelectionContext from '@/classes/selection-context'
 import DragStore from '@/classes/drag-store'
+import { getScrollParent } from '@/helpers/scroll'
 
 @Component({
   components: { RecycleScroller }
@@ -76,13 +79,20 @@ export default class ItemList extends Vue {
     }
   }) selectionContext: SelectionContext<any>
   @Prop(String) itemClass: string
-  @Prop(Boolean) virtualScroll: Boolean
+  @Prop(Boolean) virtualScroll: boolean
   @Prop({
     type: String,
     default: 'id'
   }) keyField: string
-  @Prop(Number) itemHeight: Number
-  @Prop(Boolean) allowItemReordering: Boolean
+  @Prop(Number) itemHeight: number
+  @Prop(Boolean) allowItemReordering: boolean
+
+  mounted() {
+    this.$el.addEventListener('keydown', (event: KeyboardEvent) => {
+      this.selectionContext.handleKeyboardSelection(event)
+    })
+    this.scrollItemIntoView(this.selectionContext.lastSelected)
+  }
 
   destroyed() {
     this.dragStore = null // GC
@@ -105,8 +115,12 @@ export default class ItemList extends Vue {
   }
 
   onSelectItem(event: MouseEvent, item) {
-    this.selectionContext.selectItem(event, item)
-    this.$emit('select', event, item)
+    this.selectionContext.handleMouseSelection(event, item)
+  }
+
+  onContext(event: MouseEvent, item) {
+    this.onSelectItem(event, item)
+    this.$emit('context', event)
   }
 
   onDragStart(event: DragEvent, item) {
@@ -139,10 +153,63 @@ export default class ItemList extends Vue {
     this.dragStore.handleLeave(event, item[this.keyField])
   }
 
+  scrollItemIntoView(item) {
+    const index = this.items.indexOf(item)
+    if (index === -1) {
+      return
+    }
+
+    if (this.virtualScroll) {
+      const scrollTop = index * this.itemHeight
+
+      this.executeScrollToPosition(
+        this.$refs.recycleScroller.$el,
+        this.itemHeight,
+        scrollTop
+      )
+    } else {
+      const itemToShow: HTMLElement = this.$refs.item[index]
+      const scrollTop = itemToShow.offsetTop
+      const itemHeight = itemToShow.getBoundingClientRect().height
+
+      this.executeScrollToPosition(
+        getScrollParent(itemToShow),
+        itemHeight,
+        scrollTop
+      )
+    }
+  }
+
+  executeScrollToPosition(scrollContainer: HTMLElement|null, itemHeight: number, position: number) {
+    if (!scrollContainer) {
+      return
+    }
+
+    const scrollContainerHeight = scrollContainer.getBoundingClientRect().height
+    const top = scrollContainer.scrollTop
+    const bottom = top + scrollContainerHeight
+
+    if (position < top) {
+      scrollContainer.scrollTo({ top: position })
+    }
+
+    if (position + itemHeight > bottom) {
+      scrollContainer.scrollTo({ top: position - scrollContainerHeight + itemHeight })
+    }
+  }
+
+  @Watch('selectionContext.lastSelected')
+  onSelectionChange(lastSelected, oldLastSelected) {
+    if (lastSelected !== oldLastSelected) {
+      this.scrollItemIntoView(lastSelected)
+      this.$emit('select', this.selectionContext)
+    }
+  }
+
   @Watch('items', { immediate: true })
   onItemsChange(items) {
     if(this.selectionContext.dynamic) {
-      this.$set(this.selectionContext, 'items', items)
+      this.selectionContext.items = items
     }
   }
 }

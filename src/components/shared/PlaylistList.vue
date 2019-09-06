@@ -43,13 +43,18 @@ export default class PlaylistList extends Vue {
   @Prop(Array) playlists: Playlist[];
   @Prop(Object) value: Playlist;
 
-  onSelect(event: MouseEvent, playlist: Playlist) {
-    this.$emit('select', event, playlist)
+  onSelect() {
+    const playlist = this.selectionContext.firstSortedSelected
     this.$emit('input', playlist)
   }
 
-  onPlay(event: MouseEvent, playlist: Playlist) {
-    this.$emit('play', playlist)
+  onPlay() {
+    this.$emit('play')
+  }
+
+  @Watch('playlists', { immediate: true })
+  onPlaylistsChange(playlists) {
+    this.selectionContext.items = playlists
   }
 
   @Watch('value', { immediate: true })

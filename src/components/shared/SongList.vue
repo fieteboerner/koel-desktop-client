@@ -27,7 +27,7 @@
             <b-icon
               v-else
               icon="play-circle-outline"
-              @click.native.stop="onSelectAndPlay($event, song)"
+              @click.native.stop="onSelectAndPlay(song)"
             />
           </div>
           <div class="hide-on-hover">
@@ -89,17 +89,17 @@ export default class SongList extends Vue {
   @playerModule.Action resume;
   @playerModule.Action pause;
 
-  onContext(event: MouseEvent, song: Song = null) {
-    this.$emit('context', event, song)
+  onContext(event: MouseEvent) {
+    this.$emit('context', event)
   }
 
-  onSelectAndPlay(event: MouseEvent, song: Song) {
+  onSelectAndPlay(song: Song) {
     this.selectionContext.selected = [song]
-    this.onPlay(event, song)
+    this.onPlay()
   }
 
-  onPlay(event: MouseEvent | KeyboardEvent, song: Song = null) {
-    this.$emit('play', event)
+  onPlay() {
+    this.$emit('play')
   }
 }
 </script>

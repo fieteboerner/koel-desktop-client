@@ -14,7 +14,7 @@
       album
       virtual-scroll
       @play="onPlay"
-      @context="context"
+      @context="onContext"
     >
       <EmptyListMessage slot="empty" message="No Songs" />
     </SongList>
@@ -41,6 +41,7 @@ import SelectionContext from '@/classes/selection-context'
   },
 })
 export default class Songs extends Vue {
+  $refs: { ctx: any }
   selectionContext: SelectionContext<Song> = new SelectionContext(true)
 
   @mediaModule.Getter songs: Song[]
@@ -57,10 +58,7 @@ export default class Songs extends Vue {
     this.play()
   }
 
-  context(event: MouseEvent, song: Song) {
-    if (!this.selectionContext.isSelected(song)) {
-      this.selectionContext.selected = [song]
-    }
+  onContext(event: MouseEvent) {
     this.$refs.ctx.open(event)
   }
 
