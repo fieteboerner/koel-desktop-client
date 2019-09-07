@@ -1,5 +1,5 @@
 <template>
-  <div class="song-list" tabindex="-1" @keypress.enter="onPlay">
+  <div class="song-list">
     <slot name="header" class="song-list-item" />
     <ItemList
       :items="songs"

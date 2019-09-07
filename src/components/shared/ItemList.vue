@@ -21,7 +21,7 @@
           :draggable="allowItemReordering"
           @click="onSelectItem($event, item)"
           @click.right="onContext($event, item)"
-          @dblclick="$emit('open', $event, item)"
+          @dblclick="fireOpen"
           @dragstart="onDragStart($event, item)"
           @dragenter.stop.prevent="onDragEnter($event, item)"
           @dragover.prevent
@@ -41,7 +41,7 @@
           :draggable="allowItemReordering"
           @click="onSelectItem($event, item)"
           @click.right="onContext($event, item)"
-          @dblclick="$emit('open', $event, item)"
+          @dblclick="fireOpen"
           @dragstart="onDragStart($event, item)"
           @dragenter.prevent="onDragEnter($event, item)"
           @dragover.prevent
@@ -63,6 +63,7 @@ import { RecycleScroller } from 'vue-virtual-scroller'
 import SelectionContext from '@/classes/selection-context'
 import DragStore from '@/classes/drag-store'
 import { getScrollParent } from '@/helpers/scroll'
+import { ListNavigationMap, ListNavigationActions, isActionPressed } from '@/helpers/keyboard'
 
 @Component({
   components: { RecycleScroller }
@@ -90,6 +91,7 @@ export default class ItemList extends Vue {
   mounted() {
     this.$el.addEventListener('keydown', (event: KeyboardEvent) => {
       this.selectionContext.handleKeyboardSelection(event)
+      this.onHandleKeyPress(event)
     })
     this.scrollItemIntoView(this.selectionContext.lastSelected)
   }
@@ -114,6 +116,28 @@ export default class ItemList extends Vue {
     return this.selectionContext.isSelected(item)
   }
 
+  onHandleKeyPress(event: KeyboardEvent) {
+    if (!this.selectionContext.hasSelection) {
+      return
+    }
+    if (isActionPressed(ListNavigationMap, event, ListNavigationActions.OPEN)) {
+      this.fireOpen()
+      return
+    }
+
+    if (isActionPressed(ListNavigationMap, event, ListNavigationActions.DELETE)) {
+      this.fireDelete()
+      return
+    }
+  }
+
+  fireOpen() {
+    this.$emit('open')
+  }
+
+  fireDelete() {
+    this.$emit('delete')
+  }
   onSelectItem(event: MouseEvent, item) {
     this.selectionContext.handleMouseSelection(event, item)
   }

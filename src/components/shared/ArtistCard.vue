@@ -1,5 +1,5 @@
 <template>
-  <div class="artist-card-root" tabindex="-1" @keypress.enter="onPlay">
+  <div class="artist-card-root">
     <ContextMenu
       ref="ctx"
       context="artist:song"

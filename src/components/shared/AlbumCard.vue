@@ -6,7 +6,7 @@
       context="album:song"
       @play="onPlay"
     />
-    <div class="columns card-root" tabindex="-1" @keypress.enter="onPlay">
+    <div class="columns card-root">
       <div class="column is-4 cover-column">
         <CoverTile :img="album.cover" />
       </div>
