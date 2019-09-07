@@ -9,8 +9,10 @@
       <b-tabs position="is-centered">
         <b-tab-item label="Queue">
           <div v-if="currentSong">
-            <div class="title is-5">
-              Now Playing
+            <div class="list-title">
+              <h2 class="title is-5">
+                Now Playing
+              </h2>
             </div>
             <SongList
               :songs="[currentSong]"
@@ -24,8 +26,13 @@
           </div>
 
           <div v-if="prioSongs.length">
-            <div class="title is-5">
-              Next in Queue
+            <div class="list-title">
+              <h2 class="title is-5">
+                Next in Queue
+              </h2>
+              <button class="button is-light">
+                Clear
+              </button>
             </div>
             <SongList
               v-if="prioSongs.length"
@@ -43,8 +50,10 @@
             </ul>-->
           </div>
           <div v-if="queueSongs.length">
-            <div class="title is-5">
-              Next Up
+            <div class="list-title">
+              <h2 class="title is-5">
+                Next Up
+              </h2>
             </div>
             <SongList
               :songs="queueSongsToShow"
@@ -159,6 +168,18 @@ export default class QueueList extends Vue {
 // pull footer button right
 .modal-card-foot {
   justify-content: flex-end;
+}
+
+.list-title {
+  .title {
+    margin-bottom: 0;
+  }
+
+  align-items: flex-end;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  margin-top: 2rem;
 }
 
 .fade-out {
