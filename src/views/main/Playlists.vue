@@ -96,11 +96,13 @@ export default class Playlists extends Vue {
   onPlayPlaylist() {
     const playlist = this.selected
     const songlist: Song[] = playlist.songs
-    this.setQueue({
-      songlist,
-      toPlay: songlist[0]
-    })
-    this.play()
+    if(songlist.length) {
+      this.setQueue({
+        songlist,
+        toPlay: songlist[0]
+      })
+      this.play()
+    }
   }
 
   @Watch('sortedSongs', { immediate: true })
