@@ -143,7 +143,9 @@ export default class ItemList extends Vue {
   }
 
   onContext(event: MouseEvent, item) {
-    this.onSelectItem(event, item)
+    if (!this.selectionContext.hasSelection || !this.selectionContext.isSelected(item)) {
+      this.onSelectItem(event, item)
+    }
     this.$emit('context', event)
   }
 

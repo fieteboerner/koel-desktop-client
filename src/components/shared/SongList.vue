@@ -49,7 +49,7 @@
           <b-icon
             icon="dots-horizontal"
             title="more"
-            @click.native="$emit('context', $event, song)"
+            @click.native="onContext"
           />
         </div>
         <div class="track-time">
