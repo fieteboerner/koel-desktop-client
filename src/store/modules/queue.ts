@@ -75,6 +75,9 @@ const mutations: MutationTree<QueueState> = {
     }
     state.queue.splice(lastIndex + 1, 0, ...queue)
   },
+  clearPrioQueue(state) {
+    state.queue = state.queue.filter(queueItem => !queueItem.prio)
+  },
   songStart (state) {
     let current = state.current
     current.playStart = new Date()
@@ -119,6 +122,9 @@ const actions: ActionTree<QueueState, RootState> = {
       dispatch('skip')
       dispatch('player/play', null, { root: true })
     }
+  },
+  clearPrioQueue({ commit }) {
+    commit('clearPrioQueue')
   },
   skip ({ commit, getters }) {
     if (!getters.next) return

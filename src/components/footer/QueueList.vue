@@ -30,7 +30,7 @@
               <h2 class="title is-5">
                 Next in Queue
               </h2>
-              <button class="button is-light">
+              <button class="button is-light" @click="clearPrioQueue">
                 Clear
               </button>
             </div>
@@ -112,6 +112,7 @@ import SelectionContext from '@/classes/selection-context'
 export default class QueueList extends Vue {
   selectionContext: SelectionContext<Song> = new SelectionContext(true);
   @queueModule.Action remove;
+  @queueModule.Action clearPrioQueue;
 
   @queueModule.Getter history;
   @queueModule.Getter prio;
