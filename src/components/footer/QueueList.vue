@@ -49,6 +49,7 @@
             <SongList
               :songs="queueSongsToShow"
               :selection-context="selectionContext"
+              :class="{ 'fade-out': moreQueueSongsToShow }"
               album
               artist
             />
@@ -87,6 +88,7 @@ import { take, sortBy } from 'lodash'
 import { Component, Watch } from 'vue-property-decorator'
 import { queueModule } from '@/store/namespaces'
 import SongList from '@/components/shared/SongList.vue'
+import { MAX_SHOW_QUEUE_ITEMS } from '@/config/queue'
 
 import draggable from 'vuedraggable'
 import { QueueItem, Song } from '@/interfaces'
@@ -109,24 +111,28 @@ export default class QueueList extends Vue {
 
   @queueModule.Mutation('sort') queueSort;
 
-  get queueList() {
+  get queueList(): Song[] {
     return [this.currentSong, ...this.prioSongs, ...this.queueSongs]
   }
 
-  get prioSongs() {
+  get prioSongs(): Song[] {
     return this.prio.map((queueItem: QueueItem) => queueItem.song)
   }
 
-  get queueSongs() {
+  get queueSongs(): Song[] {
     return this.queue.map((queueItem: QueueItem) => queueItem.song)
   }
 
-  get historySongs() {
+  get historySongs(): Song[] {
     return this.history.map((queueItem: QueueItem) => queueItem.song).reverse()
   }
 
-  get queueSongsToShow() {
-    return take(this.queueSongs, 100)
+  get queueSongsToShow(): Song[] {
+    return take(this.queueSongs, MAX_SHOW_QUEUE_ITEMS)
+  }
+
+  get moreQueueSongsToShow(): boolean {
+    return this.queueSongs.length > MAX_SHOW_QUEUE_ITEMS
   }
 
   onPrioSort(queue) {
@@ -145,7 +151,7 @@ export default class QueueList extends Vue {
 
   @Watch('queueList', { immediate: true })
   onQueueListChange(songs) {
-    this.$set(this.selectionContext, 'items', songs)
+    this.selectionContext.items = songs
   }
 }
 </script>
@@ -153,5 +159,19 @@ export default class QueueList extends Vue {
 // pull footer button right
 .modal-card-foot {
   justify-content: flex-end;
+}
+
+.fade-out {
+  position: relative;
+
+  &::after {
+    background-image: linear-gradient(transparent, white);
+    bottom: 0;
+    content: '';
+    height: 20em;
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+  }
 }
 </style>
