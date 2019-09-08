@@ -36,6 +36,7 @@ import { first, sortBy } from 'lodash'
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { mixins } from 'vue-class-component'
 import { mediaModule, playerModule, queueModule } from '@/store/namespaces'
+import { Debounce } from '@/decorators'
 
 import SongList from '@/components/shared/SongList.vue'
 import PlaylistList from '@/components/shared/PlaylistList.vue'
@@ -77,6 +78,7 @@ export default class Playlists extends Vue {
     return this.selected.songs || []
   }
 
+  @Debounce(200, { leading: true })
   onPlaylistSelected(playlist: Playlist) {
     this.$router.push({
       name: 'playlists',

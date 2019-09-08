@@ -19,6 +19,7 @@ import { Component } from 'vue-property-decorator'
 import { first, sortBy } from 'lodash'
 import { Getter } from 'vuex-class'
 import { mediaModule, playerModule, queueModule } from '@/store/namespaces'
+import { Debounce } from '@/decorators'
 import EmptyListMessage from '@/components/shared/EmptyListMessage.vue'
 
 import ArtistCard from '@/components/shared/ArtistCard.vue'
@@ -52,6 +53,7 @@ export default class Artists extends Vue {
     )
   }
 
+  @Debounce(200, { leading: true })
   onArtistSelect(artist: Artist) {
     this.$router.push({
       name: 'artists',
