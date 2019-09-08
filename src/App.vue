@@ -19,5 +19,6 @@ export default class App extends Vue {}
 
 // Import Bulma and Buefy styles
 @import '~bulma';
+@import '~buefy/src/scss/buefy';
 @import '@/styles/app';
 </style>
