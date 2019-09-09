@@ -11,7 +11,7 @@
       <div class="navbar">
         <div class="navbar-menu">
           <div class="navbar-end">
-            <a class="navbar-item">{{ user.name }}</a>
+            <a class="navbar-item" @click.prevent="openProfile">{{ user.name }}</a>
             <a class="navbar-item" @click="logout"><b-icon icon="exit-to-app" /></a>
           </div>
         </div>
@@ -43,7 +43,7 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
-import { ipcRenderer } from 'electron'
+import { ipcRenderer, shell } from 'electron'
 import { Component } from 'vue-property-decorator'
 import { Action, Getter } from 'vuex-class'
 
@@ -61,6 +61,7 @@ export default class Main extends Vue {
   @playerModule.Action back
   @playerModule.Action togglePlayback
   @authModule.Getter user
+  @authModule.Getter url
   @mediaModule.Getter('loading') isLoading
 
   mounted() {
@@ -85,6 +86,10 @@ export default class Main extends Vue {
 
   destroyed() {
     ipcRenderer.removeAllListeners('media-key')
+  }
+
+  openProfile() {
+    shell.openExternal(`${this.url}#!/profile`)
   }
 
   async logout() {
