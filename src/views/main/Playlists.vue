@@ -13,6 +13,7 @@
         context="playlist:song"
         :items="selectionContext.sortedSelected"
         @play="onPlay"
+        @remove="onRemoveFromPlaylist"
       />
       <SongList
         v-if="selected"
@@ -23,6 +24,7 @@
         virtual-scroll
         @play="onPlay"
         @context="onContextSong"
+        @delete="onRemoveFromPlaylist"
       >
         <EmptyListMessage slot="empty" message="There are no songs in this playlist yet" />
       </SongList>
@@ -65,6 +67,7 @@ export default class Playlists extends Vue {
   @mediaModule.Getter playlists: Playlist[]
   @mediaModule.Getter playlist: Function
   @mediaModule.Action loadPlaylistSongs
+  @mediaModule.Action removeFromPlaylist
 
   get selected(): Playlist {
     const playlistId = this.$route.params.id
@@ -93,6 +96,13 @@ export default class Playlists extends Vue {
   onPlay() {
     this.setQueueBySelection(this.selectionContext)
     this.play()
+  }
+
+  onRemoveFromPlaylist() {
+    this.removeFromPlaylist({
+      playlist: this.selected,
+      songs: this.selectionContext.selected
+    })
   }
 
   onPlayPlaylist() {

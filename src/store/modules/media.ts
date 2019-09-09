@@ -122,6 +122,32 @@ const actions: ActionTree<MediaState, RootState> = {
       MessageCenter.error('Unable to fetch playlist songs from server')
     }
   },
+  async removeFromPlaylist({ commit, dispatch }, { playlist, songs }) {
+    const oldPlaylistSongs = playlist.songs
+    try {
+      const songsToStay = playlist.songs.filter(song => !songs.includes(song))
+      await dispatch('syncPlaylist', {
+        playlist,
+        songs: songsToStay
+      })
+    } catch (e) {
+      commit('setPlaylistSongs', {
+        playlist,
+        songs: oldPlaylistSongs
+      })
+      MessageCenter.error('Unable to remove the song/s from the playlist')
+    }
+  },
+  async syncPlaylist({ commit, rootGetters }, { playlist, songs }){
+
+    commit('setPlaylistSongs', {
+      playlist,
+      songs
+    })
+
+    const songIds = songs.map(song => song.id)
+    await axios.put(`${rootGetters['auth/url']}/api/playlist/${playlist.id}/sync`, { songs: songIds })
+  },
   increasePlayCount ({ rootGetters }, song) {
     return axios.post(`${rootGetters['auth/url']}/api/interaction/play`, { song: song.id })
   },

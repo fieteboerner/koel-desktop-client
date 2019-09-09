@@ -18,7 +18,11 @@
           <hr class="dropdown-divider">
         </template>
         <a class="dropdown-item">Add to Playlist</a>
-        <a v-if="mainCtx === 'playlist' && subCtx === 'song'" class="dropdown-item">Remove from this Playlist</a>
+        <a
+          v-if="mainCtx === 'playlist' && subCtx === 'song'"
+          class="dropdown-item"
+          @click="onRemove"
+        >Remove from this Playlist</a>
         <hr class="dropdown-divider">
         <a class="dropdown-item">Save to Disk</a>
         <a v-if="subCtx === 'song' && items.length === 1" class="dropdown-item" @click="copyShare">Copy sharable URL</a>
@@ -75,6 +79,9 @@ export default {
     },
     copyShare () {
       clipboard.writeText(this.sharableUrl(this.items[0]))
+    },
+    onRemove() {
+      this.$emit('remove')
     }
   }
 }
