@@ -6,8 +6,10 @@
       :item-height="42"
       :virtual-scroll="virtualScroll"
       :selection-context="selectionContext"
+      :key-field="keyField"
       item-class="song-list-item"
       @open="onPlay"
+      @delete="onDelete"
       @context="onContext"
     >
       <slot v-if="$slots.empty" slot="empty" name="empty" />
@@ -82,6 +84,7 @@ export default class SongList extends Vue {
   @Prop(Boolean) artist: Boolean;
   @Prop(Boolean) album: Boolean;
   @Prop(Boolean) virtualScroll: Boolean;
+  @Prop(String) keyField: string
 
   @playerModule.Getter isCurrent;
   @playerModule.Getter playing;
@@ -100,6 +103,10 @@ export default class SongList extends Vue {
 
   onPlay() {
     this.$emit('play')
+  }
+
+  onDelete() {
+    this.$emit('delete')
   }
 }
 </script>

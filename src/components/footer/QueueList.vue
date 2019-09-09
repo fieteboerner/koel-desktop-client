@@ -19,6 +19,7 @@
               :selection-context="selectionContext"
               album
               artist
+              @delete="onDelete"
             />
           </div>
           <div v-else class="has-text-centered subtitle is-5">
@@ -38,8 +39,10 @@
               v-if="prioSongs.length"
               :songs="prioSongs"
               :selection-context="selectionContext"
+              key-field="queueItemId"
               album
               artist
+              @delete="onDelete"
             />
             <!-- <ul>
 						<draggable :value="prio" @input="onPrioSort" :options="{group:'queue'}">
@@ -59,8 +62,10 @@
               :songs="queueSongsToShow"
               :selection-context="selectionContext"
               :class="{ 'fade-out': moreQueueSongsToShow }"
+              key-field="queueItemId"
               album
               artist
+              @delete="onDelete"
             />
           </div>
           <!-- <ul v-if="queue.length">
@@ -75,6 +80,7 @@
           <SongList
             v-if="historySongs.length"
             :songs="historySongs"
+            key-field="queueItemId"
             album
             artist
           />
@@ -114,27 +120,31 @@ export default class QueueList extends Vue {
   @queueModule.Action remove;
   @queueModule.Action clearPrioQueue;
 
-  @queueModule.Getter history;
-  @queueModule.Getter prio;
-  @queueModule.Getter queue;
-  @queueModule.Getter currentSong;
+  @queueModule.Getter history: QueueItem[];
+  @queueModule.Getter prio: QueueItem[];
+  @queueModule.Getter queue: QueueItem[];
+  @queueModule.Getter currentSong?: Song;
 
   @queueModule.Mutation('sort') queueSort;
+
+  get queueItemList(): QueueItem[] {
+    return [...this.prio, ...this.queue]
+  }
 
   get queueList(): Song[] {
     return [this.currentSong, ...this.prioSongs, ...this.queueSongs]
   }
 
   get prioSongs(): Song[] {
-    return this.prio.map((queueItem: QueueItem) => queueItem.song)
+    return this.prio.map((queueItem: QueueItem) => this.extractSongFromQueueItem(queueItem))
   }
 
   get queueSongs(): Song[] {
-    return this.queue.map((queueItem: QueueItem) => queueItem.song)
+    return this.queue.map((queueItem: QueueItem) => this.extractSongFromQueueItem(queueItem))
   }
 
   get historySongs(): Song[] {
-    return this.history.map((queueItem: QueueItem) => queueItem.song).reverse()
+    return this.history.map((queueItem: QueueItem) => this.extractSongFromQueueItem(queueItem))
   }
 
   get queueSongsToShow(): Song[] {
@@ -143,6 +153,25 @@ export default class QueueList extends Vue {
 
   get moreQueueSongsToShow(): boolean {
     return this.queueSongs.length > MAX_SHOW_QUEUE_ITEMS
+  }
+
+  extractSongFromQueueItem(queueItem: QueueItem) {
+    return {
+      queueItemId: queueItem.id,
+      ...queueItem.song
+    }
+  }
+
+  getQueueItemBySong(song): QueueItem {
+    return this.queueItemList.find(queueItem => queueItem.id === song.queueItemId)
+  }
+
+  onDelete() {
+    const songsToRemove = this.selectionContext.selected
+      .map(song => this.getQueueItemBySong(song))
+      .filter(queueItem => Boolean(queueItem))
+
+    songsToRemove.forEach(queueItem => this.remove(queueItem))
   }
 
   onPrioSort(queue) {
