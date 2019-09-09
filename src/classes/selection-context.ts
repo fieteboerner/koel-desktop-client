@@ -3,7 +3,8 @@ import {
   ListNavigationActions,
   ListNavigationMap,
   isValidKey,
-  isActionPressed
+  isActionPressed,
+  isCmdOrCtrlPressed
 } from '@/helpers/keyboard'
 
 export default class SelectionContext<T> {
@@ -133,6 +134,12 @@ export default class SelectionContext<T> {
       const previousSelectedItem = this.selected[this.selected.length - 2]
 
       if (this.multiselect) {
+        // select all
+        if (isActionPressed(ListNavigationMap, event, ListNavigationActions.SELECT_ALL) && isCmdOrCtrlPressed(event)) {
+          this.selected = this.items
+          return
+        }
+
         if (isKeyUp && isShiftPressed) {
           // if the selection will be undone
           if(previousSelectedItem && this.isSelected(previousSelectedItem) && previousSelectedItem === previousItem) {
