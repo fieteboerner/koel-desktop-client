@@ -99,10 +99,12 @@ export default class Playlists extends Vue {
   }
 
   onRemoveFromPlaylist() {
-    this.removeFromPlaylist({
-      playlist: this.selected,
-      songs: this.selectionContext.selected
-    })
+    if (!this.selected.isFavorite) {
+      this.removeFromPlaylist({
+        playlist: this.selected,
+        songs: this.selectionContext.selected
+      })
+    }
   }
 
   onPlayPlaylist() {
