@@ -8,6 +8,12 @@
     <section class="modal-card-body">
       <b-tabs position="is-centered">
         <b-tab-item label="Queue">
+          <ContextMenu
+            ref="ctx"
+            :items="selectionContext.sortedSelected"
+            context="queue:song"
+            @play="onPlay"
+          />
           <div v-if="currentSong">
             <div class="list-title">
               <h2 class="title is-5">
@@ -19,6 +25,7 @@
               :selection-context="selectionContext"
               album
               artist
+              @context="onContext"
               @delete="onDelete"
             />
           </div>
@@ -42,6 +49,7 @@
               key-field="queueItemId"
               album
               artist
+              @context="onContext"
               @delete="onDelete"
               @play="onPlay"
             />
@@ -66,6 +74,7 @@
               key-field="queueItemId"
               album
               artist
+              @context="onContext"
               @delete="onDelete"
               @play="onPlay"
             />
@@ -107,6 +116,7 @@ import { Component, Watch } from 'vue-property-decorator'
 import { queueModule, playerModule } from '@/store/namespaces'
 import SongList from '@/components/shared/SongList.vue'
 import { MAX_SHOW_QUEUE_ITEMS } from '@/config/queue'
+import ContextMenu from '@/components/shared/ContextMenu.vue'
 
 import draggable from 'vuedraggable'
 import { QueueItem, Song } from '@/interfaces'
@@ -114,11 +124,13 @@ import SelectionContext from '@/classes/selection-context'
 
 @Component({
   components: {
+    ContextMenu,
     draggable,
     SongList
   }
 })
 export default class QueueList extends Vue {
+  $refs: { ctx: any }
   selectionContext: SelectionContext<Song> = new SelectionContext(true);
   @playerModule.Action play
 
@@ -163,8 +175,8 @@ export default class QueueList extends Vue {
 
   extractSongFromQueueItem(queueItem: QueueItem) {
     return {
+      ...queueItem.song,
       queueItemId: queueItem.id,
-      ...queueItem.song
     }
   }
 
@@ -183,6 +195,10 @@ export default class QueueList extends Vue {
   onPlay() {
     this.setQueueBySelection(this.selectionContext)
     this.play()
+  }
+
+  onContext(event: MouseEvent) {
+    this.$refs.ctx.open(event)
   }
 
   onPrioSort(queue) {
