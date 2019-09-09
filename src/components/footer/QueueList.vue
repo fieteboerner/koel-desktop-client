@@ -43,6 +43,7 @@
               album
               artist
               @delete="onDelete"
+              @play="onPlay"
             />
             <!-- <ul>
 						<draggable :value="prio" @input="onPrioSort" :options="{group:'queue'}">
@@ -66,6 +67,7 @@
               album
               artist
               @delete="onDelete"
+              @play="onPlay"
             />
           </div>
           <!-- <ul v-if="queue.length">
@@ -83,6 +85,7 @@
             key-field="queueItemId"
             album
             artist
+            @play="onPlay"
           />
           <div v-else class="has-text-centered subtitle is-5">
             No items
@@ -101,7 +104,7 @@
 import Vue from 'vue'
 import { take, sortBy } from 'lodash'
 import { Component, Watch } from 'vue-property-decorator'
-import { queueModule } from '@/store/namespaces'
+import { queueModule, playerModule } from '@/store/namespaces'
 import SongList from '@/components/shared/SongList.vue'
 import { MAX_SHOW_QUEUE_ITEMS } from '@/config/queue'
 
@@ -117,8 +120,11 @@ import SelectionContext from '@/classes/selection-context'
 })
 export default class QueueList extends Vue {
   selectionContext: SelectionContext<Song> = new SelectionContext(true);
+  @playerModule.Action play
+
   @queueModule.Action remove;
   @queueModule.Action clearPrioQueue;
+  @queueModule.Action setQueueBySelection
 
   @queueModule.Getter history: QueueItem[];
   @queueModule.Getter prio: QueueItem[];
@@ -172,6 +178,11 @@ export default class QueueList extends Vue {
       .filter(queueItem => Boolean(queueItem))
 
     songsToRemove.forEach(queueItem => this.remove(queueItem))
+  }
+
+  onPlay() {
+    this.setQueueBySelection(this.selectionContext)
+    this.play()
   }
 
   onPrioSort(queue) {
