@@ -43,7 +43,7 @@
     "@vue/cli-service": "3.11.0",
     "@vue/eslint-config-typescript": "4.0.0",
     "babel-eslint": "10.0.3",
-    "electron": "^6.0.0",
+    "electron": "^18.3.7",
     "eslint": "6.3.0",
     "eslint-plugin-vue": "5.2.3",
     "pre-commit": "^1.2.2",
